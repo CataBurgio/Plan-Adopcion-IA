@@ -358,6 +358,9 @@ main { max-width: 1440px; margin: 0 auto; padding: 36px 56px 80px; }
   .hero-title { font-size: 26px; }
   .form-row { grid-template-columns: 1fr; }
 }
+
+/* ── LOCK ── */
+body:not(.edit-unlocked) .edit-only { display: none !important; }
 </style>
 </head>
 <body>
@@ -369,6 +372,7 @@ main { max-width: 1440px; margin: 0 auto; padding: 36px 56px 80px; }
   <a href="/mapa-procesos-ia-2027" style="color:#ffffff;text-decoration:none;padding:11px 13px;border-bottom:2px solid #e85020;display:inline-block">Mapa de Procesos</a>
   <a href="/wizard" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Wizard</a>
   <a href="/consolidado" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Consolidado</a>
+  <button id="lockBtn" onclick="toggleLock()" style="margin-left:auto;background:none;border:1.5px solid #333333;border-radius:4px;cursor:pointer;color:#6b7280;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap"><span id="lockLabel">Solo lectura</span></button>
 </div>
 
 <!-- ===== HERO ===== -->
@@ -423,7 +427,7 @@ main { max-width: 1440px; margin: 0 auto; padding: 36px 56px 80px; }
     </div>
     <div class="nav-actions">
       <span id="saveIndicator"></span>
-      <button class="btn" onclick="openAddModal()">+ Agregar proceso</button>
+      <button class="btn edit-only" onclick="openAddModal()">+ Agregar proceso</button>
       <button class="btn" onclick="window.print()">Imprimir</button>
       <button class="btn" onclick="exportData()">Exportar</button>
     </div>
@@ -948,7 +952,7 @@ function renderCard(p) {
     <div class="card-capas">${badges}</div>
     ${note}
     <div class="card-footer">${opp}${ref}${spon}${fase}${fnt}</div>
-    <div class="card-actions">
+    <div class="card-actions edit-only">
       <button class="card-btn" onclick="editProcess('${p.id}')">Editar</button>
       <button class="card-btn card-btn-del" onclick="deleteProcess('${p.id}')">Eliminar</button>
     </div>
@@ -1141,6 +1145,33 @@ function exportData() {
 (async () => {
   await loadFromSupabase();
   renderAll();
+})();
+
+/* ══════════ LOCK ══════════ */
+(function() {
+  const PIN = 'corven2027';
+  const KEY = 'pai_edit_unlocked';
+  function isUnlocked() { return sessionStorage.getItem(KEY) === '1'; }
+  function applyState() {
+    const ok = isUnlocked();
+    document.body.classList.toggle('edit-unlocked', ok);
+    const btn = document.getElementById('lockBtn');
+    if (!btn) return;
+    document.getElementById('lockLabel').textContent = ok ? 'Editando' : 'Solo lectura';
+    btn.style.color = ok ? '#e85020' : '#6b7280';
+    btn.style.borderColor = ok ? '#e85020' : '#333333';
+  }
+  window.toggleLock = function() {
+    if (isUnlocked()) {
+      sessionStorage.removeItem(KEY);
+      applyState();
+    } else {
+      const p = prompt('PIN de edición:');
+      if (p === PIN) { sessionStorage.setItem(KEY, '1'); applyState(); }
+      else if (p !== null) alert('PIN incorrecto.');
+    }
+  };
+  applyState();
 })();
 </script>
 </body>

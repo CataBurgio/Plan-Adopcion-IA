@@ -277,6 +277,7 @@
   <a href="/mapa-procesos-ia-2027" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Mapa de Procesos</a>
   <a href="/wizard" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Wizard</a>
   <a href="/consolidado" style="color:#ffffff;text-decoration:none;padding:11px 13px;border-bottom:2px solid #e85020;display:inline-block">Consolidado</a>
+  <button id="lockBtn" onclick="toggleLock()" style="margin-left:auto;background:none;border:1.5px solid #333333;border-radius:4px;cursor:pointer;color:#6b7280;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap"><span id="lockLabel">Solo lectura</span></button>
 </div>
 
 <div class="topbar">
@@ -641,8 +642,30 @@ async function exportCSV() {
 }
 
 render();
-// Auto-refresh cada 30s por si el wizard está abierto en otra pestaña
 setInterval(render, 30000);
+
+/* ══ LOCK ══ */
+(function() {
+  const PIN = 'corven2027';
+  const KEY = 'pai_edit_unlocked';
+  function applyState() {
+    const ok = sessionStorage.getItem(KEY) === '1';
+    const btn = document.getElementById('lockBtn');
+    if (!btn) return;
+    document.getElementById('lockLabel').textContent = ok ? 'Editando' : 'Solo lectura';
+    btn.style.color = ok ? '#e85020' : '#6b7280';
+    btn.style.borderColor = ok ? '#e85020' : '#333333';
+  }
+  window.toggleLock = function() {
+    if (sessionStorage.getItem(KEY) === '1') { sessionStorage.removeItem(KEY); applyState(); }
+    else {
+      const p = prompt('PIN de edición:');
+      if (p === PIN) { sessionStorage.setItem(KEY, '1'); applyState(); }
+      else if (p !== null) alert('PIN incorrecto.');
+    }
+  };
+  applyState();
+})();
 </script>
 </body>
 </html>

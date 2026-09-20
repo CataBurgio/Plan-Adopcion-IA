@@ -326,6 +326,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.55}
   <a href="/mapa-procesos-ia-2027" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Mapa de Procesos</a>
   <a href="/wizard" style="color:#ffffff;text-decoration:none;padding:11px 13px;border-bottom:2px solid #e85020;display:inline-block">Wizard</a>
   <a href="/consolidado" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Consolidado</a>
+  <button id="lockBtn" onclick="toggleLock()" style="margin-left:auto;background:none;border:1.5px solid #333333;border-radius:4px;cursor:pointer;color:#6b7280;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap"><span id="lockLabel">Solo lectura</span></button>
 </div>
 
 <!-- TOP BAR -->
@@ -467,7 +468,10 @@ function setStepData(stepId, patch){
   db[currentId].updatedAt = new Date().toISOString();
   scheduleSave();
 }
-function scheduleSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(saveDB, 400); }
+function scheduleSave(){
+  if(sessionStorage.getItem('pai_edit_unlocked') !== '1') return;
+  clearTimeout(saveTimer); saveTimer = setTimeout(saveDB, 400);
+}
 
 // ════════════════════════════════════════════════════════
 // STAGE 1 DATA
@@ -1522,6 +1526,32 @@ document.getElementById('modal-overlay').addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape') closeModal();
 });
+
+/* ══════ LOCK ══════ */
+(function() {
+  const PIN = 'corven2027';
+  const KEY = 'pai_edit_unlocked';
+  function isUnlocked() { return sessionStorage.getItem(KEY) === '1'; }
+  function applyState() {
+    const ok = isUnlocked();
+    const btn = document.getElementById('lockBtn');
+    if (!btn) return;
+    document.getElementById('lockLabel').textContent = ok ? 'Editando' : 'Solo lectura';
+    btn.style.color = ok ? '#e85020' : '#6b7280';
+    btn.style.borderColor = ok ? '#e85020' : '#333333';
+  }
+  window.toggleLock = function() {
+    if (isUnlocked()) {
+      sessionStorage.removeItem(KEY);
+      applyState();
+    } else {
+      const p = prompt('PIN de edición:');
+      if (p === PIN) { sessionStorage.setItem(KEY, '1'); applyState(); }
+      else if (p !== null) alert('PIN incorrecto.');
+    }
+  };
+  applyState();
+})();
 </script>
 </body>
 </html>
