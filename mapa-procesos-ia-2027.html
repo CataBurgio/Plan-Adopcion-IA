@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa de Procesos IA 2027 — Grupo Corven</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --brand:    #e85020;
+  --brand-dk: #c0401a;
+  --black:    #111111;
+  --ink:      #1a1a1a;
+  --muted:    #6b7280;
+  --line:     #e5e7eb;
+  --bg:       #f8f9fa;
+  --white:    #ffffff;
+  --c1:  #059669;
+  --c21: #7c3aed;
+  --c22: #9333ea;
+  --c3:  #0070c0;
+  --c4:  #e85020;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg); color: var(--ink); line-height: 1.5; font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative; overflow: hidden;
+  background: linear-gradient(125deg, #edeaf8 0%, #fdf0ec 55%, #ffffff 100%);
+  padding: 44px 56px 40px;
+  border-bottom: 3px solid var(--brand);
+}
+.hero-pattern {
+  position: absolute; top: 0; right: 0;
+  width: 52%; height: 100%; pointer-events: none;
+}
+.hero-content { position: relative; z-index: 2; max-width: 780px; }
+.hero-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--brand); margin-bottom: 16px;
+}
+.hero-title {
+  font-size: 38px; font-weight: 800; color: var(--black);
+  line-height: 1.05; margin-bottom: 12px; letter-spacing: -.6px;
+}
+.hero-title span { color: var(--brand); }
+.hero-sub {
+  font-size: 14px; color: var(--muted); margin-bottom: 28px; line-height: 1.65;
+}
+.hero-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+.hero-stat { display: flex; flex-direction: column; gap: 2px; }
+.hero-stat-val { font-size: 26px; font-weight: 800; color: var(--black); line-height: 1; }
+.hero-stat-val em { color: var(--brand); font-style: normal; }
+.hero-stat-lbl { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.hero-logo {
+  position: absolute; bottom: 22px; right: 48px; z-index: 2;
+  font-size: 10px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--black); opacity: 0.35; line-height: 1.4; text-align: right;
+}
+.hero-logo strong { display: block; font-size: 14px; letter-spacing: .12em; }
+
+/* ── STICKY NAV ── */
+.sticky-nav {
+  background: var(--white); border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 56px; gap: 12px; flex-wrap: wrap;
+}
+.nav-tabs { display: flex; overflow-x: auto; }
+.tab {
+  padding: 14px 18px; font-size: 13px; font-weight: 700; color: var(--muted);
+  cursor: pointer; border: none; background: none; font-family: inherit;
+  white-space: nowrap; border-bottom: 3px solid transparent;
+  transition: all .15s; margin-bottom: -1px;
+}
+.tab:hover { color: var(--ink); }
+.tab.active { color: var(--brand); border-bottom-color: var(--brand); }
+.nav-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; padding: 10px 0; }
+.btn {
+  padding: 7px 14px; border-radius: 5px; font-family: inherit; font-size: 12.5px;
+  font-weight: 600; cursor: pointer; border: 1.5px solid var(--line);
+  background: var(--white); color: var(--ink); transition: all .15s; white-space: nowrap;
+}
+.btn:hover { border-color: var(--brand); color: var(--brand); }
+.btn-brand { background: var(--brand); color: #fff; border-color: var(--brand); }
+.btn-brand:hover { background: var(--brand-dk); border-color: var(--brand-dk); color: #fff; }
+
+/* ── FRAMEWORK BANNER ── */
+.fw-banner {
+  background: #f0f1f4; border-bottom: 1px solid var(--line);
+  padding: 18px 56px; overflow-x: auto;
+}
+.fw-title {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .14em;
+  color: rgba(0,0,0,.35); margin-bottom: 14px;
+}
+.fw-levels { display: flex; gap: 0; min-width: fit-content; }
+.fw-level {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding-right: 28px; margin-right: 28px;
+  border-right: 1px solid var(--line);
+}
+.fw-level:last-child { border-right: none; padding-right: 0; margin-right: 0; }
+.fw-num {
+  font-size: 26px; font-weight: 900; color: var(--brand);
+  line-height: 1; flex-shrink: 0; letter-spacing: -.04em;
+}
+.fw-level-text { display: flex; flex-direction: column; gap: 3px; padding-top: 3px; }
+.fw-level-name { font-size: 11.5px; font-weight: 700; color: var(--black); white-space: nowrap; }
+.fw-level-desc { font-size: 10.5px; color: var(--muted); line-height: 1.4; max-width: 155px; }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex; gap: 12px; padding: 11px 56px; background: var(--white);
+  border-bottom: 1px solid var(--line); flex-wrap: wrap; align-items: center;
+}
+.filter-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; }
+.filter-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.chip {
+  padding: 4px 2px; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; border: none; border-bottom: 2px solid transparent;
+  background: none; color: var(--muted); transition: all .12s; line-height: 1.2;
+}
+.chip:hover { color: var(--ink); }
+.chip.active { color: var(--brand); border-bottom-color: var(--brand); font-weight: 700; }
+.filter-sep { width: 1px; background: var(--line); align-self: stretch; margin: 0 10px; }
+.filter-count { font-size: 12px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+
+/* ── MAIN ── */
+main { max-width: 1440px; margin: 0 auto; padding: 36px 56px 80px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── AREA SECTION ── */
+.area-section { margin-bottom: 44px; }
+.area-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.area-number {
+  font-size: 30px; font-weight: 800; color: var(--brand);
+  line-height: 1; flex-shrink: 0; min-width: 52px; padding-top: 2px;
+}
+.area-header-text { flex: 1; padding-top: 2px; }
+.area-underline {
+  display: block; width: 28px; height: 3px; background: var(--brand);
+  border-radius: 2px; margin-bottom: 5px;
+}
+.area-title { font-size: 17px; font-weight: 800; color: var(--black); display: block; line-height: 1.2; }
+.area-desc-text { font-size: 12.5px; color: var(--muted); display: block; margin-top: 2px; }
+.area-meta { display: flex; gap: 8px; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; padding-top: 6px; }
+.priority-badge {
+  padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 700;
+  background: var(--brand); color: #fff; letter-spacing: .02em;
+}
+.priority-badge.p2 { background: #1a2a4a; }
+.priority-badge.p3 { background: #0070c0; }
+.priority-badge.p4 { background: #7c3aed; }
+.priority-badge.pbase { background: #059669; }
+.priority-badge.pid { background: #9ca3af; }
+.proc-count { font-size: 12px; color: var(--muted); }
+.area-rule { border: none; border-top: 1px solid var(--line); margin-bottom: 16px; }
+
+/* ── PROCESS GRID ── */
+.process-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 14px; }
+
+/* ── PROCESS CARD ── */
+.process-card {
+  background: var(--white); border: 1px solid var(--line);
+  border-left: 4px solid #d1d5db; border-radius: 5px;
+  padding: 16px 18px; transition: all .15s;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.process-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,.08); transform: translateY(-1px); border-left-color: var(--brand); }
+.process-card[data-status="ejecutando"]     { border-left-color: #059669; }
+.process-card[data-status="en-diseno"]      { border-left-color: #0070c0; }
+.process-card[data-status="en-mapeo"]       { border-left-color: #d97706; }
+.process-card[data-status="en-presupuesto"] { border-left-color: #7c3aed; }
+.process-card.hidden { display: none; }
+
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.card-id { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .05em; }
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11.5px; font-weight: 600; white-space: nowrap; flex-shrink: 0;
+}
+.status-badge::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  display: inline-block; flex-shrink: 0;
+}
+.s-a-relevar      { color: var(--muted); }
+.s-a-relevar::before      { background: #9ca3af; }
+.s-en-mapeo       { color: #92400e; }
+.s-en-mapeo::before       { background: #d97706; }
+.s-en-diseno      { color: #1e40af; }
+.s-en-diseno::before      { background: #2563eb; }
+.s-en-presupuesto { color: #5b21b6; }
+.s-en-presupuesto::before { background: #7c3aed; }
+.s-ejecutando     { color: #065f46; }
+.s-ejecutando::before     { background: #059669; }
+
+.card-proceso { font-size: 14px; font-weight: 800; color: var(--black); line-height: 1.25; }
+.card-desc { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+.card-capas { display: flex; gap: 4px; flex-wrap: wrap; }
+.capa-badge {
+  padding: 2px 8px; border-radius: 3px; font-size: 10.5px; font-weight: 700;
+  color: #fff; white-space: nowrap; letter-spacing: .03em;
+}
+.capa-1  { background: var(--c1); }
+.capa-21 { background: var(--c21); }
+.capa-22 { background: var(--c22); }
+.capa-3  { background: var(--c3); }
+.capa-4  { background: var(--c4); }
+.card-footer {
+  display: flex; flex-wrap: wrap; gap: 6px; font-size: 11.5px;
+  color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px;
+}
+.card-footer span { display: flex; align-items: center; gap: 4px; }
+.card-footer .opp-link { color: var(--brand); font-weight: 700; }
+.card-note {
+  font-size: 12px; color: #92400e; background: #fff8ed;
+  border-radius: 4px; padding: 7px 10px; line-height: 1.4;
+  border-left: 3px solid var(--brand);
+}
+
+/* ── EMPTY / A RELEVAR ── */
+.areas-relevar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.area-relevar-card {
+  background: var(--white); border: 1.5px dashed var(--line);
+  border-radius: 5px; padding: 14px 16px;
+}
+.area-relevar-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.area-relevar-sub { font-size: 11.5px; color: var(--muted); }
+
+/* ── CALLOUT ── */
+.callout {
+  padding: 14px 0 18px; border-top: 2px solid var(--brand);
+  margin-bottom: 24px; font-size: 13px; color: var(--muted); line-height: 1.65;
+}
+.callout.warn { border-top-color: #d97706; }
+
+/* ── LEGEND ── */
+.legend-row {
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  padding: 10px 0; margin-bottom: 22px; border-bottom: 1px solid var(--line);
+}
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+
+/* ── CAPA VIEW ── */
+.capa-block {
+  border-radius: 6px; overflow: hidden; border: 1px solid var(--line);
+  box-shadow: 0 1px 4px rgba(0,0,0,.04); margin-bottom: 18px;
+}
+.capa-block-header { padding: 13px 20px; color: #fff; display: flex; align-items: center; gap: 14px; }
+.capa-block-header h3 { font-size: 14px; font-weight: 800; }
+.capa-block-header .capa-sub { font-size: 12px; opacity: .85; }
+.capa-block-header .capa-count { margin-left: auto; font-size: 11.5px; background: rgba(255,255,255,.2); padding: 2px 9px; border-radius: 4px; }
+.bg-c1  { background: var(--c1); }
+.bg-c21 { background: var(--c21); }
+.bg-c22 { background: var(--c22); }
+.bg-c3  { background: var(--c3); }
+.bg-c4  { background: var(--c4); }
+.capa-block-body { padding: 16px 20px 20px; background: var(--white); }
+.capa-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 10px; }
+.capa-mini {
+  border: 1px solid var(--line); border-radius: 5px;
+  padding: 12px; background: var(--bg); display: flex; flex-direction: column; gap: 6px;
+}
+.capa-mini-top { display: flex; align-items: center; gap: 8px; }
+.capa-mini-area { font-size: 10.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.capa-mini-proceso { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+.capa-mini-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+/* ── MODAL ── */
+#addModal {
+  display: none; position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,.45); align-items: center; justify-content: center;
+}
+#addModal.show { display: flex; }
+.modal-box {
+  background: var(--white); border-radius: 10px; padding: 28px 32px;
+  max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+.modal-title { font-size: 18px; font-weight: 800; margin-bottom: 4px; color: var(--black); }
+.modal-title span { color: var(--brand); }
+.modal-divider { width: 28px; height: 3px; background: var(--brand); border-radius: 2px; margin-bottom: 20px; }
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 5px; display: block; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; border: 1.5px solid var(--line); border-radius: 5px; padding: 8px 12px;
+  font-family: inherit; font-size: 13.5px; color: var(--ink); background: var(--white); transition: border-color .12s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--brand); }
+.form-textarea { min-height: 80px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-capas { display: flex; gap: 7px; flex-wrap: wrap; }
+.capa-toggle {
+  padding: 5px 11px; border-radius: 4px; font-size: 12px; font-weight: 700;
+  cursor: pointer; border: 1.5px solid var(--line); background: var(--bg);
+  color: var(--muted); transition: all .12s; user-select: none;
+}
+.capa-toggle.selected { color: #fff; border-color: transparent; }
+.ct-1.selected   { background: var(--c1); }
+.ct-21.selected  { background: var(--c21); }
+.ct-22.selected  { background: var(--c22); }
+.ct-3.selected   { background: var(--c3); }
+.ct-4.selected   { background: var(--c4); }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; border-top: 1px solid var(--line); padding-top: 18px; }
+.btn-cancel { background: var(--bg); color: var(--muted); }
+.btn-cancel:hover { border-color: var(--muted); color: var(--ink); }
+
+/* ── CARD ACTIONS ── */
+.card-actions {
+  display: flex; gap: 6px; margin-top: 2px;
+  border-top: 1px solid var(--line); padding-top: 8px;
+}
+.card-btn {
+  flex: 1; padding: 5px 0; border-radius: 4px; font-family: inherit;
+  font-size: 11.5px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--line);
+  background: var(--white); color: var(--muted); transition: all .12s;
+}
+.card-btn:hover { border-color: var(--brand); color: var(--brand); }
+.card-btn-del:hover { border-color: #ef4444; color: #ef4444; }
+
+/* ── SAVE INDICATOR ── */
+#saveIndicator {
+  font-size: 11.5px; color: var(--muted); transition: opacity .3s; opacity: 0;
+}
+#saveIndicator.show { opacity: 1; }
+
+/* ── COPY ALERT ── */
+#copyAlert {
+  position: fixed; bottom: 24px; right: 24px; z-index: 400;
+  background: var(--black); color: #fff; border-radius: 8px;
+  padding: 12px 20px; font-size: 13px; font-weight: 600;
+  transform: translateY(80px); opacity: 0; transition: all .25s; pointer-events: none;
+}
+#copyAlert.show { transform: translateY(0); opacity: 1; }
+
+/* ── PRINT ── */
+@media print {
+  .hero, .sticky-nav, .fw-banner, .filter-bar, .btn, #addModal { display: none !important; }
+  body { background: #fff; }
+  main { padding: 12px 16px; }
+  .process-card { break-inside: avoid; }
+}
+@media (max-width: 900px) {
+  .hero, .fw-banner, .filter-bar, main { padding-left: 20px; padding-right: 20px; }
+  .nav-inner { padding: 0 16px; }
+  .hero-title { font-size: 26px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <!-- Triangle/chevron pattern from Corven corporate template -->
+  <svg class="hero-pattern" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" width="100%" height="100%">
+    <defs>
+      <pattern id="tri" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+        <polygon points="5,5 15,11 5,17" fill="#1a1a1a" opacity="0.16"/>
+      </pattern>
+      <linearGradient id="tri-fade" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%"   stop-color="white" stop-opacity="1"/>
+        <stop offset="45%"  stop-color="white" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="white" stop-opacity="0"/>
+      </linearGradient>
+      <mask id="tri-mask">
+        <rect width="100%" height="100%" fill="url(#tri-fade)"/>
+      </mask>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#tri)" mask="url(#tri-mask)"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-label">Programa de Innovación Digital · Grupo Corven · Plan de Adopción IA</div>
+    <h1 class="hero-title">Mapa de Procesos<br><span>de IA · 2027</span></h1>
+    <p class="hero-sub">Procesos de eficientización y automatización por área, encuadrados en los<br>niveles del Plan de Adopción IA. Documento de trabajo colaborativo · Comité IA.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-val"><em id="statTotal">0</em></span>
+        <span class="hero-stat-lbl">Procesos identificados</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-val"><em>5</em></span>
+        <span class="hero-stat-lbl">Áreas relevadas</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-val"><em>4</em></span>
+        <span class="hero-stat-lbl">Prioridades Fase 1</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-logo">GRUPO<br><strong>CORVEN</strong></div>
+</div>
+
+<!-- ===== STICKY NAV ===== -->
+<div class="sticky-nav">
+  <div class="nav-inner">
+    <div class="nav-tabs">
+      <button class="tab active" data-panel="area" onclick="switchTab(this)">Por Área</button>
+      <button class="tab" data-panel="capa" onclick="switchTab(this)">Por Capa PAI</button>
+    </div>
+    <div class="nav-actions">
+      <span id="saveIndicator"></span>
+      <button class="btn" onclick="openAddModal()">+ Agregar proceso</button>
+      <button class="btn" onclick="window.print()">Imprimir</button>
+      <button class="btn" onclick="exportData()">Exportar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAI FRAMEWORK BANNER ===== -->
+<div class="fw-banner">
+  <div class="fw-title">Marco de referencia — Niveles del Plan de Adopción IA</div>
+  <div class="fw-levels">
+    <div class="fw-level">
+      <span class="fw-num">01</span>
+      <div class="fw-level-text">
+        <span class="fw-level-name">Uso básico</span>
+        <span class="fw-level-desc">Copilot bundled en M365. Toda la empresa. Chat y síntesis.</span>
+      </div>
+    </div>
+    <div class="fw-level">
+      <span class="fw-num">02</span>
+      <div class="fw-level-text">
+        <span class="fw-level-name">Opt. individual</span>
+        <span class="fw-level-desc">Copilot M365 Business en apps. Word, Excel, Outlook. Por olas.</span>
+      </div>
+    </div>
+    <div class="fw-level">
+      <span class="fw-num">03</span>
+      <div class="fw-level-text">
+        <span class="fw-level-name">Opt. avanzada</span>
+        <span class="fw-level-desc">Agentes internos del área. Copilot Studio. Caso de uso validado.</span>
+      </div>
+    </div>
+    <div class="fw-level">
+      <span class="fw-num">04</span>
+      <div class="fw-level-text">
+        <span class="fw-level-name">Automatización</span>
+        <span class="fw-level-desc">Flujos multi-sistema con IA. Power Automate. Procesos repetibles.</span>
+      </div>
+    </div>
+    <div class="fw-level">
+      <span class="fw-num">05</span>
+      <div class="fw-level-text">
+        <span class="fw-level-name">A medida</span>
+        <span class="fw-level-desc">Agentes custom. Desarrollo propio IT. Proyectos específicos.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FILTER BAR ===== -->
+<div class="filter-bar">
+  <span class="filter-label">Estado:</span>
+  <div class="filter-chips" id="statusFilters">
+    <button class="chip active" data-status="all" onclick="setStatusFilter(this, 'all')">Todos</button>
+    <button class="chip" data-status="a-relevar" onclick="setStatusFilter(this, 'a-relevar')">A relevar</button>
+    <button class="chip" data-status="en-mapeo" onclick="setStatusFilter(this, 'en-mapeo')">En mapeo</button>
+    <button class="chip" data-status="en-diseno" onclick="setStatusFilter(this, 'en-diseno')">En diseño</button>
+    <button class="chip" data-status="en-presupuesto" onclick="setStatusFilter(this, 'en-presupuesto')">En presupuesto</button>
+    <button class="chip" data-status="ejecutando" onclick="setStatusFilter(this, 'ejecutando')">Ejecutando</button>
+  </div>
+  <div class="filter-sep"></div>
+  <span class="filter-label">Capa:</span>
+  <div class="filter-chips" id="capaFilters">
+    <button class="chip active" data-capa="all" onclick="setCapaFilter(this, 'all')">Todas</button>
+    <button class="chip" data-capa="1" onclick="setCapaFilter(this, '1')">Nivel 1</button>
+    <button class="chip" data-capa="2.1" onclick="setCapaFilter(this, '2.1')">Nivel 2.1</button>
+    <button class="chip" data-capa="2.2" onclick="setCapaFilter(this, '2.2')">Nivel 2.2</button>
+    <button class="chip" data-capa="3" onclick="setCapaFilter(this, '3')">Nivel 3</button>
+    <button class="chip" data-capa="4" onclick="setCapaFilter(this, '4')">Nivel 4</button>
+  </div>
+  <span class="filter-count" id="filterCount"></span>
+</div>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+<!-- TAB: POR ÁREA -->
+<div class="tab-panel active" id="panel-area">
+  <div class="callout">
+    Este mapa se actualiza a medida que se relevan procesos con cada área. Los procesos <strong style="color:var(--ink)">"A relevar"</strong> son áreas donde se identificó potencial pero falta la entrevista de detalle. Usarlo en la sesión de trabajo con Fabiana y Sebastián para completar y alinear.
+  </div>
+  <div class="legend-row">
+    <span class="legend-item"><span class="status-badge s-a-relevar">A relevar</span> Potencial identificado — falta mapear</span>
+    <span class="legend-item"><span class="status-badge s-en-mapeo">En mapeo</span> Relevamiento en curso</span>
+    <span class="legend-item"><span class="status-badge s-en-diseno">En diseño</span> Proceso mapeado — diseñando solución</span>
+    <span class="legend-item"><span class="status-badge s-en-presupuesto">En presupuesto</span> Solución definida — armando BC</span>
+    <span class="legend-item"><span class="status-badge s-ejecutando">Ejecutando</span> En ejecución</span>
+  </div>
+  <div id="areaView"></div>
+</div>
+
+<!-- TAB: POR CAPA PAI -->
+<div class="tab-panel" id="panel-capa">
+  <div class="callout warn">
+    Vista estratégica: procesos agrupados por nivel PAI requerido. Un proceso puede aparecer en múltiples niveles. Útil para planificar el roll-out capa por capa.
+  </div>
+  <div id="capaView"></div>
+</div>
+
+</main>
+
+<!-- ===== MODAL ===== -->
+<div id="addModal">
+  <div class="modal-box">
+    <div class="modal-title">Agregar <span>proceso de IA</span></div>
+    <div class="modal-divider"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Área *</label>
+        <input type="text" id="f-area" class="form-input" placeholder="ej. Finanzas Corporativas" list="areaList">
+        <datalist id="areaList"></datalist>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estado *</label>
+        <select id="f-status" class="form-select">
+          <option value="a-relevar">A relevar</option>
+          <option value="en-mapeo">En mapeo</option>
+          <option value="en-diseno">En diseño</option>
+          <option value="en-presupuesto">En presupuesto</option>
+          <option value="ejecutando">Ejecutando</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Proceso / Nombre *</label>
+      <input type="text" id="f-proceso" class="form-input" placeholder="ej. Automatización del cierre contable mensual">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descripción</label>
+      <textarea id="f-desc" class="form-textarea" placeholder="Contexto, volumen de trabajo, quién lo hace hoy, pain point principal..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Referente del área</label>
+        <input type="text" id="f-referente" class="form-input" placeholder="ej. De Grandis / Cocurulo">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sponsor ejecutivo</label>
+        <input type="text" id="f-sponsor" class="form-input" placeholder="ej. Manuel Trigas">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Niveles PAI involucrados</label>
+      <div class="form-capas">
+        <span class="capa-toggle ct-1" data-capa="1" onclick="toggleCapa(this)">Nivel 1</span>
+        <span class="capa-toggle ct-21" data-capa="2.1" onclick="toggleCapa(this)">Nivel 2.1</span>
+        <span class="capa-toggle ct-22" data-capa="2.2" onclick="toggleCapa(this)">Nivel 2.2</span>
+        <span class="capa-toggle ct-3" data-capa="3" onclick="toggleCapa(this)">Nivel 3</span>
+        <span class="capa-toggle ct-4" data-capa="4" onclick="toggleCapa(this)">Nivel 4</span>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">OPP vinculada</label>
+        <input type="text" id="f-opp" class="form-input" placeholder="ej. OPP-148">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fase estimada</label>
+        <select id="f-fase" class="form-select">
+          <option value="Fase 1 — 2027">Fase 1 — 2027</option>
+          <option value="Fase 2 — 2027">Fase 2 — 2027</option>
+          <option value="Fase 1+2 — 2027">Fase 1+2 — 2027</option>
+          <option value="2027+">2027+</option>
+          <option value="En curso — 2026">En curso — 2026</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nota / Contexto adicional</label>
+      <input type="text" id="f-nota" class="form-input" placeholder="ej. Pablo Cocurulo ya está mapeando — hay punto de entrada concreto">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fuente (quién / cuándo)</label>
+      <input type="text" id="f-fuente" class="form-input" placeholder="ej. Manuel Trigas · 26/08/2026">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-cancel" onclick="closeAddModal()">Cancelar</button>
+      <button class="btn btn-brand" onclick="addProcess()">Agregar proceso</button>
+    </div>
+  </div>
+</div>
+
+<div id="copyAlert">Datos copiados al portapapeles</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   SUPABASE
+   ══════════════════════════════════════════════════════════════ */
+const SB_URL  = 'https://wpmxxoojxtilgqbhymji.supabase.co';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndwbXh4b29qeHRpbGdxYmh5bWppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MzAzOTUsImV4cCI6MjEwNTUwNjM5NX0.TurznBdylkCfb3JMHbMeg_phfdaiwjJVE44x3dPsvNg';
+const SB_ROW  = 'mapa-procesos-data';
+const { createClient } = supabase;
+const sbClient = createClient(SB_URL, SB_KEY);
+
+let saveTimer = null;
+
+function showSaveIndicator(msg) {
+  const el = document.getElementById('saveIndicator');
+  el.textContent = msg; el.classList.add('show');
+}
+function hideSaveIndicator(delay = 2000) {
+  setTimeout(() => {
+    const el = document.getElementById('saveIndicator');
+    el.classList.remove('show');
+  }, delay);
+}
+
+async function loadFromSupabase() {
+  showSaveIndicator('Cargando…');
+  const { data, error } = await sbClient.from('sections').select('content').eq('id', SB_ROW).single();
+  hideSaveIndicator(0);
+  if (error || !data) return;
+  try {
+    const saved = JSON.parse(data.content || '[]');
+    if (Array.isArray(saved) && saved.length > 0) PROCESOS = saved;
+  } catch(e) {}
+}
+
+async function saveProcesos() {
+  showSaveIndicator('Guardando…');
+  await sbClient.from('sections').upsert({
+    id: SB_ROW,
+    content: JSON.stringify(PROCESOS),
+    updated_at: new Date().toISOString()
+  });
+  showSaveIndicator('Guardado ✓');
+  hideSaveIndicator();
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveProcesos, 400);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DATOS
+   ══════════════════════════════════════════════════════════════ */
+let PROCESOS = [
+  {
+    id: 'P001',
+    area: 'Finanzas Corporativas',
+    proceso: 'Automatización de business cases y presupuestación',
+    descripcion: 'De Grandis y Cocurulo generan todos los business cases y flujos de caja de Corven de forma completamente manual. IA puede automatizar la armado de escenarios, presupuestos y análisis que Leandro pide con frecuencia.',
+    opp: 'OPP-148',
+    referente: 'De Grandis / Cocurulo',
+    sponsor: 'Manuel Trigas',
+    capas: ['2.1', '3'],
+    prioridad: 1,
+    fase: 'Fase 1 — 2027',
+    status: 'a-relevar',
+    fuente: 'Manuel Trigas · 26/08/2026',
+    nota: '1ª prioridad Fase 1 según Manuel. Equipo muy motivado ("te quema la cabeza todo el día"). Arrancar por Copilot sin esperar Data Lake.'
+  },
+  {
+    id: 'P002',
+    area: 'Finanzas Corporativas',
+    proceso: 'Conciliación de datos financieros cross-sociedad',
+    descripcion: 'En reuniones con Leandro, distintas personas presentan números distintos para la misma pregunta. Un mes de recursos para conciliar una cifra que debería ser automática (caso Aduana: $15M vs $9M).',
+    opp: 'OPP-136',
+    referente: 'De Grandis / Manuel Trigas',
+    sponsor: 'Manuel Trigas',
+    capas: ['3'],
+    prioridad: 1,
+    fase: 'Fase 1 — 2027',
+    status: 'a-relevar',
+    fuente: 'Manuel Trigas · 26/08/2026',
+    nota: 'Depende de SAP Ola 2 + Data Lake. Diseñar el proceso de automatización ya, aunque la ejecución sea 2027.'
+  },
+  {
+    id: 'P003',
+    area: 'Tesorería y Operaciones',
+    proceso: 'Automatización tesorería y cuentas corrientes',
+    descripcion: 'Javier Galante y Pato Ribes identificados como referentes de automatización en tesorería. Convergencia de apps genera necesidad urgente de flujos automáticos entre sistemas.',
+    opp: '',
+    referente: 'Javier Galante / Pato Ribes',
+    sponsor: 'Nicolás Ballestrero',
+    capas: ['3'],
+    prioridad: 2,
+    fase: 'Fase 1 — 2027',
+    status: 'a-relevar',
+    fuente: 'Nicolás Ballestrero · 27/08/2026',
+    nota: 'Mencionado por Nicolás como área con "más health operativo". Relevar proceso específico con Javier y Pato.'
+  },
+  {
+    id: 'P004',
+    area: 'Legal',
+    proceso: 'Gestión de causas, jurisprudencia y seguimiento de vencimientos',
+    descripcion: '15 personas · procesos 100% manuales. Búsqueda de causas y jurisprudencia, seguimiento de vencimientos, gestión de expedientes. Benchmark Coto: buscadores internos redujeron tiempos significativamente sin IA generativa.',
+    opp: 'OPP-146',
+    referente: 'Referente Legal (a confirmar)',
+    sponsor: 'Manuel Trigas',
+    capas: ['2.2', '4'],
+    prioridad: 2,
+    fase: 'Fase 1 — 2027',
+    status: 'a-relevar',
+    fuente: 'Manuel Trigas · 26/08/2026',
+    nota: '2ª prioridad Fase 1. 15 personas = masa crítica. RAG sobre corpus documental legal.'
+  },
+  {
+    id: 'P005',
+    area: 'Legal',
+    proceso: 'Digitalización y repositorio de expedientes y contratos',
+    descripcion: 'Expedientes, contratos y documentación legal dispersa en personas. Sin repositorio central accesible. Precondición para cualquier solución IA sobre el corpus legal.',
+    opp: 'OPP-146',
+    referente: 'Referente Legal (a confirmar)',
+    sponsor: 'Manuel Trigas',
+    capas: ['2.2'],
+    prioridad: 2,
+    fase: 'Fase 1 — 2027',
+    status: 'a-relevar',
+    fuente: 'Manuel Trigas · 26/08/2026',
+    nota: 'Paso previo a P004. Mapear dónde están los documentos, quién los tiene, formatos.'
+  },
+  {
+    id: 'P006',
+    area: 'Creditech',
+    proceso: 'Aceleración del cierre contable mensual',
+    descripcion: 'Cierre contable de Creditech lento por procesos manuales y falta de interfaz entre sistema comercial (Flexus/Sirenio) y contabilidad SAP. Pablo Cocurulo / Pablo Castelli ya están mapeando el proceso.',
+    opp: 'OPP-147',
+    referente: 'Pablo Cocurulo / Pablo Castelli',
+    sponsor: 'Manuel Trigas · Javier Galante',
+    capas: ['3'],
+    prioridad: 4,
+    fase: 'Fase 1 — 2027',
+    status: 'en-mapeo',
+    fuente: 'Manuel Trigas · 26/08/2026',
+    nota: 'Pablo Castelli tiene proyecto "Aceleración Contable Creditech" en marcha. Punto de entrada concreto — no empezar de cero.'
+  },
+  {
+    id: 'P007',
+    area: 'IT / Sistemas',
+    proceso: 'Agente IA de soporte IT interno — EvoluX',
+    descripcion: 'Agente conversacional interno que resuelve consultas del helpdesk de IT, documentación técnica y procedimientos internos. Reduce carga del equipo de soporte y acelera resolución.',
+    opp: 'OPP-029',
+    referente: 'Fabiana González / Nicolás Ballestrero',
+    sponsor: 'Nicolás Ballestrero',
+    capas: ['4'],
+    prioridad: 3,
+    fase: 'En curso — 2026',
+    status: 'en-diseno',
+    fuente: 'INI-006 · Fabiana González',
+    nota: 'Iniciativa INI-006 activa. Evolux como proveedor. Diseño en curso.'
+  },
+  {
+    id: 'P008',
+    area: 'IT / Sistemas',
+    proceso: 'Evolución de RPAs existentes con IA generativa',
+    descripcion: 'Corven tiene RPAs en funcionamiento. Incorporar IA generativa permite extender los RPAs a procesos que hoy requieren juicio humano: clasificación de documentos, extracción de datos no estructurados, gestión de excepciones.',
+    opp: 'OPP-054',
+    referente: 'Fabiana González',
+    sponsor: 'Nicolás Ballestrero',
+    capas: ['3', '4'],
+    prioridad: 3,
+    fase: 'Fase 1 — 2027',
+    status: 'en-diseno',
+    fuente: 'PID · OPP-054',
+    nota: 'Identificar qué RPAs tienen excepciones manuales frecuentes — ahí entra la IA. Quick wins de alto impacto.'
+  },
+  {
+    id: 'P009',
+    area: 'IT / Sistemas',
+    proceso: 'IA en desarrollo de software — asistentes de código',
+    descripcion: 'El equipo de desarrollo IT ya usa Claude Enterprise (13 personas con licencias personales). Formalizar y escalar: licencias corporativas Anthropic, gobernanza de uso, métricas de adopción.',
+    opp: 'OPP-029',
+    referente: 'Fabiana González / Nicolás Ballestrero',
+    sponsor: 'Nicolás Ballestrero',
+    capas: ['4'],
+    prioridad: 3,
+    fase: 'En curso — 2026',
+    status: 'ejecutando',
+    fuente: 'Fabiana González · Julio 2026',
+    nota: '13 personas de IT usan Claude con licencia personal. Urgente corporativizar antes de que crezca el riesgo de datos y costos.'
+  },
+  {
+    id: 'P010',
+    area: 'Todos — Adopción individual',
+    proceso: 'Adopción Copilot M365 — Ola 1 (75 personas Movilidad)',
+    descripcion: 'Rollout de Copilot M365 Business a las 75 personas del universo piloto (Grupo Corven Movilidad). Capacitación 12-15h + 2 meses de acompañamiento. Proveedor: Mari (recomendación Newsan).',
+    opp: 'OPP-063',
+    referente: 'Catalina Burgio / Nicolás Ballestrero',
+    sponsor: 'Leandro Iraola / Nicolás Ballestrero',
+    capas: ['1', '2.1'],
+    prioridad: 0,
+    fase: 'En curso — 2026',
+    status: 'en-diseno',
+    fuente: 'INI-003 · PAI Fase 0',
+    nota: 'Capa base del programa. 75 licencias × $28/mes × 4 meses (sept-dic 2026).'
+  }
+];
+
+/* ══════════ FILTROS ══════════ */
+let activeStatus = 'all';
+let activeCapa   = 'all';
+
+/* ══════════ ÁREAS ══════════ */
+const AREAS = [
+  { key: 'Todos — Adopción individual', label: 'Todos — Adopción Individual', prioLabel: 'Base del programa', prioClass: 'pbase', desc: 'Copilot M365 para todos · Ola 1: 75 personas Movilidad' },
+  { key: 'Finanzas Corporativas',       label: 'Finanzas Corporativas',       prioLabel: 'Prioridad 1 · Fase 1', prioClass: '',     desc: 'De Grandis · Cocurulo · Galante CFO' },
+  { key: 'Tesorería y Operaciones',     label: 'Tesorería y Operaciones',     prioLabel: 'Prioridad 2 · Fase 1', prioClass: 'p2',   desc: 'Javier Galante · Pato Ribes' },
+  { key: 'Legal',                       label: 'Legal',                       prioLabel: 'Prioridad 2 · Fase 1', prioClass: 'p2',   desc: '15 personas · Manuel Trigas sponsor' },
+  { key: 'IT / Sistemas',               label: 'IT / Sistemas',               prioLabel: 'Prioridad 3 · Fase 1', prioClass: 'p3',   desc: 'Fabiana González · Nicolás Ballestrero' },
+  { key: 'Creditech',                   label: 'Creditech',                   prioLabel: 'Prioridad 4 · Fase 1', prioClass: 'p4',   desc: 'Pablo Cocurulo · Pablo Castelli' },
+];
+
+const AREAS_RELEVAR = ['RRHH','Compras y Supply Chain','Marketing y Comunicaciones','Producción / Industrial','Energía y Family Office (2027+)'];
+
+/* ══════════ CAPAS ══════════ */
+const CAPAS = [
+  { key: '1',   label: 'Nivel 1 — Uso básico',               sub: 'Copilot bundled · toda la empresa · chat, síntesis, redacción', cls: 'bg-c1' },
+  { key: '2.1', label: 'Nivel 2.1 — Optimización individual', sub: 'Copilot M365 Business · in-app · por olas', cls: 'bg-c21' },
+  { key: '2.2', label: 'Nivel 2.2 — Optimización avanzada',   sub: 'Copilot Studio · agentes internos · casos validados', cls: 'bg-c22' },
+  { key: '3',   label: 'Nivel 3 — Automatización de procesos', sub: 'Power Automate + IA · flujos multi-sistema · procesos repetibles', cls: 'bg-c3' },
+  { key: '4',   label: 'Nivel 4 — Soluciones a medida',        sub: 'Agentes custom · desarrollo IT · proyectos específicos', cls: 'bg-c4' },
+];
+
+/* ══════════ HELPERS ══════════ */
+function statusLabel(s) {
+  return {'a-relevar':'A relevar','en-mapeo':'En mapeo','en-diseno':'En diseño','en-presupuesto':'En presupuesto','ejecutando':'Ejecutando'}[s]||s;
+}
+function capaClass(c) { return {'1':'capa-1','2.1':'capa-21','2.2':'capa-22','3':'capa-3','4':'capa-4'}[c]||''; }
+function capaLabel(c) { return {'1':'Niv. 1','2.1':'Niv. 2.1','2.2':'Niv. 2.2','3':'Niv. 3','4':'Niv. 4'}[c]||c; }
+function matchesFilters(p) {
+  return (activeStatus==='all'||p.status===activeStatus) && (activeCapa==='all'||(p.capas||[]).includes(activeCapa));
+}
+function getNextId() {
+  const nums = PROCESOS.map(p=>parseInt(p.id.replace('P',''),10)).filter(n=>!isNaN(n));
+  return 'P'+String((nums.length?Math.max(...nums):0)+1).padStart(3,'0');
+}
+
+/* ══════════ RENDER ÁREA ══════════ */
+function renderAreaView() {
+  const container = document.getElementById('areaView');
+  let html = '';
+  let num = 0;
+
+  for (const area of AREAS) {
+    const procs = PROCESOS.filter(p => p.area === area.key && matchesFilters(p));
+    const allProcs = PROCESOS.filter(p => p.area === area.key);
+    if ((activeCapa !== 'all' || activeStatus !== 'all') && procs.length === 0) continue;
+    num++;
+    const n = String(num).padStart(2,'0');
+
+    html += `<div class="area-section" data-area="${area.key}">
+      <div class="area-header">
+        <div class="area-number">${n}.</div>
+        <div class="area-header-text">
+          <span class="area-underline"></span>
+          <span class="area-title">${area.label}</span>
+          <span class="area-desc-text">${area.desc}</span>
+        </div>
+        <div class="area-meta">
+          <span class="priority-badge ${area.prioClass}">${area.prioLabel}</span>
+          <span class="proc-count">${allProcs.length} proceso${allProcs.length!==1?'s':''}</span>
+        </div>
+      </div>
+      <hr class="area-rule">`;
+
+    if (procs.length === 0) {
+      html += `<div style="color:var(--muted);font-size:13px;padding:8px 0">Sin procesos para el filtro activo — hay ${allProcs.length} en esta área.</div>`;
+    } else {
+      html += `<div class="process-grid">`;
+      procs.forEach(p => { html += renderCard(p); });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+
+  // Áreas a relevar
+  const knownAreas = AREAS.map(a => a.key);
+  const extraProcs = PROCESOS.filter(p => !knownAreas.includes(p.area) && matchesFilters(p));
+  if (activeStatus === 'all' && activeCapa === 'all') {
+    num++;
+    const n = String(num).padStart(2,'0');
+    html += `<div class="area-section">
+      <div class="area-header">
+        <div class="area-number">${n}.</div>
+        <div class="area-header-text">
+          <span class="area-underline"></span>
+          <span class="area-title">Otras áreas — Pendientes de relevamiento</span>
+          <span class="area-desc-text">Áreas identificadas con potencial de automatización — entrevista pendiente</span>
+        </div>
+        <div class="area-meta">
+          <span class="priority-badge pid">Sin proceso mapeado</span>
+        </div>
+      </div>
+      <hr class="area-rule">`;
+
+    if (extraProcs.length > 0) {
+      html += `<div class="process-grid">`;
+      extraProcs.forEach(p => { html += renderCard(p); });
+      html += `</div>`;
+    } else {
+      html += `<div class="areas-relevar-grid">`;
+      AREAS_RELEVAR.forEach(a => {
+        html += `<div class="area-relevar-card">
+          <div class="area-relevar-title">${a}</div>
+          <div class="area-relevar-sub">Sin proceso mapeado</div>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function renderCard(p) {
+  const badges = (p.capas||[]).map(c=>`<span class="capa-badge ${capaClass(c)}">${capaLabel(c)}</span>`).join('');
+  const note = p.nota ? `<div class="card-note">${p.nota}</div>` : '';
+  const opp  = p.opp  ? `<span><span class="opp-link">${p.opp}</span></span>` : '';
+  const ref  = p.referente ? `<span>👤 ${p.referente}</span>` : '';
+  const spon = p.sponsor   ? `<span>★ ${p.sponsor}</span>` : '';
+  const fase = p.fase      ? `<span>${p.fase}</span>` : '';
+  const fnt  = p.fuente    ? `<span>📋 ${p.fuente}</span>` : '';
+  return `<div class="process-card" data-status="${p.status}" data-capas="${(p.capas||[]).join(',')}">
+    <div class="card-top">
+      <span class="card-id">${p.id}</span>
+      <span class="status-badge s-${p.status}">${statusLabel(p.status)}</span>
+    </div>
+    <div class="card-proceso">${p.proceso}</div>
+    ${p.descripcion?`<div class="card-desc">${p.descripcion}</div>`:''}
+    <div class="card-capas">${badges}</div>
+    ${note}
+    <div class="card-footer">${opp}${ref}${spon}${fase}${fnt}</div>
+    <div class="card-actions">
+      <button class="card-btn" onclick="editProcess('${p.id}')">Editar</button>
+      <button class="card-btn card-btn-del" onclick="deleteProcess('${p.id}')">Eliminar</button>
+    </div>
+  </div>`;
+}
+
+/* ══════════ RENDER CAPA ══════════ */
+function renderCapaView() {
+  const container = document.getElementById('capaView');
+  let html = '';
+  for (const capa of CAPAS) {
+    if (activeCapa !== 'all' && activeCapa !== capa.key) continue;
+    const procs = PROCESOS.filter(p => (p.capas||[]).includes(capa.key) && (activeStatus==='all'||p.status===activeStatus));
+    html += `<div class="capa-block">
+      <div class="capa-block-header ${capa.cls}">
+        <div><h3>${capa.label}</h3><div class="capa-sub">${capa.sub}</div></div>
+        <div class="capa-count">${procs.length} proceso${procs.length!==1?'s':''}</div>
+      </div>
+      <div class="capa-block-body">`;
+    if (procs.length === 0) {
+      html += `<div style="color:var(--muted);font-size:13px;padding:4px 0">Sin procesos para el filtro activo.</div>`;
+    } else {
+      html += `<div class="capa-cards">`;
+      procs.forEach(p => {
+        html += `<div class="capa-mini">
+          <div class="capa-mini-top">
+            <span class="capa-mini-area">${p.area}</span>
+            <span class="status-badge s-${p.status}" style="margin-left:auto;flex-shrink:0">${statusLabel(p.status)}</span>
+          </div>
+          <div class="capa-mini-proceso">${p.proceso}</div>
+          ${p.descripcion?`<div class="capa-mini-desc">${p.descripcion.substring(0,120)}${p.descripcion.length>120?'…':''}</div>`:''}
+          ${p.referente?`<div style="font-size:11.5px;color:var(--muted)">👤 ${p.referente}${p.opp?' · <strong style="color:var(--brand)">'+p.opp+'</strong>':''}</div>`:''}
+        </div>`;
+      });
+      html += `</div>`;
+    }
+    html += `</div></div>`;
+  }
+  container.innerHTML = html;
+}
+
+/* ══════════ COUNTER ══════════ */
+function updateCounter() {
+  const total = PROCESOS.length;
+  const visible = PROCESOS.filter(matchesFilters).length;
+  document.getElementById('filterCount').textContent = visible + ' de ' + total + ' procesos';
+  const st = document.getElementById('statTotal');
+  if (st) st.textContent = total;
+}
+
+function renderAll() {
+  renderAreaView();
+  renderCapaView();
+  updateCounter();
+  updateAreaDatalist();
+}
+
+/* ══════════ TABS ══════════ */
+function switchTab(el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+el.dataset.panel).classList.add('active');
+}
+
+/* ══════════ FILTERS ══════════ */
+function setStatusFilter(el, val) {
+  activeStatus = val;
+  document.querySelectorAll('#statusFilters .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+function setCapaFilter(el, val) {
+  activeCapa = val;
+  document.querySelectorAll('#capaFilters .chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+
+/* ══════════ MODAL ══════════ */
+let selectedCapas = [];
+let editingId = null;
+
+function openAddModal(id = null) {
+  editingId = id;
+  selectedCapas = [];
+  document.querySelectorAll('.capa-toggle').forEach(t => t.classList.remove('selected'));
+
+  if (id) {
+    const p = PROCESOS.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('f-area').value      = p.area || '';
+    document.getElementById('f-proceso').value   = p.proceso || '';
+    document.getElementById('f-desc').value      = p.descripcion || '';
+    document.getElementById('f-referente').value = p.referente || '';
+    document.getElementById('f-sponsor').value   = p.sponsor || '';
+    document.getElementById('f-opp').value       = p.opp || '';
+    document.getElementById('f-nota').value      = p.nota || '';
+    document.getElementById('f-fuente').value    = p.fuente || '';
+    document.getElementById('f-status').value    = p.status || 'a-relevar';
+    document.getElementById('f-fase').value      = p.fase || 'Fase 1 — 2027';
+    selectedCapas = [...(p.capas || [])];
+    document.querySelectorAll('.capa-toggle').forEach(t => {
+      if (selectedCapas.includes(t.dataset.capa)) t.classList.add('selected');
+    });
+    document.querySelector('.modal-title').innerHTML = 'Editar <span>proceso de IA</span>';
+    document.querySelector('.modal-footer .btn-brand').textContent = 'Guardar cambios';
+  } else {
+    ['f-area','f-proceso','f-desc','f-referente','f-sponsor','f-opp','f-nota','f-fuente'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    document.getElementById('f-status').value = 'a-relevar';
+    document.getElementById('f-fase').value   = 'Fase 1 — 2027';
+    document.querySelector('.modal-title').innerHTML = 'Agregar <span>proceso de IA</span>';
+    document.querySelector('.modal-footer .btn-brand').textContent = 'Agregar proceso';
+  }
+  document.getElementById('addModal').classList.add('show');
+}
+
+function closeAddModal() { document.getElementById('addModal').classList.remove('show'); editingId = null; }
+
+function toggleCapa(el) {
+  const c = el.dataset.capa;
+  if (selectedCapas.includes(c)) { selectedCapas = selectedCapas.filter(x => x !== c); el.classList.remove('selected'); }
+  else { selectedCapas.push(c); el.classList.add('selected'); }
+}
+
+function addProcess() {
+  const area    = document.getElementById('f-area').value.trim();
+  const proceso = document.getElementById('f-proceso').value.trim();
+  if (!area || !proceso) { alert('Área y nombre del proceso son requeridos.'); return; }
+
+  const data = {
+    area, proceso,
+    descripcion: document.getElementById('f-desc').value.trim(),
+    opp:         document.getElementById('f-opp').value.trim(),
+    referente:   document.getElementById('f-referente').value.trim(),
+    sponsor:     document.getElementById('f-sponsor').value.trim(),
+    capas:       [...selectedCapas].sort(),
+    fase:        document.getElementById('f-fase').value,
+    status:      document.getElementById('f-status').value,
+    fuente:      document.getElementById('f-fuente').value.trim(),
+    nota:        document.getElementById('f-nota').value.trim()
+  };
+
+  if (editingId) {
+    const idx = PROCESOS.findIndex(p => p.id === editingId);
+    if (idx !== -1) PROCESOS[idx] = { ...PROCESOS[idx], ...data };
+  } else {
+    PROCESOS.push({ id: getNextId(), prioridad: 99, ...data });
+  }
+
+  closeAddModal();
+  renderAll();
+  scheduleSave();
+}
+
+function editProcess(id) { openAddModal(id); }
+
+function deleteProcess(id) {
+  const p = PROCESOS.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`¿Eliminar el proceso "${p.proceso}"?`)) return;
+  PROCESOS = PROCESOS.filter(x => x.id !== id);
+  renderAll();
+  scheduleSave();
+}
+function updateAreaDatalist() {
+  const areas=[...new Set(PROCESOS.map(p=>p.area)),...AREAS.map(a=>a.key)].filter(Boolean);
+  document.getElementById('areaList').innerHTML=areas.map(a=>`<option value="${a}">`).join('');
+}
+document.getElementById('addModal').addEventListener('click',function(e){if(e.target===this)closeAddModal();});
+
+/* ══════════ EXPORT ══════════ */
+function exportData() {
+  const text=JSON.stringify(PROCESOS,null,2);
+  navigator.clipboard.writeText(text).then(()=>{
+    const el=document.getElementById('copyAlert');
+    el.classList.add('show');
+    setTimeout(()=>el.classList.remove('show'),2500);
+  }).catch(()=>{
+    const a=document.createElement('a');
+    a.href='data:text/json;charset=utf-8,'+encodeURIComponent(text);
+    a.download='procesos-ia-2027.json';
+    a.click();
+  });
+}
+
+/* ══════════ INIT ══════════ */
+(async () => {
+  await loadFromSupabase();
+  renderAll();
+})();
+</script>
+</body>
+</html>

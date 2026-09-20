@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consolidado Procesos — PID Etapa 2</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --navy: #1A1A2E;
+    --orange: #E85020;
+    --orange-light: #fef3ef;
+    --gray-bg: #F4F5F7;
+    --gray-mid: #8A94A6;
+    --gray-border: #DDE1E9;
+    --green: #0FA570;
+    --yellow: #F5A623;
+    --red: #E8302E;
+    --purple: #6C5CE7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--gray-bg); color: #1A1A2E; font-size: 14px; }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--navy);
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 52px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar .logo { font-weight: 700; font-size: 15px; letter-spacing: .5px; }
+  .topbar .logo span { color: var(--orange); }
+  .topbar .subtitle { font-size: 12px; opacity: .7; flex: 1; }
+  .topbar .last-sync { font-size: 11px; opacity: .5; }
+  .topbar button {
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .topbar button.sec {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,.3);
+  }
+  .topbar button:hover { opacity: .85; }
+
+  /* LAYOUT */
+  .container { max-width: 1300px; margin: 0 auto; padding: 24px 20px; }
+
+  /* CARDS RESUMEN */
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .summary-card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid var(--gray-border);
+  }
+  .summary-card .num { font-size: 28px; font-weight: 700; line-height: 1; }
+  .summary-card .lbl { font-size: 11px; color: var(--gray-mid); margin-top: 4px; text-transform: uppercase; letter-spacing: .4px; }
+  .summary-card.green .num { color: var(--green); }
+  .summary-card.orange .num { color: var(--orange); }
+  .summary-card.yellow .num { color: var(--yellow); }
+  .summary-card.red .num { color: var(--red); }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    margin-top: 28px;
+  }
+  .section-title { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .section-hint { font-size: 11px; color: var(--gray-mid); }
+
+  /* TABLE */
+  .table-wrap { background: white; border-radius: 10px; border: 1px solid var(--gray-border); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--navy);
+    color: rgba(255,255,255,.85);
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    white-space: nowrap;
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--gray-border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--orange-light); }
+
+  .rank-badge {
+    display: inline-flex;
+    width: 24px; height: 24px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--navy);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .rank-badge.top { background: var(--orange); }
+
+  .score-bar-wrap { display: flex; align-items: center; gap: 8px; min-width: 100px; }
+  .score-bar { flex: 1; height: 6px; background: var(--gray-border); border-radius: 3px; overflow: hidden; }
+  .score-bar-fill { height: 100%; border-radius: 3px; background: var(--orange); }
+  .score-bar-fill.hi { background: var(--green); }
+  .score-bar-fill.med { background: var(--yellow); }
+  .score-bar-fill.lo { background: var(--red); }
+  .score-num { font-weight: 700; font-size: 13px; min-width: 28px; text-align: right; }
+
+  /* STATUS PILL */
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pill.completed { background: #e6f9f1; color: var(--green); }
+  .pill.discarded { background: #fde8e8; color: var(--red); }
+  .pill.in-progress { background: #fff7e6; color: var(--yellow); }
+  .pill.early { background: #f0f0ff; color: var(--purple); }
+
+  /* 2x2 MATRIX */
+  .matrix-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 28px;
+  }
+  .matrix-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--gray-border);
+    padding: 20px;
+  }
+  .matrix-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 16px; color: var(--navy); }
+
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    height: 320px;
+    position: relative;
+  }
+  .matrix-axis-y {
+    position: absolute;
+    left: -44px;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 11px;
+    color: var(--gray-mid);
+    font-weight: 600;
+    letter-spacing: .5px;
+    gap: 4px;
+  }
+  .matrix-axis-x {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--gray-mid);
+    font-weight: 600;
+    letter-spacing: .5px;
+  }
+  .matrix-quadrant {
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .q-tl { background: #fff7e6; } /* alto impacto, alta factibilidad → Hacer ya */
+  .q-tr { background: #e6f9f1; } /* alto impacto, baja factibilidad → Apostar */
+  .q-bl { background: #f0f0ff; } /* bajo impacto, alta factibilidad → Optimizar */
+  .q-br { background: #fde8e8; } /* bajo impacto, baja factibilidad → Cuestionar */
+  .q-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    opacity: .6;
+    margin-bottom: 2px;
+  }
+  .q-dot {
+    background: white;
+    border-radius: 4px;
+    padding: 3px 6px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  }
+  .matrix-wrap { position: relative; padding-left: 50px; }
+
+  /* CHART BARRAS */
+  .bar-chart { display: flex; flex-direction: column; gap: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-row .bar-label { font-size: 11px; width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--navy); }
+  .bar-row .bar-track { flex: 1; height: 20px; background: var(--gray-bg); border-radius: 4px; overflow: hidden; }
+  .bar-row .bar-fill { height: 100%; border-radius: 4px; background: var(--orange); display: flex; align-items: center; padding-left: 8px; }
+  .bar-row .bar-val { font-size: 11px; font-weight: 700; color: white; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gray-mid);
+  }
+  .empty-state h3 { font-size: 16px; margin-bottom: 8px; color: var(--navy); }
+  .empty-state p { font-size: 13px; line-height: 1.6; }
+  .empty-state a { color: var(--orange); text-decoration: none; font-weight: 600; }
+
+  /* PRINT */
+  @media print {
+    .topbar { position: static; }
+    .topbar button { display: none; }
+    body { background: white; }
+    .matrix-section { page-break-before: always; }
+  }
+
+  /* SORT INDICATOR */
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { background: #2a2a4a; }
+  th.sort-asc::after { content: ' ↑'; }
+  th.sort-desc::after { content: ' ↓'; }
+
+  .filter-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .filter-row select, .filter-row input {
+    padding: 6px 10px;
+    border: 1px solid var(--gray-border);
+    border-radius: 6px;
+    font-size: 12px;
+    background: white;
+    color: var(--navy);
+  }
+  .filter-row label { font-size: 12px; color: var(--gray-mid); align-self: center; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">CORVEN <span>PID</span></div>
+  <div class="subtitle">Consolidado de Procesos — Etapa 2</div>
+  <span class="last-sync" id="lastSync"></span>
+  <button class="sec" onclick="window.location.href='wizard.html'">← Volver al Wizard</button>
+  <button onclick="exportCSV()">↓ Exportar CSV</button>
+  <button onclick="window.print()">Imprimir</button>
+</div>
+
+<div class="container" id="mainContent">
+  <!-- se llena por JS -->
+</div>
+
+<script>
+const SB_URL = 'https://wpmxxoojxtilgqbhymji.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndwbXh4b29qeHRpbGdxYmh5bWppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MzAzOTUsImV4cCI6MjEwNTUwNjM5NX0.TurznBdylkCfb3JMHbMeg_phfdaiwjJVE44x3dPsvNg';
+const { createClient } = supabase;
+const sbClient = createClient(SB_URL, SB_KEY);
+
+async function loadDB() {
+  try {
+    const { data, error } = await sbClient.from('sections').select('content').eq('id', 'wizard-db').single();
+    if (error || !data) return {};
+    return JSON.parse(data.content || '{}');
+  } catch(e) { return {}; }
+}
+
+let sortCol = 'score';
+let sortDir = 'desc';
+let filterArea = '';
+let filterStatus = '';
+
+const STATUS_LABEL = {
+  preA: 'Pre-análisis A', preB: 'Pre-análisis B', killGate1: 'Kill Gate 1',
+  preC: 'Pre-análisis C', realign: 'Re-alineamiento', killGate2: 'Kill Gate 2',
+  paso1: 'Paso 1', paso2: 'Paso 2', killGate3: 'Kill Gate 3',
+  paso3: 'Paso 3', paso4: 'Paso 4', signoff: 'Sign-off',
+  completed: 'Completado', discarded: 'Descartado'
+};
+
+function loadDB() {
+  try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; }
+  catch(e) { return {}; }
+}
+
+function calcScore(p) {
+  const d = p.paso2 || {};
+  let s = 0;
+  const ben = parseFloat(d.beneficioBase) || 0;
+  const inv = parseFloat(d.inversionEstimada) || 0;
+  if (inv > 0) {
+    const ratio = ben / inv;
+    s += ratio >= 3 ? 40 : ratio >= 2 ? 30 : ratio >= 1 ? 20 : ratio > 0 ? 10 : 0;
+  }
+  const pb = parseInt(d.paybackMeses) || 0;
+  s += pb > 0 && pb <= 12 ? 25 : pb <= 24 ? 18 : pb <= 36 ? 10 : pb > 36 ? 3 : 0;
+  const fac = (p.paso1 || {}).factibilidadIT || '';
+  s += fac === 'Alta' ? 20 : fac === 'Media' ? 10 : 0;
+  const conf = d.confianzaDato || '';
+  s += conf === 'Medido' ? 15 : conf === 'Validado con área' ? 10 : conf === 'Estimación informada' ? 5 : 0;
+  return Math.min(s, 100);
+}
+
+function getImpact(p) {
+  const d = p.paso2 || {};
+  const ben = parseFloat(d.beneficioBase) || 0;
+  const inv = parseFloat(d.inversionEstimada) || 0;
+  if (inv > 0) return ben / inv;
+  return 0;
+}
+
+function getFeasibility(p) {
+  const fac = (p.paso1 || {}).factibilidadIT || '';
+  return fac === 'Alta' ? 3 : fac === 'Media' ? 2 : fac === 'Baja' ? 1 : 0;
+}
+
+function statusPillClass(s) {
+  if (s === 'completed') return 'completed';
+  if (s === 'discarded') return 'discarded';
+  if (s === 'paso3' || s === 'paso4' || s === 'signoff') return 'in-progress';
+  return 'early';
+}
+
+function statusGroup(s) {
+  if (s === 'completed') return 'Completado';
+  if (s === 'discarded') return 'Descartado';
+  if (['paso1','paso2','killGate3','paso3','paso4','signoff'].includes(s)) return 'En análisis';
+  return 'En exploración';
+}
+
+function fmt(n) {
+  if (!n) return '—';
+  return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(n);
+}
+
+async function allProcesses() {
+  const db = await loadDB();
+  return Object.values(db).map(p => ({ ...p, score: calcScore(p) }));
+}
+
+async function render() {
+  const db = await loadDB();
+  const procs = Object.values(db);
+
+  const el = document.getElementById('mainContent');
+
+  if (procs.length === 0) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <h3>No hay procesos cargados</h3>
+        <p>Abrí el <a href="wizard.html">wizard</a> y creá tu primer proceso.<br>
+        Los datos se guardan en el mismo navegador (localStorage) y se ven acá automáticamente.</p>
+      </div>`;
+    return;
+  }
+
+  // Métricas resumen
+  const total = procs.length;
+  const completed = procs.filter(p => p.status === 'completed').length;
+  const discarded = procs.filter(p => p.status === 'discarded').length;
+  const inAnalysis = procs.filter(p => ['paso1','paso2','killGate3','paso3','paso4','signoff'].includes(p.status)).length;
+  const inExploration = total - completed - discarded - inAnalysis;
+  const avgScore = procs.length ? Math.round(procs.reduce((a,p) => a + calcScore(p), 0) / procs.length) : 0;
+
+  // Actualizar last sync
+  const dates = procs.map(p => p.updatedAt).filter(Boolean).sort().reverse();
+  if (dates[0]) {
+    document.getElementById('lastSync').textContent = 'Última actividad: ' + new Date(dates[0]).toLocaleDateString('es-AR');
+  }
+
+  // Areas únicas
+  const areas = [...new Set(procs.map(p => p.area).filter(Boolean))].sort();
+
+  let html = `
+    <div class="summary-row">
+      <div class="summary-card">
+        <div class="num">${total}</div>
+        <div class="lbl">Procesos totales</div>
+      </div>
+      <div class="summary-card green">
+        <div class="num">${completed}</div>
+        <div class="lbl">Completados</div>
+      </div>
+      <div class="summary-card orange">
+        <div class="num">${inAnalysis}</div>
+        <div class="lbl">En análisis</div>
+      </div>
+      <div class="summary-card yellow">
+        <div class="num">${inExploration}</div>
+        <div class="lbl">En exploración</div>
+      </div>
+      <div class="summary-card red">
+        <div class="num">${discarded}</div>
+        <div class="lbl">Descartados</div>
+      </div>
+    </div>`;
+
+  // Filtros y tabla
+  let filtered = procs.map(p => ({ ...p, score: calcScore(p) }));
+  if (filterArea) filtered = filtered.filter(p => p.area === filterArea);
+  if (filterStatus) filtered = filtered.filter(p => statusGroup(p.status) === filterStatus);
+
+  // Sort
+  filtered.sort((a, b) => {
+    let va, vb;
+    if (sortCol === 'score') { va = a.score; vb = b.score; }
+    else if (sortCol === 'name') { va = (a.name||'').toLowerCase(); vb = (b.name||'').toLowerCase(); }
+    else if (sortCol === 'area') { va = (a.area||'').toLowerCase(); vb = (b.area||'').toLowerCase(); }
+    else if (sortCol === 'status') { va = (a.status||''); vb = (b.status||''); }
+    else if (sortCol === 'ben') { va = parseFloat((a.paso2||{}).beneficioBase)||0; vb = parseFloat((b.paso2||{}).beneficioBase)||0; }
+    else if (sortCol === 'inv') { va = parseFloat((a.paso2||{}).inversionEstimada)||0; vb = parseFloat((b.paso2||{}).inversionEstimada)||0; }
+    else { va = 0; vb = 0; }
+    if (va < vb) return sortDir === 'asc' ? -1 : 1;
+    if (va > vb) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  function th(col, label) {
+    const cls = sortCol === col ? `sortable sort-${sortDir}` : 'sortable';
+    return `<th class="${cls}" onclick="setSort('${col}')">${label}</th>`;
+  }
+
+  const rows = filtered.map((p, i) => {
+    const score = p.score;
+    const fillClass = score >= 70 ? 'hi' : score >= 40 ? 'med' : 'lo';
+    const rankClass = i < 3 ? 'top' : '';
+    const ben = parseFloat((p.paso2||{}).beneficioBase) || 0;
+    const inv = parseFloat((p.paso2||{}).inversionEstimada) || 0;
+    const pb = parseInt((p.paso2||{}).paybackMeses) || 0;
+    const fac = (p.paso1||{}).factibilidadIT || '—';
+    const pillCls = statusPillClass(p.status);
+    return `<tr>
+      <td><span class="rank-badge ${rankClass}">${i+1}</span></td>
+      <td><strong>${p.name || 'Sin nombre'}</strong></td>
+      <td>${p.area || '—'}</td>
+      <td><span class="pill ${pillCls}">${STATUS_LABEL[p.status] || p.status}</span></td>
+      <td>
+        <div class="score-bar-wrap">
+          <div class="score-bar"><div class="score-bar-fill ${fillClass}" style="width:${score}%"></div></div>
+          <span class="score-num">${score}</span>
+        </div>
+      </td>
+      <td>${ben ? fmt(ben) : '—'}</td>
+      <td>${inv ? fmt(inv) : '—'}</td>
+      <td>${pb ? pb + ' meses' : '—'}</td>
+      <td>${fac}</td>
+    </tr>`;
+  }).join('');
+
+  html += `
+    <div class="section-header">
+      <span class="section-title">Ranking de Procesos</span>
+      <span class="section-hint">${filtered.length} de ${total} procesos</span>
+    </div>
+    <div class="filter-row">
+      <label>Área:</label>
+      <select onchange="filterArea=this.value;render()">
+        <option value="">Todas</option>
+        ${areas.map(a => `<option ${filterArea===a?'selected':''} value="${a}">${a}</option>`).join('')}
+      </select>
+      <label>Estado:</label>
+      <select onchange="filterStatus=this.value;render()">
+        <option value="">Todos</option>
+        <option ${filterStatus==='Completado'?'selected':''} value="Completado">Completado</option>
+        <option ${filterStatus==='En análisis'?'selected':''} value="En análisis">En análisis</option>
+        <option ${filterStatus==='En exploración'?'selected':''} value="En exploración">En exploración</option>
+        <option ${filterStatus==='Descartado'?'selected':''} value="Descartado">Descartado</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th>
+          ${th('name','Proceso')}
+          ${th('area','Área')}
+          ${th('status','Estado')}
+          ${th('score','Score (0–100)')}
+          ${th('ben','Beneficio est.')}
+          ${th('inv','Inversión est.')}
+          <th>Payback</th>
+          <th>Factibilidad IT</th>
+        </tr></thead>
+        <tbody>${rows || '<tr><td colspan="9" style="text-align:center;padding:30px;color:#8A94A6">No hay procesos que coincidan con los filtros</td></tr>'}</tbody>
+      </table>
+    </div>`;
+
+  // Sección 2x2 y chart
+  const forMatrix = procs.map(p => ({
+    ...p,
+    impact: getImpact(p),
+    feas: getFeasibility(p)
+  })).filter(p => p.impact > 0 || p.feas > 0);
+
+  const medImpact = forMatrix.length ? forMatrix.slice().sort((a,b) => a.impact - b.impact)[Math.floor(forMatrix.length/2)]?.impact || 1 : 1;
+  const medFeas = 2; // Media = 2, Alta = 3
+
+  // Cuadrantes: alto impacto ↑, alta factibilidad →
+  const q = { tl: [], tr: [], bl: [], br: [] };
+  forMatrix.forEach(p => {
+    const hi = p.impact >= medImpact;
+    const hf = p.feas >= medFeas;
+    const key = hi && hf ? 'tl' : hi && !hf ? 'tr' : !hi && hf ? 'bl' : 'br';
+    q[key].push(p);
+  });
+
+  function qDots(arr) {
+    return arr.slice(0, 8).map(p => `<div class="q-dot" title="${p.name}">${(p.name||'?').substring(0,22)}</div>`).join('') || '<div style="opacity:.4;font-size:10px">—</div>';
+  }
+
+  // Chart de scores por área
+  const byArea = {};
+  procs.forEach(p => {
+    const a = p.area || 'Sin área';
+    if (!byArea[a]) byArea[a] = [];
+    byArea[a].push(calcScore(p));
+  });
+  const areaAvg = Object.entries(byArea).map(([a, scores]) => ({
+    area: a,
+    avg: Math.round(scores.reduce((s,v) => s+v, 0) / scores.length)
+  })).sort((a,b) => b.avg - a.avg);
+
+  const bars = areaAvg.map(({ area, avg }) => `
+    <div class="bar-row">
+      <span class="bar-label" title="${area}">${area}</span>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${avg}%">
+          <span class="bar-val">${avg}</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  html += `
+    <div class="matrix-section">
+      <div class="matrix-card">
+        <h3>Matriz Impacto vs. Factibilidad IT</h3>
+        <div class="matrix-wrap">
+          <div class="matrix-axis-y">↑ IMPACTO P&amp;L (ROI)</div>
+          <div class="matrix-grid">
+            <div class="matrix-quadrant q-tl">
+              <div class="q-label">Hacer ya</div>
+              ${qDots(q.tl)}
+            </div>
+            <div class="matrix-quadrant q-tr">
+              <div class="q-label">Apostar / Planificar</div>
+              ${qDots(q.tr)}
+            </div>
+            <div class="matrix-quadrant q-bl">
+              <div class="q-label">Optimizar rápido</div>
+              ${qDots(q.bl)}
+            </div>
+            <div class="matrix-quadrant q-br">
+              <div class="q-label">Cuestionar</div>
+              ${qDots(q.br)}
+            </div>
+          </div>
+          <div class="matrix-axis-x">
+            <span>Baja factibilidad →</span>
+            <span>← Alta factibilidad</span>
+          </div>
+        </div>
+        <p style="font-size:10px;color:#8A94A6;margin-top:10px">Solo procesos con datos de Paso 2 y Paso 1 completos</p>
+      </div>
+      <div class="matrix-card">
+        <h3>Score promedio por área</h3>
+        ${areaAvg.length > 0
+          ? `<div class="bar-chart">${bars}</div>`
+          : '<p style="color:#8A94A6;font-size:12px">Completá el Paso 2 de cada proceso para ver el score</p>'}
+      </div>
+    </div>`;
+
+  el.innerHTML = html;
+}
+
+function setSort(col) {
+  if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortCol = col; sortDir = 'desc'; }
+  render();
+}
+
+async function exportCSV() {
+  const procs = await allProcesses();
+  if (!procs.length) { alert('No hay procesos para exportar'); return; }
+  const cols = ['Proceso','Área','Estado','Score','Beneficio estimado','Inversión estimada','Payback (meses)','Factibilidad IT','Confianza dato'];
+  const rows = procs.map(p => [
+    `"${(p.name||'').replace(/"/g,'""')}"`,
+    `"${p.area||''}"`,
+    `"${STATUS_LABEL[p.status]||p.status}"`,
+    p.score,
+    (p.paso2||{}).beneficioBase||'',
+    (p.paso2||{}).inversionEstimada||'',
+    (p.paso2||{}).paybackMeses||'',
+    (p.paso1||{}).factibilidadIT||'',
+    (p.paso2||{}).confianzaDato||''
+  ].join(','));
+  const csv = [cols.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'pid-consolidado-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+}
+
+render();
+// Auto-refresh cada 30s por si el wizard está abierto en otra pestaña
+setInterval(render, 30000);
+</script>
+</body>
+</html>

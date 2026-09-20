@@ -1,0 +1,2345 @@
+{
+  "pain_points": [
+    {
+      "id": "PP-001",
+      "title": "Stock sin rotación — modelos 2023 acumulados en fábrica",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-002",
+      "title": "Inexistencia de base de datos del consumidor final",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-003",
+      "title": "Análisis de precios de competencia manual y no estandarizado",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-004",
+      "title": "Desconexión entre planta y área comercial",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-005",
+      "title": "Postventa y repuestos sin canal de marketing ni proceso estructurado",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-006",
+      "title": "8 marcas internas compitiendo sin estrategia unificada",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-007",
+      "title": "Alto rechazo de calidad en repuestos remotos — $5M pérdida anual",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-008",
+      "title": "KPIs principales no definidos ni visualizados en ninguna herramienta centralizad",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-009",
+      "title": "Producto terminado bloqueado — sin trazabilidad en línea de ensamble",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-010",
+      "title": "Gastos corporativos sin control ni políticas claras (movilidad, viajes, licencia",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-011",
+      "title": "Sin sistema WMS para logística — punto de dolor principal en Motos",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "",
+      "title": "pp-013-infraestructura-basica-limitada",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-014-seguridad-ia-bloqueadas-por-it",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-015-ecommerce-trabado-sin-soporte",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-016-sin-crm-motos",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-017-marketing-dispar-bajo",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-018-concentracion-pocos-clientes",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-019-triple-erp-triplica-integraciones",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-020-shadow-it-herramientas-sin-gobierno",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-021-sin-base-madre-plan-produccion-motos",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-022-sop-manual-motos",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-023-stock-motos-sin-control-color",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-024-power-bi-unipersonal-motos",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-025-gobernanza-proyectos-it-deficiente",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-026-sin-catalogo-digital-centralizado",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-027-crisis-equipo-data",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-028-salarios-tech-bajo-mercado",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-029-analistas-datos-dispersos",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-030-dependencia-consultoras-externas",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-031-mapeos-sap-manuales",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-032-rrhh-sin-expertise-tech",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-033-governance-sitios-web",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-034-riesgo-ai-no-escalado",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-035-it-excluido-de-estrategia",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-037-apps-world-class-subutilizadas",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-038-sin-tracking-horas-recursos",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-040-it-reactivo-sin-proactividad",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-041-gerencia-it-sin-traduccion-negocio",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-042-desarrollo-carrera-limitado-it",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-043-duplicacion-diagnosticos-rrhh-pid",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-044-analisis-soporte-sap-manual-lento",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-045-directores-fuera-del-loop-foro",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-046-item-file-sin-sanear",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-047-inversiones-it-sin-roi",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-048-reporteria-manual-control-gestion",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-049-data-lake-riesgo-inconsistencia-contable",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-050-sistema-garantias-obsoleto",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-051-fragmentacion-tecnologica-apps",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-052-manualidad-b2c-producteca-ml",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-053-resistencia-cultural-adopcion-sistemas",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-054-licenciamiento-copilot-microsoft-fragmentado",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-055-copilot-studio-limitado-desarrollo-local",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-056-accountability-chart-difuso-it",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-057-estrategia-negocio-5-anos-indefinida",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-058-sin-arquitectura-empresarial-plano-completo",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-059-bill-of-material-inexistente-17m-bloqueado",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-060-sop-100-excel-todas-unidades",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-061-cero-arquitectura-integracion-sin-owner",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-062-cultura-silos-areas-piden-sistemas-aislado",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-063-datos-llegan-15-dias-productividad-ejecutiva",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-064-sin-inventarios-ciclicos-descontrol-stock",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-065-implementaciones-sap-wms-fallidas-sin-pisar-planta",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-066-estructura-rrhh-it-chiquita-no-crecio-con-negocio",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-067-sin-estructura-soporte-humano-canales-ia",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-068-riesgo-reputacional-pid-proyectos-sin-filtro",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-069-sin-framework-medicion-innovacion",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-070-repuestos-chery-desguace-cbu",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-071-bajas-inventario-destiempo-circuito-adv",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-072-funnel-leads-foton-baja-calidad",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-073-sin-integracion-foton-china",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-074-sin-nurturing-automatizado-leads",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-075-sitio-web-foton-sin-profundidad-tecnica",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-076-riesgo-adopcion-sf-concesionarios-foton",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-077-alta-cliente-b2b-foton-manual",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-078-sin-cdp-b2c-corporativo",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-079-conflicto-canal-directo-distribuidores-autopartes",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-080-sin-maestro-clientes-jerarquias",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-081-sin-parque-automotor-historico",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-082-sin-scoring-crediticio-flotas",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-083-sin-qr-ean-productos",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "PP-084",
+      "title": "Sin tracking de gastos logísticos intercompany vs precio de venta",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "PP-085",
+      "title": "Sin sistema de planeamiento de compra FOB con timing de negociación y lead times",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": ""
+    },
+    {
+      "id": "",
+      "title": "pp-086-sin-alertas-automaticas-calidad-industrial",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-087-carga-manual-datos-produccion-supervisor",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-088-sistemas-calidad-infra-obsoleta-crt",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-089-dependencia-knowhow-individual-cnc",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-090-mantenimiento-preventivo-sin-leadtime",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-091-trazabilidad-motos-papel-hasta-cierre",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-092-maquinas-legacy-sin-retrofit",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-093-cuentas-cobrar-18-ftes-como-1990",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-094-tesoreria-30k-comprobantes-manual",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-096-ausencia-baselines-roi-iniciativas",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-097-it-sobredimensionado-piramidal",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-098-estrategia-b2c-sin-conviccion-cfo",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-099-crecimiento-3x-procesos-legacy-caos",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-100-fuerza-ventas-sin-capacidad-consultiva",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-101-bi-clickview-subutilizado-vendedores",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-102-webexperto-b2b-baja-adopcion",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-103-objetivos-por-historico-no-territorio",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-104-sin-relacion-directa-mecanico",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-105-maestros-sap-autopartes-mal-estado",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-106-contact-center-horario-limitado",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-107-perdida-trazabilidad-cliente-transporte",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-108-sin-selector-inteligente-modelo-auto",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-109-conflicto-canal-distribuidor-pdv-flotas",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-110-pdv-sin-gestion-stock-cuadernitos",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-111-sin-pricing-dinamico-autopartes",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-112-mercado-libre-25-aftermarket-sin-estrategia",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-113-salesforce-confusion-rol-crm",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-114-medios-pago-atrasados-sin-pos",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-115-vendedores-chery-sin-onboarding",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-116-periodistas-informan-mal-phev",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-117-cliente-vuelve-5-7-veces-postventa",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-118-capacidad-llm-agentes-interna",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-119-versionado-caotico-planos-renovable",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-120-sin-crm-b2b-energia-coral",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-121-info-mercado-energetico-manual",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-122-armado-manual-memorias-tecnicas",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-123-sap-ps-solo-contable-no-obra-itasol",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-124-sin-roadmap-tecnologico-corporativo-coral",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-125-scada-enlatado-sin-consolidacion",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-126-power-bi-coral-shadow-data",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-130-data-sap-no-confiable-coherente",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-132-influencers-sin-tracking-conversion",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-133-marketing-corven-inexistente-lanzamientos",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-134-sin-sponsor-negocio-iniciativas-digitales-transversales",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-135-capacidad-operativa-digital-nula-un",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-136-banda-salarial-no-compite-talento-digital",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-137-costo-adquisicion-b2c-sin-equity-marca-digital",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-138-logistica-no-preparada-ecommerce",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-139-it-no-usa-ia-propios-procesos",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-140-falta-visibilidad-project-management-it",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-141-estrategia-ecommerce-2-3-anos-desactualizada",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-142-sin-owner-claro-ecommerce-gobernanza-matricial",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-143-capacidades-desarrollo-productos-digitales-inexistentes",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-144-roadmap-inexistente-areas-digitales-actuales",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-145-it-sin-capacidad-gis-geoespacial",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-146-nueva-un-creada-sin-notificacion-a-it",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-147-mercadoshops-cierra-31-12",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-148-category-manager-motos-0-fte",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-149-it-sin-sla-expectativas-formales-cliente-interno",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-150-presupuesto-it-congelado-bau-crece",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-151-capacitaciones-it-sin-obligatoriedad-asistencia-4pct",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-152-agentes-ia-shadow-sin-gobernanza-tokens",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-153-ausencia-funcion-gestion-procesos-bpm",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-154-sin-casos-uso-ia-end-to-end-agentes-cross-sistema",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-155-it-sin-traspaso-agenda-nicolas-javier-no-hizo-pasaje",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-156-alta-direccion-desconoce-inventario-sistemas-it",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-157-baja-conversion-whatsapp-sin-persona-dedicada",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-158-canal-venta-empleados-muerto-sin-recurso",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-159-alta-direccion-sin-claridad-capacidades-salesforce",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-160-motos-sin-cultura-crm-concesionarios-no-comparten-datos",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-161-sin-dashboards-estrategicos-salesforce-alta-direccion",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-162-canal-whatsapp-sin-integracion-sap-wms-proceso-manual",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-163-kits-desarmados-calidad-capital-inmovilizado",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-164-qc-recepcion-autopartes-sin-sistematizar",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-165-amortiguadores-sin-liderazgo-planta-deteriorada",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-166-objetivo-estrategico-ia-sin-definir",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-167-sap-mal-parametrizado-raiz",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-168-wms-tms-sin-owner-unificacion",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-169-family-office-sin-it-unificado-creditech-blackbox",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-171-sin-visibilidad-economica-it-inversion-vs-facturacion",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-172-ciclo-vida-software-sin-definir-build-run-handoff",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-173-herramientas-ai-pagadas-sin-activar",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-174-fuga-info-ia-personal-sin-monitoreo",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-175-no-integracion-cliente-cross-marca",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-176-sin-owner-analisis-cross-info-comercial",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-177-redes-sociales-solo-branding-cero-transaccional",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-179-agente-ia-chery-lanzado-sin-estrategia-cross-un",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-181-sin-seguimiento-entregas-usuario-final",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-183-marketing-ecommerce-mendiga-recursos",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-184-operaciones-ecommerce-semi-manual-solo-sacif-automatizado",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-185-falta-sinergia-b2b-digital-uns-vs-ecommerce-b2c",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-186-organizacion-b2b-incapaz-canal-d2c",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-187-vacio-liderazgo-ecommerce-julian-desvinculado",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-188-dependencia-meli-sin-datos-propios",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-190-sin-estrategia-marca-canal-digital",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-191-it-sin-capacidad-ejecucion-headcount",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-192-seguridad-ia-no-ejecutable-hasta-modern-workplace",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-193-sin-integracion-dms-salesforce-doble-carga-concesionarios",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-194-datos-cliente-incompletos-activacion-garantias-salesforce",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-195-decisiones-estrategicas-digitales-de-pasillo",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-196-sin-pmo-ni-change-management-cross-company",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-197-postventa-canales-digitales-sin-definicion-estructural",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-198-pid-sin-sponsor-unico",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-199-backlog-pid-bottom-up-sin-agenda-ceos",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-200-proyectos-digitales-fuera-radar-pid",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-201-bucket-optimizacion-procesos-sin-owner",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-202-sin-criterio-proyecto-pid-vs-evolucion-negocio",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-203-proveedores-capacitacion-sin-capacidad-pedagogica",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-204-falta-track-mindset-digital",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-205-lideres-analogicos-anulan-ganancia-ia",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-206-talento-humano-saturado-hasta-diciembre",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-207-sin-capa-clevel-ia-di-tella-frenado",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-208-sin-estrategia-corporativa-modelos-ia-aprobados",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-209-sin-medicion-productividad-planta-oee",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-210-vacio-ownership-adopcion-tecnologia-comprada",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-211-sin-capa-self-service-bi",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-212-facturacion-no-aperturada-por-canal-digital",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-213-perdida-rol-convocatoria-cross-area",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-214-asignacion-marcas-mercadolibre-sin-proceso",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-215-corredores-viales-sin-base-tecnologica",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-216-inventario-aplicaciones-incompleto-registros-fantasma",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-217-sin-interfaz-creditech-comercial-contabilidad",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-218-estrategia-planeamiento-sin-herramienta",
+      "vertical": "V2 — Data & BI",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-219-family-office-agro-sin-crm-ni-supply-mapeado",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-220-it-corporativo-sin-proceso-formal-intake",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-221-sponsorship-sin-habilitacion-estructural",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-222-gente-no-reconoce-su-trabajo-como-proceso",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-223-tension-it-cuello-botella-vs-soluciones-satelite",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-224-sin-portal-cuentas-corrientes-clientes-b2b",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-225-pl-ecommerce-no-comparable-canal-offline",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-226-margen-ecommerce-igual-canal-tradicional",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-227-falta-validacion-tecnica-seleccion-cto",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-228-tension-centralizacion-autonomia-uns-marketing-digital",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-229-estructura-societaria-sap-ecommerce-por-default-sin-business-case",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-230-direccion-sin-vision-compartida-modelo-b2c-plataforma",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-231-ecommerce-sin-objetivo-rentabilidad-ni-numero-target",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-232-ecommerce-monocanal-meli-sin-reventa-base-propia",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-233-leads-tienda-corven-a-un-sin-ownership-ni-trazabilidad",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-234-cinco-experiencias-de-compra-distintas-en-el-grupo",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-235-riesgo-ceder-data-red-fisica-a-meli",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-236-alcance-tienda-propia-no-entendido-por-directores",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-237-sin-definicion-segmentos-abc-canal-digital",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-238-sin-espacio-priorizacion-conjunta-cross-un-demanda-it",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-239-nadie-tiene-mandato-empujar-vision-post-workshop",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-240-ecommerce-lanza-octubre-sin-agencia-ni-marketing-dedicado",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "5"
+    },
+    {
+      "id": "",
+      "title": "pp-241-demanda-it-no-se-captura-ni-centraliza",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-242-marketing-fragmentado-cinco-agencias-por-marca",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-243-automatizaciones-nunca-bajaron-headcount",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-244-no-hay-presupuesto-de-innovacion",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-245-circuito-business-case-existe-pero-digital-no-lo-usa",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-246-sin-capacidad-interna-desarrollar-agentes-ia",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-247-valor-adopcion-individual-inmedible-sin-rol-asignado",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "",
+      "severidad": "4"
+    },
+    {
+      "id": "",
+      "title": "pp-248-umbral-soporte-evolutivo-proyecto-sin-definir",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-249-se-parte-de-la-herramienta-no-del-dolor",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-250-motopartes-protegida-por-repuesto-original-autopartes-no",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-251-legal-15-personas-procesos-100-manuales",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "",
+      "severidad": "3"
+    },
+    {
+      "id": "",
+      "title": "pp-252-sap-ola2-sin-capacitacion-usuarios-carga-datos",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "",
+      "severidad": "4"
+    }
+  ],
+  "opportunities": [
+    {
+      "id": "OPP-001",
+      "title": "Corven Outlet Day — liquidación de stock 2023",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Motos",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "OPP-002",
+      "title": "Pricing intelligence — automatización del benchmarking de competencia",
+      "vertical": "V2 — Data & BI",
+      "area": "Motos · Autopartes",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "OPP-005",
+      "title": "Integración planta-comercial — visibilidad de stock y producción en tiempo real",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Cross-UN · Motos",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "OPP-006",
+      "title": "Producto digital de suscripción postventa — \"Corven Care\" / \"Netflix Corven\"",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Motos · Automotriz",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "OPP-008",
+      "title": "Plataforma de BI / KPIs consolidada para Grupo Corven",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "OPP-010",
+      "title": "Governance y automatización de gastos corporativos",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Corporativo",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "OPP-011",
+      "title": "WMS para Motos",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Motos",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "IA conversacional sobre BI y dashboards consolidados",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Data Lake corporativo — cerrar gaps de datos",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Marketing digital cross-marca + CX consumidor final (Motos arranca como piloto)",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Salesforce Agent Force — PoC en gestión de leads y posventa",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "Motos · Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Activar IA embebida en SAP S/4 + Salesforce + Microsoft",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Automatizar cruce patentamiento + asignación a concesionarios",
+      "vertical": "V2 — Data & BI",
+      "area": "Motos",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "API Gateway / Bus de Integración como proyecto con presupuesto propio",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "IA para desarrollo en IT — acelerar ciclos de coding",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Consolidar los 20 analistas de datos dispersos bajo Data & Analytics",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Governance de sitios web — proceso estándar + pen testing",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Migración Siomaa",
+      "vertical": "V2 — Data & BI",
+      "area": "Motos",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Programa AI corporativo — governance + adopción cross-company (empezando por IT)",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Agente IA interno para soporte y evoluciones SAP (EvoluX)",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "Cross-UN",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Layer CTO / Director de Tecnología",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Framework de evaluación de inversiones IT — ROI + % facturación + business case",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Programa de saneamiento de datos maestros — item file y diccionarios comunes",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "Cross-UN · Autopartes · Motos",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Validación cruzada Data Lake ↔ Contabilidad por etapa de carga",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Modelo Operativo IT bimodal — Shared Services + IT Business Partners",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Salesforce 360 — visión unificada de cliente con datos consolidados",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Cross-UN · Motos · Automotriz",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Evolución de RPAs hacia automatización inteligente con IA",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Asistente IA conversacional para propietarios Chery (Arrizo 8 PHEV)",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Automotriz",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "S&OP digital unificado cross-UN",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN · Motos · Autopartes · Neumáticos",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Enterprise Architect · owner de arquitectura corporativa",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Programa de adopción Copilot corporativo · capacitación cross-empresa",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Proyecto Alba · Customer Data Platform B2C corporativo",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN · Neumáticos",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Configurador técnico / asesor virtual de camiones Foton",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Automotriz",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "",
+      "title": "Suite postventa digital para camiones Foton (telemetría + turnos + WhatsApp + ma",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Automotriz",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Programa cross-marca de captura digital + atención cross-UN",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Cross-UN",
+      "prioridad": "ALTO"
+    },
+    {
+      "id": "",
+      "title": "Catálogo Digital cross-company con enriquecimiento agentizado",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN · Neumáticos · Autopartes",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Cockpit IA scoring crediticio para apertura cuentas B2B flotas",
+      "vertical": "V2 — Data & BI",
+      "area": "Autopartes · Automotriz",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Ingestar parque automotor histórico · medidas OEM neumáticos por modelo",
+      "vertical": "V2 — Data & BI",
+      "area": "Neumáticos",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "",
+      "title": "QR/EAN universal en productos como entrada al mega-funnel",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Cross-UN",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "",
+      "title": "Replicar modelo 4.0 Amortiguadores (caso Huguito) a Motos + Camiones",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "Motos · Automotriz",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "★ Programa SCADA/OT formal industrial cross-planta",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "Motos · Autopartes · Coral",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Tablero visual Andon planta tiempo real (LED + push móvil)",
+      "vertical": "V2 — Data & BI",
+      "area": "Motos",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "",
+      "title": "★ Portal de Proveedores (Galante sponsor declarado)",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Portal de Clientes B2B digital",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Autopartes",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Programa de capacidades digitales (data + integración + UX) previo a B2C",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "★ Red Mecánicos Corven (modelo \"Ibupirac\" · códigos de referencia traceables)",
+      "vertical": "V2 — Data & BI",
+      "area": "Autopartes",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Programa PdV Autopartes digital (digitalización stock/POS + cuenta y orden)",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "Autopartes",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Selector inteligente por modelo de auto + carrito (eCommerce Autopartes)",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Autopartes",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Estrategia Mercado Libre directa Corven (recuperar control de 25% aftermarket)",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Autopartes",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "DMS/PLM ingeniería renovable (versionado planos · sello \"conforme a obra\")",
+      "vertical": "V2 — Data & BI",
+      "area": "Coral",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "",
+      "title": "CRM B2B/B2G energía (Cammesa · distribuidoras · mineras · pipeline licitaciones)",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Coral",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Scraper + tablero mercado energético (Cammesa · SE · spot · licitaciones)",
+      "vertical": "V2 — Data & BI",
+      "area": "Coral",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Generación asistida memorias técnicas con IA (BOQ + memoria + modelo financiero)",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "Coral",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Herramienta gestión proyectos construcción Itasol (complemento SAP PS)",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Coral",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "",
+      "title": "Sistema administración de grupos Proyecta Futuro (plan de ahorro vehicular)",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Corporativo",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Creditech expansión B2B — Julius Sirenio como plataforma para financieras + LatA",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Corporativo",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "★ Área de Negocios Digitales transversal (sexto negocio · stand-alone)",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Cross-UN",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "★ Club de Beneficios Corven · captura B2C + loyalty (piloto Neumáticos)",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Cross-UN · Neumáticos",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "",
+      "title": "Cross-border / venta directa China sin importación interna (modelo Meli-like)",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Automotriz",
+      "prioridad": "BAJO"
+    },
+    {
+      "id": "",
+      "title": "Portal venta multimarca de motos / marketplace motos del grupo",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Motos",
+      "prioridad": "ALTA"
+    },
+    {
+      "id": "",
+      "title": "Plataforma IA financiera para simulación / planeamiento (reemplazo Excel)",
+      "vertical": "V2 — Data & BI",
+      "area": "Corporativo · Cross-UN",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Incorporar capacidad GIS/geoespacial en IT corporativa",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN · Coral",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Módulo SAP Minería — implementar sistema de negocio para la UN",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Corporativo",
+      "prioridad": "BAJA"
+    },
+    {
+      "id": "",
+      "title": "Soporte formal dentro de IT para tecnologías industriales (OT)",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Aceleración por adquisición de distribuidor B2C — neumáticos",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Neumáticos",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Automatización proceso venta Web/WhatsApp → SAP → WMS → logística (end-to-end)",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Neumáticos · Cross-UN",
+      "prioridad": "MEDIA"
+    },
+    {
+      "id": "",
+      "title": "Programa de adhesión concesionarios motos a Salesforce",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Motos",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Mapa de capacidades Salesforce + dashboards ejecutivos para alta dirección",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN · Motos",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "IA sobre ingesta / ETL SAP → Data Lake",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Visión por computadora / celular para operarios de planta",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Autopartes · Motos",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Marketplace multi-marca de autopartes (\"Partzon\")",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Autopartes",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Programa Data Governance — Data Officer + piloto maestro de materiales",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Programa D2C en puntos de venta físicos — tablet en gomerías + incentivos a mecá",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Neumáticos",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Modelo omnicanal de repuestos con retiro/margen en concesionario",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Autopartes",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Programa de explotación avanzada del stack (Platform Value Realization)",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Programa de inventarios cíclicos (cycle counting)",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Cross-UN · Motos · Autopartes · Neumáticos",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Tracking de costos logísticos intercompany vs pricing por canal",
+      "vertical": "V2 — Data & BI",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Sistema de planeamiento de compra FOB cross-UN",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Cross-UN · Motos · Automotriz · Autopartes · Neumá",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "PMO estratégico del portfolio digital (registro único + seguimiento mensual)",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Proceso de intake abierto de oportunidades + ficha estándar",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "\"Semana de la IA\" — dispositivo cultural de adopción",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Plataforma financiera cross-sociedad para Corporativo (evitar el octavo ERP)",
+      "vertical": "V1 — Legacy & Lights On",
+      "area": "Corporativo",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Estructura jurídica/logística independiente para eCommerce multi-marca",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Gobierno de demanda IT — 3 pasos + 3 mesas de priorización (SAP · Salesforce · r",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Plataforma única de automatizaciones con observabilidad de costo por proceso y u",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "RFP de agencia de growth / CRO para eCommerce",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Exigir a los 3 proveedores de desarrollo un plan de uso de IA",
+      "vertical": "Transversal — IA & Productividad",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Riesgo / respuesta al agregador tipo Alephee en autopartes",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Autopartes",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Modelo organizativo Newsan — separar dirección de transformación de dirección de",
+      "vertical": "Transversal — Gobernanza & Org",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "eCommerce como canal de liquidación de stock inmovilizado cross-UN",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Plan de lanzamiento con ramp-up atado a capacidad operativa (\"teoría del vaso\")",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Cross-UN",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Automatización de procesos Legales — gestión de causas, jurisprudencia y expedie",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Corporativo",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Aceleración contable Creditech — automatización del proceso de cierre mensual",
+      "vertical": "V3 — Apps de Negocio",
+      "area": "Corporativo",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Automatización de finanzas corporativas — business cases, presupuestación y fluj",
+      "vertical": "V2 — Data & BI",
+      "area": "Corporativo",
+      "prioridad": ""
+    },
+    {
+      "id": "",
+      "title": "Workshops de visión digital para verticales Family Office — separados por negoci",
+      "vertical": "V4 — Negocios Digitales",
+      "area": "Corporativo",
+      "prioridad": ""
+    }
+  ],
+  "generated": "2026-08-27"
+}

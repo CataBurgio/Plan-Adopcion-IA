@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Análisis de Procesos — PID Etapa 2 · Grupo Corven</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --accent:#E85020; --accent-l:#FDF0EC; --navy:#1A1A2E; --white:#fff;
+  --soft:#F5F5F7; --ink:#1A1A1A; --ink2:#555; --muted:#999;
+  --line:#E2E2E2; --green:#27AE60; --green-l:#EAF7EF;
+  --amber:#D97706; --amber-l:#FEF3E0;
+  --red:#E74C3C; --red-l:#FEF0EE;
+  --blue:#276BA5; --blue-l:#EAF1F8;
+  --purple:#7C3AED; --purple-l:#F3EEFF;
+  --sans:'DM Sans',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--sans);color:var(--ink);background:var(--soft);overflow:hidden}
+
+/* ── TOP BAR ── */
+#topbar{
+  height:48px;background:var(--navy);display:flex;align-items:center;
+  justify-content:space-between;padding:0 20px;flex-shrink:0;
+}
+#topbar .brand{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.01em}
+#topbar .brand span{color:var(--accent)}
+#topbar .actions{display:flex;gap:8px}
+.btn{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:var(--sans);border:none;transition:.15s}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.2)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:#c73e18}
+.btn-soft{background:var(--soft);color:var(--ink2);border:1px solid var(--line)}
+.btn-soft:hover{background:var(--line)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:#1e8e4e}
+
+/* ── LAYOUT ── */
+#app{display:flex;height:calc(100vh - 48px);overflow:hidden}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:270px;background:#fff;border-right:1px solid var(--line);
+  display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;
+}
+#sidebar-header{
+  padding:16px;border-bottom:1px solid var(--line);flex-shrink:0;
+}
+#sidebar-header h3{font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1.5px;color:var(--muted);margin-bottom:10px}
+#process-list{flex:1;overflow-y:auto;padding:8px}
+.proc-item{
+  padding:10px 12px;border-radius:8px;cursor:pointer;margin-bottom:4px;
+  border:1.5px solid transparent;transition:.15s;
+}
+.proc-item:hover{background:var(--soft)}
+.proc-item.active{background:var(--accent-l);border-color:rgba(232,80,32,.25)}
+.proc-item .proc-name{font-size:13px;font-weight:600;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proc-item .proc-area{font-size:11px;color:var(--muted);margin-top:2px}
+.proc-item .proc-status{margin-top:6px}
+.status-badge{
+  display:inline-block;padding:2px 8px;border-radius:20px;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+}
+.st-preA{background:#F3EEFF;color:var(--purple)}
+.st-preB{background:var(--blue-l);color:var(--blue)}
+.st-gate{background:var(--red-l);color:var(--red)}
+.st-preC{background:var(--amber-l);color:var(--amber)}
+.st-paso{background:var(--accent-l);color:var(--accent)}
+.st-signoff{background:var(--green-l);color:var(--green)}
+.st-completed{background:var(--green-l);color:var(--green)}
+.st-discarded{background:#f5f5f5;color:var(--muted)}
+.empty-list{padding:24px 12px;text-align:center;color:var(--muted);font-size:13px}
+
+/* ── MAIN PANEL ── */
+#main{flex:1;overflow-y:auto;padding:28px 36px}
+#empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;text-align:center;color:var(--muted);
+}
+#empty-state h2{font-size:22px;font-weight:700;color:var(--ink);margin-bottom:8px}
+#empty-state p{font-size:14px;line-height:1.6;max-width:380px}
+
+/* ── STEP HEADER ── */
+#step-header{margin-bottom:24px}
+.step-meta{font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:2px;color:var(--muted);margin-bottom:6px}
+.step-title{font-size:26px;font-weight:800;color:var(--ink);line-height:1.1}
+.step-subtitle{font-size:14px;color:var(--ink2);margin-top:4px}
+
+/* ── PROGRESS BAR ── */
+#progress-wrap{
+  background:#fff;border:1px solid var(--line);border-radius:12px;
+  padding:16px 20px;margin-bottom:24px;overflow-x:auto;
+}
+.progress-track{display:flex;align-items:center;min-width:600px}
+.progress-node{
+  display:flex;flex-direction:column;align-items:center;flex:1;
+  position:relative;cursor:pointer;
+}
+.progress-node:not(:last-child)::after{
+  content:'';position:absolute;top:13px;left:50%;width:100%;
+  height:2px;background:var(--line);z-index:0;
+}
+.progress-node.done:not(:last-child)::after{background:var(--green)}
+.progress-node.active:not(:last-child)::after{background:var(--line)}
+.pn-dot{
+  width:26px;height:26px;border-radius:50%;border:2px solid var(--line);
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:800;color:var(--muted);z-index:1;
+  position:relative;transition:.2s;flex-shrink:0;
+}
+.progress-node.done .pn-dot{background:var(--green);border-color:var(--green);color:#fff}
+.progress-node.active .pn-dot{background:var(--accent);border-color:var(--accent);color:#fff;transform:scale(1.2)}
+.progress-node.gate .pn-dot{border-color:var(--red);color:var(--red)}
+.progress-node.gate.done .pn-dot{background:var(--green);border-color:var(--green);color:#fff}
+.pn-label{font-size:9px;font-weight:600;color:var(--muted);margin-top:5px;
+  text-align:center;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+.progress-node.active .pn-label{color:var(--accent);font-weight:700}
+.progress-node.done .pn-label{color:var(--green)}
+
+/* ── FORM ── */
+.form-card{
+  background:#fff;border:1px solid var(--line);border-radius:12px;
+  padding:24px;margin-bottom:16px;
+}
+.form-card.highlight-card{
+  border-color:rgba(232,80,32,.3);background:var(--accent-l);
+}
+.form-section-title{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--accent);margin-bottom:16px;padding-bottom:8px;
+  border-bottom:2px solid var(--accent-l);
+}
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+label{display:block;font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+label .hint{font-weight:400;color:var(--muted);font-style:italic;margin-left:4px}
+label .required{color:var(--accent);margin-left:2px}
+input[type=text],input[type=number],input[type=date],textarea,select{
+  width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;
+  font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;
+  transition:.15s;outline:none;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:80px;line-height:1.55}
+.calc-field{
+  padding:9px 12px;background:var(--soft);border:1.5px solid var(--line);
+  border-radius:8px;font-size:13px;font-weight:700;color:var(--accent);
+  min-height:40px;display:flex;align-items:center;
+}
+
+/* radio & checkbox */
+.radio-group,.check-group{display:flex;flex-wrap:wrap;gap:8px}
+.radio-opt,.check-opt{
+  display:flex;align-items:center;gap:6px;padding:6px 12px;
+  border:1.5px solid var(--line);border-radius:6px;cursor:pointer;
+  font-size:12px;font-weight:500;color:var(--ink2);transition:.15s;
+  user-select:none;
+}
+.radio-opt:hover,.check-opt:hover{border-color:var(--accent);color:var(--accent)}
+.radio-opt.selected,.check-opt.selected{
+  border-color:var(--accent);background:var(--accent-l);color:var(--accent);font-weight:700;
+}
+.radio-opt input,.check-opt input{display:none}
+
+/* repeatable */
+.rep-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.rep-row{display:flex;gap:6px;align-items:center}
+.rep-row input{flex:1}
+.rep-del{background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:16px;padding:4px;border-radius:4px;flex-shrink:0}
+.rep-del:hover{color:var(--red);background:var(--red-l)}
+.btn-add-rep{font-size:12px;color:var(--accent);background:none;border:none;
+  cursor:pointer;font-weight:600;padding:4px 0;font-family:var(--sans)}
+.btn-add-rep:hover{text-decoration:underline}
+
+/* steps (as-is) */
+.steps-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.step-row{display:flex;gap:8px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--accent);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:800;flex-shrink:0;margin-top:8px}
+.step-row textarea{flex:1;min-height:52px}
+
+/* stage1 panel */
+.stage1-panel{
+  background:var(--soft);border:1px solid var(--line);border-radius:8px;
+  padding:14px;max-height:220px;overflow-y:auto;
+}
+.stage1-panel .s1-empty{color:var(--muted);font-size:12px;text-align:center;padding:12px}
+.s1-item{
+  display:flex;align-items:flex-start;gap:8px;padding:6px 0;
+  border-bottom:1px solid var(--line);font-size:12px;
+}
+.s1-item:last-child{border-bottom:none}
+.s1-badge{
+  flex-shrink:0;padding:2px 6px;border-radius:4px;font-size:9px;
+  font-weight:700;text-transform:uppercase;
+}
+.s1-pp{background:var(--red-l);color:var(--red)}
+.s1-opp{background:var(--green-l);color:var(--green)}
+.s1-title{color:var(--ink);line-height:1.4}
+.s1-id{color:var(--muted);font-size:10px}
+
+/* kill gate */
+.gate-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px}
+.gate-title{font-size:16px;font-weight:800;color:var(--red);margin-bottom:6px}
+.gate-subtitle{font-size:13px;color:var(--ink2);margin-bottom:20px}
+.gate-criteria{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.gate-crit{
+  display:flex;align-items:flex-start;gap:12px;padding:12px 14px;
+  border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:.15s;
+}
+.gate-crit:hover{border-color:var(--green)}
+.gate-crit.checked{border-color:var(--green);background:var(--green-l)}
+.gate-crit .crit-check{
+  width:20px;height:20px;border-radius:4px;border:2px solid var(--line);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#fff;transition:.15s;margin-top:1px;
+}
+.gate-crit.checked .crit-check{background:var(--green);border-color:var(--green)}
+.gate-crit .crit-text{font-size:13px;color:var(--ink);line-height:1.4}
+.gate-discard{margin-top:16px}
+.gate-discard label{font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px}
+
+/* realignment */
+.realign-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px}
+
+/* habilitantes */
+.hab-list{display:flex;flex-direction:column;gap:8px}
+.hab-item{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:.15s;
+}
+.hab-item:hover{border-color:var(--accent)}
+.hab-check{
+  width:18px;height:18px;border-radius:4px;border:2px solid var(--line);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:#fff;transition:.15s;
+}
+.hab-item.resolved .hab-check{background:var(--green);border-color:var(--green)}
+.hab-item.inprogress .hab-check{background:var(--amber);border-color:var(--amber)}
+.hab-item .hab-label{font-size:12px;color:var(--ink);flex:1}
+.hab-status-cycle{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;flex-shrink:0}
+.hab-item.resolved .hab-status-cycle{background:var(--green-l);color:var(--green)}
+.hab-item.inprogress .hab-status-cycle{background:var(--amber-l);color:var(--amber)}
+.hab-item.pending .hab-status-cycle{background:var(--red-l);color:var(--red)}
+
+/* confirm checkbox */
+.confirm-check{
+  display:flex;align-items:flex-start;gap:12px;padding:14px;
+  border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:.15s;
+}
+.confirm-check:hover{border-color:var(--accent)}
+.confirm-check.checked{border-color:var(--green);background:var(--green-l)}
+.confirm-box{
+  width:20px;height:20px;border-radius:4px;border:2px solid var(--line);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#fff;transition:.15s;margin-top:1px;
+}
+.confirm-check.checked .confirm-box{background:var(--green);border-color:var(--green)}
+.confirm-text{font-size:13px;color:var(--ink);line-height:1.5}
+
+/* nav buttons */
+#step-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:24px;padding-top:20px;border-top:1px solid var(--line);
+}
+.nav-info{font-size:12px;color:var(--muted)}
+
+/* info banner */
+.info-banner{
+  background:var(--blue-l);border:1px solid rgba(39,107,165,.2);
+  border-radius:8px;padding:12px 14px;font-size:12px;color:var(--blue);
+  line-height:1.6;margin-bottom:16px;
+}
+.warn-banner{
+  background:var(--amber-l);border:1px solid rgba(217,119,6,.2);
+  border-radius:8px;padding:12px 14px;font-size:12px;color:var(--amber);
+  line-height:1.6;margin-bottom:16px;font-weight:600;
+}
+
+/* discarded overlay */
+.discarded-banner{
+  background:var(--soft);border:2px solid var(--line);border-radius:12px;
+  padding:24px;text-align:center;margin-bottom:20px;
+}
+.discarded-banner h3{font-size:16px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.discarded-banner p{font-size:13px;color:var(--muted)}
+
+/* modal */
+#modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;
+  align-items:center;justify-content:center;
+}
+#modal-overlay.open{display:flex}
+#modal{
+  background:#fff;border-radius:14px;padding:28px;max-width:440px;width:90%;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+#modal h3{font-size:18px;font-weight:800;margin-bottom:8px}
+#modal p{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:20px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+#new-proc-name{width:100%;margin-bottom:12px}
+#new-proc-area{width:100%;margin-bottom:16px}
+
+@media print{
+  #topbar,#sidebar,#progress-wrap,#step-nav{display:none}
+  #main{padding:0}
+  .form-card{box-shadow:none;border:1px solid #ddd}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="brand">PID Etapa 2 · <span>Análisis de Procesos</span> — Grupo Corven</div>
+  <div class="actions">
+    <span id="save-indicator" style="font-size:11px;color:#999;margin-right:8px;display:none"></span>
+    <button class="btn btn-ghost" onclick="importJSON()">↑ Importar proceso</button>
+    <button class="btn btn-ghost" id="btn-export" onclick="exportJSON()" style="display:none">↓ Exportar JSON</button>
+    <button class="btn btn-ghost" id="btn-onepager" onclick="generateOnePager()" style="display:none">📄 One-pager</button>
+    <a href="consolidado.html" target="_blank"><button class="btn btn-accent">Vista consolidada →</button></a>
+  </div>
+</div>
+
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <h3>Procesos</h3>
+      <button class="btn btn-accent" style="width:100%" onclick="openNewModal()">+ Nuevo proceso</button>
+    </div>
+    <div id="process-list"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+    <div id="empty-state">
+      <h2>Bienvenida, Catalina</h2>
+      <p>Creá un nuevo proceso o seleccioná uno existente para continuar el análisis.</p>
+    </div>
+    <div id="process-view" style="display:none">
+      <div id="progress-wrap"><div class="progress-track" id="progress-track"></div></div>
+      <div id="step-header"></div>
+      <div id="step-content"></div>
+      <div id="step-nav">
+        <button class="btn btn-soft" id="btn-prev" onclick="prevStep()">← Anterior</button>
+        <span class="nav-info" id="nav-info"></span>
+        <button class="btn btn-accent" id="btn-next" onclick="nextStep()">Guardar y continuar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO PROCESO -->
+<div id="modal-overlay">
+  <div id="modal">
+    <h3>Nuevo proceso</h3>
+    <p>Completá los datos iniciales. Vas a poder editarlos dentro del wizard.</p>
+    <input type="text" id="new-proc-name" placeholder="Nombre del proceso o área (ej: Área Legal)" />
+    <input type="text" id="new-proc-area" placeholder="Unidad de negocio / área (ej: Corporativo)" />
+    <div class="modal-actions">
+      <button class="btn btn-soft" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-accent" onclick="createProcess()">Crear proceso</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="file-import" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<script>
+// ════════════════════════════════════════════════════════
+// DATA MODEL
+// ════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// SUPABASE
+// ════════════════════════════════════════════════════════
+const SB_URL  = 'https://wpmxxoojxtilgqbhymji.supabase.co';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndwbXh4b29qeHRpbGdxYmh5bWppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MzAzOTUsImV4cCI6MjEwNTUwNjM5NX0.TurznBdylkCfb3JMHbMeg_phfdaiwjJVE44x3dPsvNg';
+const SB_ROW  = 'wizard-db';
+const { createClient } = supabase;
+const sbClient = createClient(SB_URL, SB_KEY);
+
+function showSaveIndicator(msg){ const el=document.getElementById('save-indicator'); if(!el)return; el.style.display='inline'; el.textContent=msg; }
+function hideSaveIndicator(){ const el=document.getElementById('save-indicator'); if(!el)return; setTimeout(()=>{ el.style.display='none'; },1500); }
+
+const HABILITANTES = [
+  'CTO con mandato real incorporado',
+  'Organización IT reconfigurada (Practia)',
+  'Presupuesto IT revisado al alza',
+  'Datos maestros saneados',
+  'Gobernanza IA operativa (Comité + políticas)',
+  'Arquitectura de integración corporativa',
+  'Área de Negocios Digitales con mandato y P&L',
+  'Equipo ágil y de PM (oficina de transformación)',
+];
+
+const STEPS = [
+  { id:'preA',      label:'Pre A',     title:'CEO Intake',               subtitle:'Señal inicial del CEO', color:'#7C3AED' },
+  { id:'preB',      label:'Pre B',     title:'Reunión Director/Gerente', subtitle:'Definición del proceso específico', color:'#276BA5' },
+  { id:'killGate1', label:'Gate 1',    title:'Kill Gate 1',              subtitle:'¿Vale la pena relevar?', color:'#E74C3C', gate:true },
+  { id:'preC',      label:'Pre C',     title:'Relevamiento Operativo',   subtitle:'Mapeo con el equipo', color:'#D97706' },
+  { id:'realign',   label:'Re-align',  title:'Re-alignment Check',       subtitle:'Validación de discrepancias', color:'#E74C3C', gate:true },
+  { id:'killGate2', label:'Gate 2',    title:'Kill Gate 2',              subtitle:'¿El proceso es automatizable?', color:'#E74C3C', gate:true },
+  { id:'paso1',     label:'Paso 1',    title:'Cuantificación',           subtitle:'Dimensionamiento del problema', color:'#E85020' },
+  { id:'paso2',     label:'Paso 2',    title:'Solución + IT',            subtitle:'To-Be y factibilidad técnica', color:'#E85020' },
+  { id:'killGate3', label:'Gate 3',    title:'Kill Gate 3',              subtitle:'¿IT puede ejecutarlo en 2027?', color:'#E74C3C', gate:true },
+  { id:'paso3',     label:'Paso 3',    title:'Business Case',            subtitle:'Inversión, beneficio y retorno', color:'#E85020' },
+  { id:'paso4',     label:'Paso 4',    title:'Riesgos y Habilitantes',   subtitle:'Condiciones del proyecto', color:'#E85020' },
+  { id:'signoff',   label:'Sign-off',  title:'Sign-off Director',        subtitle:'Validación antes del output CEO', color:'#27AE60' },
+];
+
+const STATUS_LABELS = {
+  preA:'Pre A', preB:'Pre B', killGate1:'Gate 1', preC:'Pre C',
+  realign:'Re-align', killGate2:'Gate 2', paso1:'Paso 1', paso2:'Paso 2',
+  killGate3:'Gate 3', paso3:'Paso 3', paso4:'Paso 4', signoff:'Sign-off',
+  completed:'Completado', discarded:'Descartado',
+};
+const STATUS_CSS = {
+  preA:'st-preA', preB:'st-preB', killGate1:'st-gate', preC:'st-paso',
+  realign:'st-gate', killGate2:'st-gate', paso1:'st-paso', paso2:'st-paso',
+  killGate3:'st-gate', paso3:'st-paso', paso4:'st-paso', signoff:'st-signoff',
+  completed:'st-completed', discarded:'st-discarded',
+};
+
+let db = {}, currentId = null, currentStepIdx = 0, stage1 = {pain_points:[], opportunities:[]};
+let saveTimer = null;
+
+async function loadDB(){
+  try {
+    const { data, error } = await sbClient.from('sections').select('content').eq('id', SB_ROW).single();
+    if (error || !data) { db = {}; return; }
+    db = JSON.parse(data.content || '{}');
+  } catch { db = {}; }
+}
+async function saveDB(){
+  showSaveIndicator('Guardando…');
+  try {
+    await sbClient.from('sections').upsert({ id: SB_ROW, content: JSON.stringify(db), updated_at: new Date().toISOString() });
+    showSaveIndicator('Guardado ✓');
+  } catch(e) { showSaveIndicator('Error al guardar'); console.error(e); }
+  hideSaveIndicator();
+}
+function getData(){ return db[currentId]||{}; }
+function getStepData(stepId){ return (getData()[stepId])||{}; }
+function setStepData(stepId, patch){
+  if(!db[currentId]) return;
+  db[currentId][stepId] = Object.assign({}, getStepData(stepId), patch);
+  db[currentId].updatedAt = new Date().toISOString();
+  scheduleSave();
+}
+function scheduleSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(saveDB, 400); }
+
+// ════════════════════════════════════════════════════════
+// STAGE 1 DATA
+// ════════════════════════════════════════════════════════
+fetch('data/stage1-data.json')
+  .then(r=>r.json()).then(d=>{ stage1=d; })
+  .catch(()=>{ console.warn('stage1-data.json no cargó — cross-reference deshabilitado'); });
+
+function getStage1ForArea(area){
+  if(!area||!stage1.pain_points) return {pps:[], opps:[]};
+  const q = area.toLowerCase();
+  const pps = stage1.pain_points.filter(p=>
+    (p.area||'').toLowerCase().includes(q) ||
+    (p.vertical||'').toLowerCase().includes(q) ||
+    (p.title||'').toLowerCase().includes(q)
+  ).slice(0,15);
+  const opps = stage1.opportunities.filter(o=>
+    (o.area||'').toLowerCase().includes(o) ||
+    (o.vertical||'').toLowerCase().includes(q) ||
+    (o.title||'').toLowerCase().includes(q)
+  ).slice(0,10);
+  return {pps, opps};
+}
+
+// ════════════════════════════════════════════════════════
+// PROCESS LIST
+// ════════════════════════════════════════════════════════
+function renderSidebar(){
+  const list = document.getElementById('process-list');
+  const ids = Object.keys(db);
+  if(!ids.length){ list.innerHTML='<div class="empty-list">Ningún proceso todavía.<br>Creá el primero.</div>'; return; }
+  list.innerHTML = ids.map(id=>{
+    const p = db[id];
+    const active = id===currentId ? 'active':'';
+    const badge = STATUS_LABELS[p.status]||p.status;
+    const css = STATUS_CSS[p.status]||'st-preA';
+    return `<div class="proc-item ${active}" onclick="selectProcess('${id}')">
+      <div class="proc-name">${p.name||'Sin nombre'}</div>
+      <div class="proc-area">${p.area||'—'}</div>
+      <div class="proc-status"><span class="status-badge ${css}">${badge}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function selectProcess(id){
+  currentId = id;
+  currentStepIdx = stepIdxFromStatus(db[id].status);
+  renderSidebar();
+  renderProcessView();
+  document.getElementById('empty-state').style.display='none';
+  document.getElementById('process-view').style.display='block';
+  document.getElementById('btn-export').style.display='';
+  document.getElementById('btn-onepager').style.display = db[id].status==='completed'?'':'none';
+}
+
+function stepIdxFromStatus(status){
+  if(status==='completed') return STEPS.length-1;
+  if(status==='discarded') return 0;
+  const idx = STEPS.findIndex(s=>s.id===status);
+  return idx>=0?idx:0;
+}
+
+// ════════════════════════════════════════════════════════
+// PROCESS VIEW
+// ════════════════════════════════════════════════════════
+function renderProcessView(){
+  renderProgress();
+  renderStepHeader();
+  renderStep();
+  renderNav();
+}
+
+function renderProgress(){
+  const track = document.getElementById('progress-track');
+  const proc = getData();
+  track.innerHTML = STEPS.map((s,i)=>{
+    const stepIdx = STEPS.findIndex(x=>x.id===proc.status);
+    const done = i < (stepIdx>=0?stepIdx:0);
+    const active = i===currentStepIdx;
+    const gate = s.gate?'gate':'';
+    return `<div class="progress-node ${done?'done':''} ${active?'active':''} ${gate}" onclick="goToStep(${i})" title="${s.title}">
+      <div class="pn-dot">${done?'✓':i+1}</div>
+      <div class="pn-label">${s.label}</div>
+    </div>`;
+  }).join('');
+}
+
+function goToStep(i){
+  // Only allow going back or to current step
+  const proc = getData();
+  const currentStatusIdx = STEPS.findIndex(s=>s.id===proc.status);
+  if(i<=currentStatusIdx) { currentStepIdx=i; renderProcessView(); }
+}
+
+function renderStepHeader(){
+  const s = STEPS[currentStepIdx];
+  document.getElementById('step-header').innerHTML = `
+    <div class="step-meta">Paso ${currentStepIdx+1} de ${STEPS.length}</div>
+    <div class="step-title" style="color:${s.color}">${s.title}</div>
+    <div class="step-subtitle">${s.subtitle}</div>`;
+}
+
+function renderNav(){
+  const proc = getData();
+  const isDiscarded = proc.status==='discarded';
+  const isCompleted = proc.status==='completed';
+  document.getElementById('btn-prev').style.display = currentStepIdx>0?'':'none';
+  document.getElementById('btn-next').style.display = (isDiscarded||isCompleted)?'none':'';
+  const s = STEPS[currentStepIdx];
+  document.getElementById('nav-info').textContent = `Auto-guardado · ${proc.updatedAt?new Date(proc.updatedAt).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'sin cambios'}`;
+}
+
+// ════════════════════════════════════════════════════════
+// STEP RENDERER
+// ════════════════════════════════════════════════════════
+function renderStep(){
+  const s = STEPS[currentStepIdx];
+  const el = document.getElementById('step-content');
+  if(s.id==='preA')      { el.innerHTML = renderPreA(); bindPreA(); }
+  else if(s.id==='preB') { el.innerHTML = renderPreB(); bindPreB(); }
+  else if(s.id==='killGate1') { el.innerHTML = renderGate('killGate1','¿Vale la pena relevar este proceso?',['El proceso tiene volumen suficiente para justificar el análisis','El Director facilitará acceso al equipo operativo','El proceso es relevante para el presupuesto 2027','No está siendo trabajado por otra iniciativa activa']); bindGate('killGate1'); }
+  else if(s.id==='preC') { el.innerHTML = renderPreC(); bindPreC(); }
+  else if(s.id==='realign') { el.innerHTML = renderRealign(); bindRealign(); }
+  else if(s.id==='killGate2') { el.innerHTML = renderGate('killGate2','¿El proceso es automatizable?',['El proceso es repetitivo y estandarizable','Los datos necesarios están disponibles o pueden estarlo','El equipo mostró apertura al cambio','El impacto potencial justifica la inversión','La métrica de éxito está definida y tiene un responsable de medición']); bindGate('killGate2'); }
+  else if(s.id==='paso1') { el.innerHTML = renderPaso1(); bindPaso1(); }
+  else if(s.id==='paso2') { el.innerHTML = renderPaso2(); bindPaso2(); }
+  else if(s.id==='killGate3') { el.innerHTML = renderGate('killGate3','¿IT puede ejecutarlo en 2027?',['IT confirmó factibilidad Alta o Media','Las condiciones técnicas son alcanzables en 2027','No depende de sistemas en proceso de reemplazo o migración']); bindGate('killGate3'); }
+  else if(s.id==='paso3') { el.innerHTML = renderPaso3(); bindPaso3(); }
+  else if(s.id==='paso4') { el.innerHTML = renderPaso4(); bindPaso4(); }
+  else if(s.id==='signoff') { el.innerHTML = renderSignoff(); bindSignoff(); }
+}
+
+// ── PRE A ──────────────────────────────────────────────
+function renderPreA(){
+  const d = getStepData('preA');
+  return `
+  <div class="form-card">
+    <div class="form-section-title">Señal del CEO</div>
+    <div class="field"><label>Área/UN señalada <span class="required">*</span></label>
+      <input type="text" id="pa-area" value="${esc(d.area)}" placeholder="Ej: Área Legal, Creditech, Finanzas Corporativo...">
+    </div>
+    <div class="field"><label>CEO que lo señaló <span class="required">*</span></label>
+      <input type="text" id="pa-ceo" value="${esc(d.ceo)}" placeholder="Ej: Nicolás Ballestrero">
+    </div>
+    <div class="field"><label>Fecha <span class="required">*</span></label>
+      <input type="date" id="pa-fecha" value="${esc(d.fecha)}">
+    </div>
+    <div class="field"><label>Contexto y motivación <span class="required">*</span></label>
+      <textarea id="pa-contexto" placeholder="¿Qué dijo el CEO? ¿Por qué señaló esta área?">${esc(d.contexto)}</textarea>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Cross-reference Etapa 1 — PPs y OPPs relacionadas</div>
+    <div class="info-banner">Escribí el área en el campo de arriba y se filtran automáticamente los dolores y oportunidades ya relevados en la Etapa 1 del PID.</div>
+    <div id="stage1-panel" class="stage1-panel"><div class="s1-empty">Completá el área para ver los datos de Etapa 1.</div></div>
+  </div>
+  <div class="form-card highlight-card">
+    <div class="form-section-title">Hipótesis preliminar para llevar al Director</div>
+    <div class="warn-banner">⚠ Nunca vayas a la reunión con el Director sin una hipótesis basada en los datos de Etapa 1. Documentala acá antes de continuar.</div>
+    <div class="field"><label>Hipótesis <span class="required">*</span></label>
+      <textarea id="pa-hipotesis" placeholder="Basada en los PPs y OPPs de arriba, ¿cuál es tu hipótesis sobre el proceso o problema central de esta área?">${esc(d.hipotesis)}</textarea>
+    </div>
+  </div>`;
+}
+function bindPreA(){
+  auto('pa-area','preA','area', ()=>updateStage1Panel());
+  auto('pa-ceo','preA','ceo');
+  auto('pa-fecha','preA','fecha');
+  auto('pa-contexto','preA','contexto');
+  auto('pa-hipotesis','preA','hipotesis');
+  updateStage1Panel();
+}
+function updateStage1Panel(){
+  const area = document.getElementById('pa-area')?.value||'';
+  const panel = document.getElementById('stage1-panel');
+  if(!panel) return;
+  if(!area.trim()){ panel.innerHTML='<div class="s1-empty">Completá el área para ver los datos de Etapa 1.</div>'; return; }
+  const {pps, opps} = getStage1ForArea(area);
+  if(!pps.length && !opps.length){ panel.innerHTML='<div class="s1-empty">No se encontraron datos de Etapa 1 para esta área. Revisá el nombre o buscá por vertical (V1/V2/V3/V4).</div>'; return; }
+  panel.innerHTML = [
+    ...pps.map(p=>`<div class="s1-item"><span class="s1-badge s1-pp">PP</span><div><div class="s1-id">${p.id} · Sev ${p.severidad||'?'}</div><div class="s1-title">${p.title}</div></div></div>`),
+    ...opps.map(o=>`<div class="s1-item"><span class="s1-badge s1-opp">OPP</span><div><div class="s1-id">${o.id} · ${o.prioridad||'?'}</div><div class="s1-title">${o.title}</div></div></div>`),
+  ].join('');
+}
+
+// ── PRE B ──────────────────────────────────────────────
+function renderPreB(){
+  const d = getStepData('preB');
+  const dA = getStepData('preA');
+  const equipo = d.equipo || [''];
+  return `
+  <div class="info-banner">Hipótesis llevada a esta reunión: <strong>"${esc(dA.hipotesis)||'No definida en Pre A'}"</strong></div>
+  <div class="form-card">
+    <div class="form-section-title">Datos de la reunión</div>
+    <div class="field"><label>Director / Gerente del área <span class="required">*</span></label>
+      <input type="text" id="pb-director" value="${esc(d.director)}" placeholder="Nombre y cargo">
+    </div>
+    <div class="field"><label>Fecha de reunión <span class="required">*</span></label>
+      <input type="date" id="pb-fecha" value="${esc(d.fecha)}">
+    </div>
+    <div class="field"><label>Proceso identificado por el Director <span class="required">*</span></label>
+      <input type="text" id="pb-proceso" value="${esc(d.proceso)}" placeholder="Nombre específico del proceso">
+    </div>
+    <div class="field"><label>¿Matchea con la hipótesis? <span class="required">*</span></label>
+      ${renderRadio('pb-match',['Sí','Parcial','No'],d.match)}
+    </div>
+    <div class="field"><label>Notas sobre el match <span class="hint">(qué coincidió, qué no)</span></label>
+      <textarea id="pb-match-notas" placeholder="Diferencias o confirmaciones respecto a la hipótesis">${esc(d.matchNotas)}</textarea>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Alcance</div>
+    <div class="field"><label>Qué incluye el análisis <span class="required">*</span></label>
+      <textarea id="pb-incluye" placeholder="Qué partes del proceso están dentro del scope">${esc(d.incluye)}</textarea>
+    </div>
+    <div class="field"><label>Qué NO incluye</label>
+      <textarea id="pb-excluye" placeholder="Qué queda explícitamente fuera del scope">${esc(d.excluye)}</textarea>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Equipo operativo a relevar</div>
+    <div class="rep-list" id="equipo-list">
+      ${equipo.map((v,i)=>`<div class="rep-row"><input type="text" class="eq-item" placeholder="Nombre · Rol" value="${esc(v)}"><button class="rep-del" onclick="removeRep('equipo-list',${i})">×</button></div>`).join('')}
+    </div>
+    <button class="btn-add-rep" onclick="addRep('equipo-list','eq-item','preB','equipo')">+ Agregar persona</button>
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Alineación</div>
+    <div class="field"><label>¿El Director está alineado con el foco del análisis? <span class="required">*</span></label>
+      ${renderConfirm('pb-alineado','Confirmo que el Director validó el proceso y el alcance del relevamiento', d.alineado)}
+    </div>
+  </div>`;
+}
+function bindPreB(){
+  auto('pb-director','preB','director');
+  auto('pb-fecha','preB','fecha');
+  auto('pb-proceso','preB','proceso');
+  bindRadio('pb-match','preB','match');
+  auto('pb-match-notas','preB','matchNotas');
+  auto('pb-incluye','preB','incluye');
+  auto('pb-excluye','preB','excluye');
+  bindRepList('equipo-list','eq-item','preB','equipo');
+  bindConfirm('pb-alineado','preB','alineado');
+}
+
+// ── GATE ───────────────────────────────────────────────
+function renderGate(gateId, question, criteria){
+  const d = getStepData(gateId);
+  const checks = d.checks||criteria.map(()=>false);
+  const discarded = d.discarded||false;
+  return `
+  <div class="gate-card">
+    <div class="gate-title">⛔ ${STEPS.find(s=>s.id===gateId).title}</div>
+    <div class="gate-subtitle">${question} — Todos los criterios deben cumplirse para continuar.</div>
+    <div class="gate-criteria">
+      ${criteria.map((c,i)=>`
+        <div class="gate-crit ${checks[i]?'checked':''}" id="gc-${i}" onclick="toggleGateCrit('${gateId}',${i})">
+          <div class="crit-check">${checks[i]?'✓':''}</div>
+          <div class="crit-text">${c}</div>
+        </div>`).join('')}
+    </div>
+    <div class="gate-discard">
+      <label>Si el proceso no pasa este gate, registrá la razón del descarte:</label>
+      <textarea id="gate-discard-reason" placeholder="Razón del descarte (dejar vacío si pasa el gate)">${esc(d.discardReason)}</textarea>
+    </div>
+  </div>`;
+}
+function bindGate(gateId){
+  autoById('gate-discard-reason', val=>setStepData(gateId,{discardReason:val}));
+}
+function toggleGateCrit(gateId, idx){
+  const d = getStepData(gateId);
+  const criteria = d.checks||(gateId==='killGate1'?[false,false,false,false]:gateId==='killGate2'?[false,false,false,false]:[false,false,false]);
+  criteria[idx] = !criteria[idx];
+  setStepData(gateId,{checks:criteria});
+  const el = document.getElementById(`gc-${idx}`);
+  el.classList.toggle('checked',criteria[idx]);
+  el.querySelector('.crit-check').textContent = criteria[idx]?'✓':'';
+}
+
+// ── PRE C ──────────────────────────────────────────────
+function renderPreC(){
+  const d = getStepData('preC');
+  const pasos = d.pasos||[''];
+  const dolores = d.dolores||[''];
+  const participantes = d.participantes||[''];
+  return `
+  <div class="warn-banner">⚠ Campo crítico: "Workarounds" y "Discrepancias con Pre B" son los más valiosos de esta fase. No los saltees.</div>
+  <div class="form-card">
+    <div class="form-section-title">Metodología y sesión</div>
+    <div class="field"><label>Metodología de relevamiento <span class="required">*</span></label>
+      ${renderMultiCheck('pc-met',['Entrevista','Observación directa','Time tracking','Revisión de documentos'], d.metodologia||[])}
+    </div>
+    <div class="field"><label>Fecha(s) de sesión <span class="required">*</span></label>
+      <input type="text" id="pc-fecha" value="${esc(d.fecha)}" placeholder="Ej: 05/09 y 08/09/2026">
+    </div>
+    <div class="field"><label>Participantes del equipo operativo <span class="required">*</span></label>
+      <div class="rep-list" id="part-list">
+        ${participantes.map((v,i)=>`<div class="rep-row"><input type="text" class="part-item" placeholder="Nombre · Rol" value="${esc(v)}"><button class="rep-del" onclick="removeRep('part-list',${i})">×</button></div>`).join('')}
+      </div>
+      <button class="btn-add-rep" onclick="addRep('part-list','part-item','preC','participantes')">+ Agregar persona</button>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Proceso As-Is — paso a paso</div>
+    <div class="info-banner">Describí el proceso como el equipo lo hace realmente hoy, no como debería hacerse. Incluí tiempos si podés.</div>
+    <div class="steps-list" id="pasos-list">
+      ${pasos.map((v,i)=>`<div class="step-row"><div class="step-num">${i+1}</div><textarea class="paso-item" placeholder="Describí este paso...">${esc(v)}</textarea><button class="rep-del" onclick="removeStep(${i})">×</button></div>`).join('')}
+    </div>
+    <button class="btn-add-rep" onclick="addStep()">+ Agregar paso</button>
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Sistemas y datos</div>
+    <div class="field"><label>Sistemas involucrados <span class="required">*</span></label>
+      <textarea id="pc-sistemas" placeholder="Qué sistemas usa el equipo: SAP, Excel, WhatsApp, email, sistemas propios...">${esc(d.sistemas)}</textarea>
+    </div>
+    <div class="field"><label>Volumen y frecuencia <span class="required">*</span></label>
+      <input type="text" id="pc-volumen" value="${esc(d.volumen)}" placeholder="Ej: 200 facturas/mes · proceso diario · 3hs por ocurrencia">
+    </div>
+  </div>
+  <div class="form-card highlight-card">
+    <div class="form-section-title">Hallazgos críticos</div>
+    <div class="field"><label>Workarounds detectados <span class="required">*</span>
+      <span class="hint">— atajos e informalidades que usa el equipo</span></label>
+      <textarea id="pc-workarounds" placeholder="Describí qué hace el equipo por fuera del proceso formal. Si no encontrás ninguno, revisá la metodología.">${esc(d.workarounds)}</textarea>
+    </div>
+    <div class="field"><label>Dolores en palabras del equipo <span class="required">*</span></label>
+      <div class="rep-list" id="dolores-list">
+        ${dolores.map((v,i)=>`<div class="rep-row"><input type="text" class="dolor-item" placeholder="Frases textuales del equipo sobre lo que les duele" value="${esc(v)}"><button class="rep-del" onclick="removeRep('dolores-list',${i})">×</button></div>`).join('')}
+      </div>
+      <button class="btn-add-rep" onclick="addRep('dolores-list','dolor-item','preC','dolores')">+ Agregar dolor</button>
+    </div>
+    <div class="field"><label>Discrepancias con lo que describió el Director (Pre B) <span class="required">*</span></label>
+      <textarea id="pc-discrepancias" placeholder="¿En qué difirió la realidad operativa de lo que describió el Director? Escribí 'ninguna' si coincidió.">${esc(d.discrepancias)}</textarea>
+    </div>
+  </div>`;
+}
+function bindPreC(){
+  bindMultiCheck('pc-met','preC','metodologia');
+  auto('pc-fecha','preC','fecha');
+  bindRepList('part-list','part-item','preC','participantes');
+  bindStepsList();
+  auto('pc-sistemas','preC','sistemas');
+  auto('pc-volumen','preC','volumen');
+  auto('pc-workarounds','preC','workarounds');
+  bindRepList('dolores-list','dolor-item','preC','dolores');
+  auto('pc-discrepancias','preC','discrepancias');
+}
+
+// ── REALIGN ────────────────────────────────────────────
+function renderRealign(){
+  const d = getStepData('realign');
+  const disc = getStepData('preC').discrepancias||'';
+  return `
+  <div class="realign-card">
+    <div class="gate-title" style="color:#D97706">🔄 Re-alignment Check</div>
+    <div class="gate-subtitle" style="margin-bottom:20px">Verificá si las discrepancias encontradas en Pre C requieren volver al Director antes de continuar el análisis.</div>
+    <div class="form-card" style="background:var(--soft);border:none">
+      <div class="form-section-title">Discrepancias registradas en Pre C</div>
+      <p style="font-size:13px;color:var(--ink2);line-height:1.6">${disc||'No se registraron discrepancias en Pre C.'}</p>
+    </div>
+    <div class="field" style="margin-top:20px"><label>¿Las discrepancias son significativas y requieren re-alinear con el Director? <span class="required">*</span></label>
+      ${renderRadio('ra-requiere',['Sí — voy a hablar con el Director antes de continuar','No — el análisis puede seguir con los datos del equipo'],d.requiere)}
+    </div>
+    <div class="field"><label>Notas de re-alineación <span class="hint">(si hubo reunión de seguimiento con el Director)</span></label>
+      <textarea id="ra-notas" placeholder="Qué se acordó en la re-alineación, qué cambió en el scope...">${esc(d.notas)}</textarea>
+    </div>
+    <div class="field"><label>Fecha de re-alineación</label>
+      <input type="date" id="ra-fecha" value="${esc(d.fecha)}">
+    </div>
+  </div>`;
+}
+function bindRealign(){
+  bindRadio('ra-requiere','realign','requiere');
+  auto('ra-notas','realign','notas');
+  auto('ra-fecha','realign','fecha');
+}
+
+// ── PASO 1 ─────────────────────────────────────────────
+function renderPaso1(){
+  const d = getStepData('paso1');
+  const cm = calcCostoMensual(d);
+  return `
+  <div class="form-card">
+    <div class="form-section-title">Dimensionamiento actual</div>
+    <div class="field"><label>Horas/persona/mes <span class="required">*</span></label>
+      <input type="number" id="p1-horas" value="${d.horas||''}" min="0" placeholder="0">
+    </div>
+    <div class="field"><label>Nivel de confianza del dato <span class="required">*</span></label>
+      ${renderRadio('p1-confianza',['Estimación','Validado por el equipo','Medido formalmente'],d.confianza)}
+    </div>
+    <div class="field"><label>Personas involucradas <span class="required">*</span></label>
+      <input type="number" id="p1-personas" value="${d.personas||''}" min="0" placeholder="0">
+    </div>
+    <div class="field"><label>Costo hora promedio (ARS) <span class="hint">— opcional, para el cálculo automático</span></label>
+      <input type="number" id="p1-costohr" value="${d.costoHora||''}" min="0" placeholder="0">
+    </div>
+    <div class="field"><label>Costo mensual estimado (calculado)</label>
+      <div class="calc-field" id="p1-costo-calc">${cm}</div>
+    </div>
+    <div class="field"><label>Tasa de error estimada (%)</label>
+      <input type="number" id="p1-error" value="${d.error||''}" min="0" max="100" placeholder="0">
+    </div>
+  </div>
+  <div class="form-card highlight-card">
+    <div class="form-section-title">Impacto en P&L — tres escenarios</div>
+    <div class="info-banner">Si no tenés datos duros, usá estimaciones conservadoras. El escenario base es el que aparece en el one-pager.</div>
+    <div class="field"><label>Tipo de impacto <span class="required">*</span></label>
+      ${renderRadio('p1-tipo',['Ahorro en costos','Revenue adicional','Ambos'],d.tipo)}
+    </div>
+    <div class="field"><label>Conservador (ARS/año) <span class="required">*</span></label>
+      <input type="number" id="p1-imp-c" value="${d.impConservador||''}" min="0" placeholder="0">
+    </div>
+    <div class="field"><label>Base (ARS/año) <span class="required">*</span></label>
+      <input type="number" id="p1-imp-b" value="${d.impBase||''}" min="0" placeholder="0">
+    </div>
+    <div class="field"><label>Optimista (ARS/año) <span class="required">*</span></label>
+      <input type="number" id="p1-imp-o" value="${d.impOptimista||''}" min="0" placeholder="0">
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Métrica de éxito — ¿cómo lo vas a verificar?</div>
+    <div class="info-banner">Si declaraste un impacto, definí ya cómo lo vas a medir después del go-live. Sin esto, el business case no es verificable.</div>
+    <div class="field"><label>Indicador principal <span class="required">*</span></label>
+      <input type="text" id="p1-kpi-ind" value="${esc(d.kpiIndicador||'')}" placeholder="Ej: Horas-persona en conciliación · N° errores por mes · Tiempo de cierre">
+    </div>
+    <div class="field"><label>Valor actual (baseline)</label>
+      <input type="text" id="p1-kpi-base" value="${esc(d.kpiBaseline||'')}" placeholder="Ej: 40 hs/mes · 15% tasa de error">
+    </div>
+    <div class="field"><label>Target a 90 días post go-live</label>
+      <input type="text" id="p1-kpi-target" value="${esc(d.kpiTarget||'')}" placeholder="Ej: 10 hs/mes · &lt; 3% tasa de error">
+    </div>
+    <div class="field"><label>Responsable de medir <span class="required">*</span></label>
+      <input type="text" id="p1-kpi-resp" value="${esc(d.kpiResponsable||'')}" placeholder="Nombre y cargo">
+    </div>
+  </div>`;
+}
+function bindPaso1(){
+  const recalc = ()=>{
+    const h = +v('p1-horas'), p = +v('p1-personas'), c = +v('p1-costohr');
+    const cm = h&&p&&c ? fmtARS(h*p*c) : h&&p ? `${h*p} horas/mes totales` : '—';
+    document.getElementById('p1-costo-calc').textContent = cm;
+    setStepData('paso1',{horas:v('p1-horas'),personas:v('p1-personas'),costoHora:v('p1-costohr')});
+  };
+  ['p1-horas','p1-personas','p1-costohr'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input',recalc); });
+  auto('p1-error','paso1','error');
+  auto('p1-imp-c','paso1','impConservador');
+  auto('p1-imp-b','paso1','impBase');
+  auto('p1-imp-o','paso1','impOptimista');
+  bindRadio('p1-confianza','paso1','confianza');
+  bindRadio('p1-tipo','paso1','tipo');
+  auto('p1-kpi-ind','paso1','kpiIndicador');
+  auto('p1-kpi-base','paso1','kpiBaseline');
+  auto('p1-kpi-target','paso1','kpiTarget');
+  auto('p1-kpi-resp','paso1','kpiResponsable');
+}
+
+// ── PASO 2 ─────────────────────────────────────────────
+function renderPaso2(){
+  const d = getStepData('paso2');
+  return `
+  <div class="form-card">
+    <div class="form-section-title">Solución propuesta (To-Be)</div>
+    <div class="field"><label>Descripción de la solución <span class="required">*</span></label>
+      <textarea id="p2-desc" placeholder="Cómo quedaría el proceso con la solución implementada">${esc(d.desc)}</textarea>
+    </div>
+    <div class="field"><label>Tecnología propuesta <span class="required">*</span></label>
+      ${renderMultiCheck('p2-tec',['IA / ML','RPA','Integración API','Desarrollo de app','BI / Analytics','Copilot / IA generativa','Otro'],d.tecnologia||[])}
+    </div>
+    <div class="field"><label>Enfoque <span class="required">*</span></label>
+      ${renderRadio('p2-enfoque',['MVP','Piloto','Solución completa'],d.enfoque)}
+    </div>
+    <div class="field"><label>Dependencias técnicas</label>
+      <textarea id="p2-deps" placeholder="Qué tiene que estar resuelto técnicamente antes de poder implementar">${esc(d.deps)}</textarea>
+    </div>
+  </div>
+  <div class="form-card highlight-card">
+    <div class="form-section-title">Input de IT — obligatorio antes de continuar</div>
+    <div class="warn-banner">⚠ No avances sin este input. Un business case sin validación de IT no tiene credibilidad frente al CEO.</div>
+    <div class="field"><label>Quién de IT evaluó <span class="required">*</span></label>
+      <input type="text" id="p2-it-quien" value="${esc(d.itQuien)}" placeholder="Nombre y cargo">
+    </div>
+    <div class="field"><label>Fecha de evaluación IT <span class="required">*</span></label>
+      <input type="date" id="p2-it-fecha" value="${esc(d.itFecha)}">
+    </div>
+    <div class="field"><label>Factibilidad <span class="required">*</span></label>
+      ${renderRadio('p2-it-fact',['Alta','Media','Baja'],d.itFactibilidad)}
+    </div>
+    <div class="field"><label>Condiciones técnicas necesarias</label>
+      <textarea id="p2-it-cond" placeholder="Qué tiene que estar resuelto para que IT pueda ejecutarlo">${esc(d.itCondiciones)}</textarea>
+    </div>
+    <div class="field"><label>Capacidad IT para ejecutar en 2027 <span class="required">*</span></label>
+      ${renderRadio('p2-it-cap',['Sí','Con recursos adicionales','No'],d.itCapacidad)}
+    </div>
+  </div>`;
+}
+function bindPaso2(){
+  auto('p2-desc','paso2','desc');
+  bindMultiCheck('p2-tec','paso2','tecnologia');
+  bindRadio('p2-enfoque','paso2','enfoque');
+  auto('p2-deps','paso2','deps');
+  auto('p2-it-quien','paso2','itQuien');
+  auto('p2-it-fecha','paso2','itFecha');
+  bindRadio('p2-it-fact','paso2','itFactibilidad');
+  auto('p2-it-cond','paso2','itCondiciones');
+  bindRadio('p2-it-cap','paso2','itCapacidad');
+}
+
+// ── PASO 3 ─────────────────────────────────────────────
+function renderPaso3(){
+  const d = getStepData('paso3');
+  const totCM = (+d.cmCap||0)+(+d.cmRoles||0)+(+d.cmSoporte||0);
+  const totInv = (+d.invTec||0)+(+d.invImpl||0)+totCM;
+  const benBase = +getStepData('paso1').impBase||0;
+  const pb = benBase>0&&totInv>0 ? `${(totInv/benBase*12).toFixed(1)} meses` : '—';
+  const score = calcScore();
+  return `
+  <div class="form-card">
+    <div class="form-section-title">Inversión</div>
+    <div class="field"><label>Tecnología (one-time, ARS) <span class="required">*</span></label>
+      <input type="number" id="p3-tec" value="${d.invTec||''}" min="0" placeholder="0"></div>
+    <div class="field"><label>Implementación / integración (ARS) <span class="required">*</span></label>
+      <input type="number" id="p3-impl" value="${d.invImpl||''}" min="0" placeholder="0"></div>
+  </div>
+  <div class="form-card highlight-card">
+    <div class="form-section-title">Change Management — no omitir</div>
+    <div class="info-banner">El change management representa el 30–50% del costo real. Omitirlo destruye la credibilidad del BC frente al CFO.</div>
+    <div class="field"><label>Capacitación (ARS) <span class="required">*</span></label>
+      <input type="number" id="p3-cm-cap" value="${d.cmCap||''}" min="0" placeholder="0"></div>
+    <div class="field"><label>Rediseño de roles (ARS) <span class="required">*</span></label>
+      <input type="number" id="p3-cm-roles" value="${d.cmRoles||''}" min="0" placeholder="0"></div>
+    <div class="field"><label>Soporte adopción (ARS) <span class="required">*</span></label>
+      <input type="number" id="p3-cm-sop" value="${d.cmSoporte||''}" min="0" placeholder="0"></div>
+    <div class="field"><label>Total Change Management (calculado)</label>
+      <div class="calc-field" id="p3-cm-calc">${fmtARS(totCM)}</div></div>
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Costos recurrentes y retorno</div>
+    <div class="field"><label>OPEX anual (ARS) <span class="required">*</span></label>
+      <input type="number" id="p3-opex" value="${d.opex||''}" min="0" placeholder="0"></div>
+    <div class="field"><label>Inversión total año 1 (calculado)</label>
+      <div class="calc-field" id="p3-inv-calc">${fmtARS(totInv)}</div></div>
+    <div class="field"><label>Beneficio anual conservador (ARS)</label>
+      <div class="calc-field">${fmtARS(+getStepData('paso1').impConservador||0)} <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:8px">cargado en Paso 1</span></div></div>
+    <div class="field"><label>Beneficio anual base (ARS)</label>
+      <div class="calc-field">${fmtARS(benBase)} <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:8px">cargado en Paso 1</span></div></div>
+    <div class="field"><label>Payback — escenario base (calculado)</label>
+      <div class="calc-field" id="p3-pb-calc">${pb}</div></div>
+    <div class="field"><label>Score de priorización (calculado)</label>
+      <div class="calc-field" id="p3-score-calc" style="font-size:20px">${score}/100</div></div>
+  </div>`;
+}
+function bindPaso3(){
+  const recalc = ()=>{
+    const tec=+v('p3-tec'),impl=+v('p3-impl'),cap=+v('p3-cm-cap'),roles=+v('p3-cm-roles'),sop=+v('p3-cm-sop');
+    const cm=cap+roles+sop, inv=tec+impl+cm;
+    document.getElementById('p3-cm-calc').textContent=fmtARS(cm);
+    document.getElementById('p3-inv-calc').textContent=fmtARS(inv);
+    const benBase=+getStepData('paso1').impBase||0;
+    document.getElementById('p3-pb-calc').textContent=benBase>0&&inv>0?`${(inv/benBase*12).toFixed(1)} meses`:'—';
+    setStepData('paso3',{invTec:v('p3-tec'),invImpl:v('p3-impl'),cmCap:v('p3-cm-cap'),cmRoles:v('p3-cm-roles'),cmSoporte:v('p3-cm-sop')});
+    document.getElementById('p3-score-calc').textContent=calcScore()+'/100';
+  };
+  ['p3-tec','p3-impl','p3-cm-cap','p3-cm-roles','p3-cm-sop'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.addEventListener('input',recalc);
+  });
+  auto('p3-opex','paso3','opex');
+}
+
+// ── PASO 4 ─────────────────────────────────────────────
+function renderPaso4(){
+  const d = getStepData('paso4');
+  const habs = d.habilitantes||HABILITANTES.map(()=>'pending');
+  return `
+  <div class="form-card">
+    <div class="form-section-title">Top 3 Riesgos</div>
+    ${[1,2,3].map(i=>{
+      const prefix = `riesgo${i}`;
+      return `<div style="border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">Riesgo ${i}${i===1?' (requerido)':' (opcional)'}</div>
+        <div class="field"><label>Descripción</label>
+          <input type="text" id="p4-r${i}-desc" value="${esc(d[prefix+'Desc'])}" placeholder="¿Cuál es el riesgo?"></div>
+        <div class="field"><label>Nivel</label>
+          ${renderRadio(`p4-r${i}-nivel`,['Alto','Medio','Bajo'],d[prefix+'Nivel'])}</div>
+        <div class="field"><label>Mitigación</label>
+          <textarea id="p4-r${i}-mit" placeholder="¿Cómo se mitiga?">${esc(d[prefix+'Mit'])}</textarea></div>
+      </div>`;
+    }).join('')}
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Condiciones habilitantes</div>
+    <div class="info-banner">Hacé clic en cada condición para ciclar entre: Sin resolver → En curso → Resuelto</div>
+    <div class="hab-list" id="hab-list">
+      ${HABILITANTES.map((h,i)=>{
+        const st = habs[i]||'pending';
+        const lbl = st==='resolved'?'✓ Resuelto':st==='inprogress'?'→ En curso':'✗ Sin resolver';
+        return `<div class="hab-item ${st}" onclick="cycleHab(${i})" id="hab-${i}">
+          <div class="hab-check">${st==='resolved'?'✓':st==='inprogress'?'→':''}</div>
+          <div class="hab-label">${h}</div>
+          <div class="hab-status-cycle">${lbl}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="form-section-title">Compliance y datos sensibles</div>
+    <div class="field"><label>¿El proceso involucra datos sensibles o requiere análisis de compliance? <span class="required">*</span></label>
+      ${renderRadio('p4-comp',['No','Sí — requiere revisión legal/compliance'],d.compliance)}
+    </div>
+    <div class="field" id="p4-comp-det-wrap" style="${d.compliance&&d.compliance.startsWith('Sí')?'':'display:none'}">
+      <label>Detalle de compliance</label>
+      <textarea id="p4-comp-det" placeholder="Qué datos sensibles involucra y qué revisión se necesita">${esc(d.complianceDet)}</textarea>
+    </div>
+  </div>`;
+}
+function bindPaso4(){
+  [1,2,3].forEach(i=>{
+    auto(`p4-r${i}-desc`,'paso4',`riesgo${i}Desc`);
+    auto(`p4-r${i}-mit`,'paso4',`riesgo${i}Mit`);
+    bindRadio(`p4-r${i}-nivel`,'paso4',`riesgo${i}Nivel`);
+  });
+  bindRadio('p4-comp','paso4','compliance',val=>{
+    document.getElementById('p4-comp-det-wrap').style.display=val&&val.startsWith('Sí')?'':'none';
+  });
+  auto('p4-comp-det','paso4','complianceDet');
+}
+function cycleHab(idx){
+  const d = getStepData('paso4');
+  const habs = d.habilitantes||HABILITANTES.map(()=>'pending');
+  const cycle = {pending:'inprogress',inprogress:'resolved',resolved:'pending'};
+  habs[idx] = cycle[habs[idx]]||'pending';
+  setStepData('paso4',{habilitantes:habs});
+  const st = habs[idx];
+  const el = document.getElementById(`hab-${idx}`);
+  el.className = `hab-item ${st}`;
+  el.querySelector('.hab-check').textContent = st==='resolved'?'✓':st==='inprogress'?'→':'';
+  el.querySelector('.hab-status-cycle').textContent = st==='resolved'?'✓ Resuelto':st==='inprogress'?'→ En curso':'✗ Sin resolver';
+}
+
+// ── SIGN-OFF ───────────────────────────────────────────
+function renderSignoff(){
+  const d = getStepData('signoff');
+  return `
+  <div class="info-banner">Una vez que el Director firme este análisis, se habilita el one-pager para presentar al CEO. Sin sign-off, el análisis no está listo para el Board Digital.</div>
+  <div class="form-card">
+    <div class="form-section-title">Validación del Director del área</div>
+    <div class="field"><label>Nombre del Director <span class="required">*</span></label>
+      <input type="text" id="so-director" value="${esc(d.director)}" placeholder="Nombre completo y cargo">
+    </div>
+    <div class="field"><label>Fecha <span class="required">*</span></label>
+      <input type="date" id="so-fecha" value="${esc(d.fecha)}">
+    </div>
+    <div class="field"><label>Observaciones</label>
+      <textarea id="so-obs" placeholder="Comentarios o condiciones del Director sobre el análisis">${esc(d.observaciones)}</textarea>
+    </div>
+    <div class="field"><label>Confirmación <span class="required">*</span></label>
+      ${renderConfirm('so-confirm','Confirmo que revisé el análisis completo y apruebo su presentación al CEO y Board Digital', d.confirm)}
+    </div>
+  </div>`;
+}
+function bindSignoff(){
+  auto('so-director','signoff','director');
+  auto('so-fecha','signoff','fecha');
+  auto('so-obs','signoff','observaciones');
+  bindConfirm('so-confirm','signoff','confirm');
+}
+
+// ════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════
+function nextStep(){
+  const proc = getData();
+  const s = STEPS[currentStepIdx];
+
+  // Validate kill gate
+  if(s.gate||s.id.startsWith('killGate')){
+    const d = getStepData(s.id);
+    const allChecked = (d.checks||[]).every(Boolean);
+    const discardReason = (d.discardReason||'').trim();
+    if(!allChecked && !discardReason){
+      alert('Marcá todos los criterios o registrá la razón del descarte antes de continuar.');
+      return;
+    }
+    if(!allChecked && discardReason){
+      if(!confirm('¿Confirmás que este proceso no pasa el Kill Gate y se descarta?')) return;
+      db[currentId].status = 'discarded';
+      db[currentId].discardedAt = new Date().toISOString();
+      db[currentId].discardReason = discardReason;
+      saveDB();
+      renderSidebar();
+      renderProcessView();
+      return;
+    }
+  }
+
+  // Advance
+  if(currentStepIdx < STEPS.length - 1){
+    currentStepIdx++;
+    db[currentId].status = STEPS[currentStepIdx].id;
+    saveDB();
+    renderSidebar();
+    renderProcessView();
+    document.getElementById('main').scrollTop=0;
+  } else {
+    // Final step done
+    db[currentId].status = 'completed';
+    saveDB();
+    renderSidebar();
+    document.getElementById('btn-onepager').style.display='';
+    alert('¡Análisis completo! El one-pager está habilitado.');
+  }
+}
+
+function prevStep(){
+  if(currentStepIdx > 0){
+    currentStepIdx--;
+    renderProcessView();
+    document.getElementById('main').scrollTop=0;
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// HELPERS — UI COMPONENTS
+// ════════════════════════════════════════════════════════
+function renderRadio(name, options, selected){
+  return `<div class="radio-group">${options.map(o=>`
+    <label class="radio-opt ${selected===o?'selected':''}" id="ro-${name}-${o.replace(/\s+/g,'_')}">
+      <input type="radio" name="${name}" value="${o}" ${selected===o?'checked':''}>
+      ${o}
+    </label>`).join('')}</div>`;
+}
+function bindRadio(name, stepId, field, cb){
+  document.querySelectorAll(`input[name="${name}"]`).forEach(el=>{
+    el.addEventListener('change',e=>{
+      const val=e.target.value;
+      document.querySelectorAll(`label[id^="ro-${name}-"]`).forEach(l=>l.classList.remove('selected'));
+      const labelId=`ro-${name}-${val.replace(/\s+/g,'_')}`;
+      document.getElementById(labelId)?.classList.add('selected');
+      setStepData(stepId,{[field]:val});
+      if(cb) cb(val);
+    });
+  });
+}
+
+function renderMultiCheck(name, options, selected){
+  return `<div class="check-group">${options.map(o=>`
+    <label class="check-opt ${(selected||[]).includes(o)?'selected':''}" id="co-${name}-${o.replace(/\s+/g,'_')}" onclick="toggleCheck('${name}','${o}')">
+      ${o}
+    </label>`).join('')}</div>`;
+}
+function toggleCheck(name, option){
+  const labelId=`co-${name}-${option.replace(/\s+/g,'_')}`;
+  document.getElementById(labelId)?.classList.toggle('selected');
+}
+function bindMultiCheck(name, stepId, field){
+  // already handled via onclick toggleCheck; read on save
+  const getSelected=()=>Array.from(document.querySelectorAll(`label[id^="co-${name}-"].selected`)).map(l=>l.textContent.trim());
+  document.querySelectorAll(`label[id^="co-${name}-"]`).forEach(el=>{
+    el.addEventListener('click',()=>{ setTimeout(()=>setStepData(stepId,{[field]:getSelected()}),50); });
+  });
+}
+
+function renderConfirm(id, text, checked){
+  return `<div class="confirm-check ${checked?'checked':''}" id="${id}" onclick="toggleConfirm('${id}')">
+    <div class="confirm-box">${checked?'✓':''}</div>
+    <div class="confirm-text">${text}</div>
+  </div>`;
+}
+function toggleConfirm(id){
+  const el=document.getElementById(id);
+  const now=!el.classList.contains('checked');
+  el.classList.toggle('checked',now);
+  el.querySelector('.confirm-box').textContent=now?'✓':'';
+  return now;
+}
+function bindConfirm(id, stepId, field){
+  document.getElementById(id)?.addEventListener('click',()=>{
+    const val=document.getElementById(id)?.classList.contains('checked');
+    setStepData(stepId,{[field]:val});
+  });
+}
+
+function addRep(listId, itemClass, stepId, field){
+  const list=document.getElementById(listId);
+  const idx=list.querySelectorAll('.rep-row').length;
+  const row=document.createElement('div');
+  row.className='rep-row';
+  row.innerHTML=`<input type="text" class="${itemClass}" placeholder=""><button class="rep-del" onclick="removeRep('${listId}',${idx})">×</button>`;
+  list.appendChild(row);
+  row.querySelector('input').addEventListener('input',()=>syncRep(listId,itemClass,stepId,field));
+}
+function removeRep(listId, idx){
+  const list=document.getElementById(listId);
+  const rows=list.querySelectorAll('.rep-row');
+  if(rows[idx]) rows[idx].remove();
+}
+function syncRep(listId, itemClass, stepId, field){
+  const vals=Array.from(document.querySelectorAll(`#${listId} .${itemClass}`)).map(i=>i.value);
+  setStepData(stepId,{[field]:vals});
+}
+function bindRepList(listId, itemClass, stepId, field){
+  document.querySelectorAll(`#${listId} .${itemClass}`).forEach(el=>{
+    el.addEventListener('input',()=>syncRep(listId,itemClass,stepId,field));
+  });
+}
+function addStep(){
+  const list=document.getElementById('pasos-list');
+  const idx=list.querySelectorAll('.step-row').length;
+  const row=document.createElement('div');
+  row.className='step-row';
+  row.innerHTML=`<div class="step-num">${idx+1}</div><textarea class="paso-item" placeholder="Describí este paso..."></textarea><button class="rep-del" onclick="removeStep(${idx})">×</button>`;
+  list.appendChild(row);
+  row.querySelector('textarea').addEventListener('input',syncSteps);
+  renumberSteps();
+}
+function removeStep(idx){
+  const list=document.getElementById('pasos-list');
+  const rows=list.querySelectorAll('.step-row');
+  if(rows[idx]) rows[idx].remove();
+  renumberSteps(); syncSteps();
+}
+function renumberSteps(){
+  document.querySelectorAll('#pasos-list .step-num').forEach((el,i)=>el.textContent=i+1);
+}
+function syncSteps(){
+  const vals=Array.from(document.querySelectorAll('#pasos-list .paso-item')).map(t=>t.value);
+  setStepData('preC',{pasos:vals});
+}
+function bindStepsList(){
+  document.querySelectorAll('#pasos-list .paso-item').forEach(el=>el.addEventListener('input',syncSteps));
+}
+
+// ════════════════════════════════════════════════════════
+// HELPERS — GENERIC
+// ════════════════════════════════════════════════════════
+function auto(id, stepId, field, cb){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('input',e=>{ setStepData(stepId,{[field]:e.target.value}); if(cb) cb(e.target.value); });
+}
+function autoById(id, cb){
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input',e=>cb(e.target.value));
+}
+function v(id){ return document.getElementById(id)?.value||''; }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+function fmtARS(n){ return n>0?`ARS ${Number(n).toLocaleString('es-AR')}`:'—'; }
+
+function calcCostoMensual(d){
+  const h=+d.horas||0, p=+d.personas||0, c=+d.costoHora||0;
+  if(h&&p&&c) return fmtARS(h*p*c);
+  if(h&&p) return `${h*p} horas/mes totales`;
+  return '—';
+}
+
+function calcScore(){
+  const p1=getStepData('paso1'), p2=getStepData('paso2'), p3=getStepData('paso3');
+  const benBase=+p1.impBase||0;
+  const inv=(+p3.invTec||0)+(+p3.invImpl||0)+(+p3.cmCap||0)+(+p3.cmRoles||0)+(+p3.cmSoporte||0);
+  const factMap={'Alta':20,'Media':10,'Baja':0};
+  const confMap={'Medido formalmente':15,'Validado por el equipo':10,'Estimación':5};
+  let s=0;
+  // Impacto P&L (0-40)
+  if(benBase>0&&inv>0){ const ratio=benBase/inv; s+=ratio>2?40:ratio>1?30:ratio>0.5?20:10; }
+  // Payback (0-25)
+  if(benBase>0&&inv>0){ const pb=inv/benBase*12; s+=pb<12?25:pb<24?18:pb<36?10:3; }
+  // Factibilidad IT (0-20)
+  s+=factMap[p2.itFactibilidad]||0;
+  // Confianza dato (0-15)
+  s+=confMap[p1.confianza]||0;
+  return Math.min(s,100);
+}
+
+// ════════════════════════════════════════════════════════
+// PROCESS MANAGEMENT
+// ════════════════════════════════════════════════════════
+function openNewModal(){
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('new-proc-name').focus();
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+function createProcess(){
+  const name=document.getElementById('new-proc-name').value.trim();
+  const area=document.getElementById('new-proc-area').value.trim();
+  if(!name){ alert('Ingresá un nombre'); return; }
+  const id='proc_'+Date.now();
+  db[id]={ id, name, area, status:'preA', createdAt:new Date().toISOString(), updatedAt:new Date().toISOString() };
+  saveDB();
+  closeModal();
+  document.getElementById('new-proc-name').value='';
+  document.getElementById('new-proc-area').value='';
+  selectProcess(id);
+  renderSidebar();
+}
+
+// ════════════════════════════════════════════════════════
+// EXPORT / IMPORT
+// ════════════════════════════════════════════════════════
+function exportJSON(){
+  if(!currentId) return;
+  const data=db[currentId];
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`proceso-${(data.name||'sin-nombre').toLowerCase().replace(/\s+/g,'-')}.json`;
+  a.click();
+}
+function importJSON(){ document.getElementById('file-import').click(); }
+function handleImport(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try {
+      const data=JSON.parse(ev.target.result);
+      if(!data.id) data.id='proc_'+Date.now();
+      db[data.id]=data;
+      saveDB(); renderSidebar();
+      selectProcess(data.id);
+      alert(`Proceso "${data.name||data.id}" importado correctamente.`);
+    } catch{ alert('Error al leer el archivo JSON.'); }
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+// ════════════════════════════════════════════════════════
+// ONE-PAGER GENERATION
+// ════════════════════════════════════════════════════════
+function generateOnePager(){
+  const proc=db[currentId]; if(!proc) return;
+  const pA=proc.preA||{}, pB=proc.preB||{}, pC=proc.preC||{};
+  const p1=proc.paso1||{}, p2=proc.paso2||{}, p3=proc.paso3||{}, p4=proc.paso4||{};
+  const so=proc.signoff||{};
+  const invTotal=(+p3.invTec||0)+(+p3.invImpl||0)+(+p3.cmCap||0)+(+p3.cmRoles||0)+(+p3.cmSoporte||0);
+  const benBase=+p1.impBase||0;
+  const pb=benBase>0&&invTotal>0?`${(invTotal/benBase*12).toFixed(1)} meses`:'—';
+  const score=calcScore();
+
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>One-pager — ${proc.name}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',Arial,sans-serif;color:#1A1A1A;background:#fff;padding:40px 48px;max-width:900px;margin:0 auto}
+    @media print{body{padding:20px 24px}}
+    .header{border-top:5px solid #E85020;padding-top:20px;margin-bottom:32px}
+    .tag{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#E85020;margin-bottom:8px}
+    h1{font-size:28px;font-weight:800;line-height:1.1;margin-bottom:6px}
+    .meta{font-size:12px;color:#888;margin-bottom:24px}
+    .why-box{background:#FDF0EC;border-left:4px solid #E85020;padding:14px 16px;border-radius:0 8px 8px 0;margin-bottom:28px;font-size:13px;line-height:1.6;color:#333}
+    .section{margin-bottom:24px}
+    .section h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#888;border-bottom:1px solid #eee;padding-bottom:6px;margin-bottom:12px}
+    .kpi-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+    .kpi{flex:1;min-width:120px;background:#f8f8f8;border-radius:8px;padding:14px 16px}
+    .kpi .num{font-size:22px;font-weight:800;color:#E85020;line-height:1}
+    .kpi .lbl{font-size:11px;color:#888;margin-top:4px}
+    .kpi.green .num{color:#27AE60}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    td,th{padding:8px 10px;border-bottom:1px solid #eee;text-align:left;vertical-align:top;line-height:1.4}
+    th{font-weight:700;color:#888;font-size:10px;text-transform:uppercase;letter-spacing:.5px;background:#f8f8f8}
+    .asis-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;font-size:12px}
+    .asis-num{width:20px;height:20px;border-radius:50%;background:#E85020;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;flex-shrink:0;margin-top:1px}
+    .risk-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase}
+    .r-alto{background:#FEF0EE;color:#E74C3C}.r-medio{background:#FEF3E0;color:#D97706}.r-bajo{background:#EAF7EF;color:#27AE60}
+    .score-bar{height:8px;background:#eee;border-radius:4px;margin-top:6px}
+    .score-fill{height:8px;border-radius:4px;background:#E85020}
+    .footer{margin-top:40px;padding-top:16px;border-top:1px solid #eee;display:flex;justify-content:space-between;font-size:10px;color:#bbb}
+    .signoff-box{background:#EAF7EF;border:1px solid rgba(39,174,96,.25);border-radius:8px;padding:14px;font-size:12px}
+  </style></head><body>
+  <div class="header">
+    <div class="tag">PID Etapa 2 · Análisis de Proceso · Grupo Corven</div>
+    <h1>${proc.name||'Sin nombre'}</h1>
+    <div class="meta">${pA.area||'—'} · Análisis iniciado ${new Date(proc.createdAt).toLocaleDateString('es-AR')} · Sign-off ${so.fecha||'pendiente'}</div>
+  </div>
+
+  <div class="why-box">
+    <strong>¿Por qué este proceso?</strong><br>
+    ${pA.ceo||'—'} señaló el área de <strong>${pA.area||'—'}</strong>${pA.contexto?' con el siguiente contexto: '+pA.contexto:''}. La hipótesis preliminar llevada al Director: "<em>${pA.hipotesis||'—'}</em>". ${pB.director||''} identificó el proceso <strong>${pB.proceso||'—'}</strong> como el más crítico para automatizar.
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="num">${fmtARS(benBase)}</div><div class="lbl">Beneficio anual base</div></div>
+    <div class="kpi"><div class="num">${fmtARS(invTotal)}</div><div class="lbl">Inversión total año 1</div></div>
+    <div class="kpi green"><div class="num">${pb}</div><div class="lbl">Payback estimado</div></div>
+    <div class="kpi"><div class="num">${score}/100</div><div class="lbl">Score de prioridad</div>
+      <div class="score-bar"><div class="score-fill" style="width:${score}%"></div></div>
+    </div>
+  </div>
+
+  <div class="section"><h2>Estado actual del proceso (As-Is)</h2>
+    ${(pC.pasos||[]).map((s,i)=>`<div class="asis-step"><div class="asis-num">${i+1}</div><div>${s}</div></div>`).join('')||'<p style="color:#888;font-size:12px">No relevado</p>'}
+    <p style="font-size:12px;color:#555;margin-top:8px"><strong>Volumen:</strong> ${pC.volumen||'—'} · <strong>Sistemas:</strong> ${pC.sistemas||'—'}</p>
+    ${pC.workarounds?`<p style="font-size:12px;color:#D97706;margin-top:6px"><strong>Workarounds detectados:</strong> ${pC.workarounds}</p>`:''}
+  </div>
+
+  <div class="section"><h2>Solución propuesta (To-Be)</h2>
+    <p style="font-size:13px;line-height:1.6">${p2.desc||'—'}</p>
+    <p style="font-size:12px;color:#555;margin-top:8px"><strong>Tecnología:</strong> ${(p2.tecnologia||[]).join(', ')||'—'} · <strong>Enfoque:</strong> ${p2.enfoque||'—'} · <strong>Factibilidad IT:</strong> ${p2.itFactibilidad||'—'}</p>
+  </div>
+
+  <div class="section"><h2>Business Case</h2>
+  <table>
+    <tr><th>Concepto</th><th>Conservador</th><th>Base</th><th>Optimista</th></tr>
+    <tr><td>Beneficio anual</td><td>${fmtARS(+p1.impConservador||0)}</td><td><strong>${fmtARS(benBase)}</strong></td><td>${fmtARS(+p1.impOptimista||0)}</td></tr>
+    <tr><td>Inversión total</td><td colspan="3">${fmtARS(invTotal)} (incl. change management)</td></tr>
+    <tr><td>Payback</td><td colspan="3">${pb}</td></tr>
+  </table>
+  </div>
+
+  ${p1.kpiIndicador?`<div class="section"><h2>Métrica de éxito</h2>
+  <table>
+    <tr><th>Indicador</th><th>Baseline</th><th>Target 90 días</th><th>Responsable</th></tr>
+    <tr><td>${p1.kpiIndicador||'—'}</td><td>${p1.kpiBaseline||'—'}</td><td>${p1.kpiTarget||'—'}</td><td>${p1.kpiResponsable||'—'}</td></tr>
+  </table></div>`:''}
+
+  ${p4.riesgo1Desc?`<div class="section"><h2>Riesgos principales</h2>
+  <table><tr><th>Riesgo</th><th>Nivel</th><th>Mitigación</th></tr>
+    ${[[p4.riesgo1Desc,p4.riesgo1Nivel,p4.riesgo1Mit],[p4.riesgo2Desc,p4.riesgo2Nivel,p4.riesgo2Mit],[p4.riesgo3Desc,p4.riesgo3Nivel,p4.riesgo3Mit]].filter(r=>r[0]).map(r=>`<tr><td>${r[0]||''}</td><td><span class="risk-badge r-${(r[1]||'').toLowerCase()}">${r[1]||'—'}</span></td><td>${r[2]||'—'}</td></tr>`).join('')}
+  </table></div>`:''}
+
+  <div class="section"><h2>Sign-off</h2>
+  <div class="signoff-box">✓ Aprobado por <strong>${so.director||'—'}</strong> el ${so.fecha||'—'}${so.observaciones?'<br><em>'+so.observaciones+'</em>':''}</div>
+  </div>
+
+  <div class="footer">
+    <span>PID Grupo Corven · Análisis Etapa 2 · Confidencial</span>
+    <span>Generado ${new Date().toLocaleDateString('es-AR')}</span>
+  </div>
+  <script>window.print();<\/script>
+  </body></html>`;
+
+  const w=window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+}
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+(async () => {
+  showSaveIndicator('Cargando…');
+  await loadDB();
+  hideSaveIndicator();
+  renderSidebar();
+})();
+
+document.getElementById('modal-overlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeModal();
+});
+</script>
+</body>
+</html>
