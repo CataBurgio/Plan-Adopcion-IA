@@ -319,7 +319,7 @@ td.opp      { font-size: 11px; color: var(--dim); }
   <a href="/mapa-procesos-ia-2027" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Mapa de Procesos</a>
   <a href="/wizard" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Wizard</a>
   <a href="/consolidado" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Consolidado</a>
-  <button id="lockBtn" onclick="toggleLock()" style="margin-left:auto;background:none;border:1.5px solid #333333;border-radius:4px;cursor:pointer;color:#6b7280;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap"><span id="lockLabel">Solo lectura</span></button>
+  <span id="lockBtn" style="margin-left:auto;border:1.5px solid #333333;border-radius:4px;color:#6b7280;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap"><span id="lockLabel">Solo lectura</span></span>
 </div>
 
 <!-- Loading overlay -->
@@ -859,15 +859,6 @@ function updateLockBtn(ok) {
   btn.style.color = ok ? '#e85020' : '#6b7280';
   btn.style.borderColor = ok ? '#e85020' : '#333333';
 }
-window.toggleLock = function() {
-  if (sessionStorage.getItem('pai_edit_unlocked') === '1') {
-    sessionStorage.removeItem('pai_edit_unlocked');
-    if (editMode) toggleEditMode();
-    updateLockBtn(false);
-  } else {
-    toggleEditMode();
-  }
-};
 updateLockBtn(sessionStorage.getItem('pai_edit_unlocked') === '1');
 </script>
 </body>
