@@ -1005,11 +1005,19 @@ function addTableRow(btn) {
   const newRow = document.createElement('tr');
   for (let i = 0; i < cols; i++) {
     const td = document.createElement('td');
-    if (last?.children[i]) {
-      td.className = last.children[i].className;
-      td.style.cssText = last.children[i].style.cssText;
+    const srcTd = last?.children[i];
+    if (srcTd) {
+      td.className = srcTd.className;
+      td.style.cssText = srcTd.style.cssText;
+      if (srcTd.querySelector('.badge')) {
+        // Columna de estado: poner badge por defecto clickeable
+        td.innerHTML = '<span class="badge badge-gray">⬜ Propuesta</span>';
+      } else {
+        td.contentEditable = 'true';
+      }
+    } else {
+      td.contentEditable = 'true';
     }
-    td.contentEditable = 'true';
     newRow.appendChild(td);
   }
   const totalRow = tbody.querySelector('.total-row');
