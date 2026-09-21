@@ -315,6 +315,16 @@ textarea{resize:vertical;min-height:80px;line-height:1.55}
   #main{padding:0}
   .form-card{box-shadow:none;border:1px solid #ddd}
 }
+/* ── EDIT HINTS ── */
+body.edit-unlocked [contenteditable="true"] {
+  outline: 1.5px dashed rgba(232,80,32,.4);
+  border-radius: 2px;
+  cursor: text;
+}
+body.edit-unlocked [contenteditable="true"]:focus {
+  outline: 2px solid #e85020;
+  background: rgba(232,80,32,.04);
+}
 </style>
 </head>
 <body>
@@ -332,7 +342,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.55}
 
 <!-- TOP BAR -->
 <div id="topbar">
-  <div class="brand">PID Etapa 2 · <span>Análisis de Procesos</span> — Grupo Corven</div>
+  <div class="brand" id="content-wizard-brand">PID Etapa 2 · <span>Análisis de Procesos</span> — Grupo Corven</div>
   <div class="actions">
     <span id="save-indicator" style="font-size:11px;color:#999;margin-right:8px;display:none"></span>
     <button class="btn btn-ghost" onclick="importJSON()">↑ Importar proceso</button>
@@ -355,9 +365,11 @@ textarea{resize:vertical;min-height:80px;line-height:1.55}
 
   <!-- MAIN -->
   <div id="main">
-    <div id="empty-state">
-      <h2>Bienvenida, Catalina</h2>
-      <p>Creá un nuevo proceso o seleccioná uno existente para continuar el análisis.</p>
+    <div id="content-wizard-empty">
+      <div id="empty-state">
+        <h2>Bienvenida, Catalina</h2>
+        <p>Creá un nuevo proceso o seleccioná uno existente para continuar el análisis.</p>
+      </div>
     </div>
     <div id="process-view" style="display:none">
       <div id="progress-wrap"><div class="progress-track" id="progress-track"></div></div>
@@ -1514,9 +1526,35 @@ function generateOnePager(){
 // ════════════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════════════
+/* ══ STATIC TEXT EDIT ══ */
+const _SECTIONS = [
+  { id: 'wizard-brand', sel: null },
+  { id: 'wizard-empty', sel: 'h2, p' }
+];
+let _stT = null, _stP = {};
+async function _stLoad() {
+  try {
+    const { data } = await sbClient.from('sections').select('id, content').in('id', _SECTIONS.map(s => s.id));
+    if (data) data.forEach(r => { const e = document.getElementById('content-' + r.id); if (e && r.content) e.innerHTML = r.content; });
+  } catch(e) {}
+}
+async function _stSave(id) {
+  const e = document.getElementById('content-' + id); if (!e) return;
+  await sbClient.from('sections').upsert({ id, content: e.innerHTML, updated_at: new Date().toISOString() }, { onConflict: 'id' });
+}
+function _stSched(id) { _stP[id] = true; clearTimeout(_stT); _stT = setTimeout(() => { Object.keys(_stP).forEach(_stSave); _stP = {}; }, 1500); }
+function _stToggle(on) {
+  _SECTIONS.forEach(({ id, sel }) => {
+    const c = document.getElementById('content-' + id); if (!c) return;
+    const els = sel ? [...c.querySelectorAll(sel)] : [c];
+    els.forEach(el => { el.contentEditable = on ? 'true' : 'false'; if (on) el.addEventListener('input', () => _stSched(id)); });
+  });
+}
+
 (async () => {
   showSaveIndicator('Cargando…');
   await loadDB();
+  await _stLoad();
   hideSaveIndicator();
   renderSidebar();
 })();
@@ -1543,15 +1581,15 @@ document.addEventListener('keydown',e=>{
   }
   window.toggleLock = function() {
     if (isUnlocked()) {
-      sessionStorage.removeItem(KEY);
-      applyState();
+      sessionStorage.removeItem(KEY); _stToggle(false); applyState();
     } else {
       const p = prompt('PIN de edición:');
-      if (p === PIN) { sessionStorage.setItem(KEY, '1'); applyState(); }
+      if (p === PIN) { sessionStorage.setItem(KEY, '1'); applyState(); _stToggle(true); }
       else if (p !== null) alert('PIN incorrecto.');
     }
   };
   applyState();
+  if (isUnlocked()) _stToggle(true);
 })();
 </script>
 </body>

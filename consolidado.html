@@ -266,6 +266,17 @@
     color: var(--navy);
   }
   .filter-row label { font-size: 12px; color: var(--gray-mid); align-self: center; }
+}
+/* ── EDIT HINTS ── */
+body.edit-unlocked [contenteditable="true"] {
+  outline: 1.5px dashed rgba(232,80,32,.4);
+  border-radius: 2px;
+  cursor: text;
+}
+body.edit-unlocked [contenteditable="true"]:focus {
+  outline: 2px solid #e85020;
+  background: rgba(232,80,32,.04);
+}
 </style>
 </head>
 <body>
@@ -281,7 +292,7 @@
   <button id="editBtn" onclick="toggleLock()" style="margin-left:8px;background:transparent;border:1.5px solid #e85020;border-radius:4px;cursor:pointer;color:#e85020;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap">✏️ Editar</button>
 </div>
 
-<div class="topbar">
+<div class="topbar" id="content-conso-topbar">
   <div class="logo">CORVEN <span>PID</span></div>
   <div class="subtitle">Consolidado de Procesos — Etapa 2</div>
   <span class="last-sync" id="lastSync"></span>
@@ -642,6 +653,29 @@ async function exportCSV() {
   a.click();
 }
 
+/* ══ STATIC TEXT EDIT ══ */
+const _SECTIONS = [{ id: 'conso-topbar', sel: '.logo, .subtitle' }];
+let _stT = null, _stP = {};
+async function _stLoad() {
+  try {
+    const { data } = await sbClient.from('sections').select('id, content').in('id', _SECTIONS.map(s => s.id));
+    if (data) data.forEach(r => { const e = document.getElementById('content-' + r.id); if (e && r.content) e.innerHTML = r.content; });
+  } catch(e) {}
+}
+async function _stSave(id) {
+  const e = document.getElementById('content-' + id); if (!e) return;
+  await sbClient.from('sections').upsert({ id, content: e.innerHTML, updated_at: new Date().toISOString() }, { onConflict: 'id' });
+}
+function _stSched(id) { _stP[id] = true; clearTimeout(_stT); _stT = setTimeout(() => { Object.keys(_stP).forEach(_stSave); _stP = {}; }, 1500); }
+function _stToggle(on) {
+  _SECTIONS.forEach(({ id, sel }) => {
+    const c = document.getElementById('content-' + id); if (!c) return;
+    const els = sel ? [...c.querySelectorAll(sel)] : [c];
+    els.forEach(el => { el.contentEditable = on ? 'true' : 'false'; if (on) el.addEventListener('input', () => _stSched(id)); });
+  });
+}
+
+(async () => { await _stLoad(); })();
 render();
 setInterval(render, 30000);
 
@@ -658,14 +692,15 @@ setInterval(render, 30000);
     editBtn.style.background = ok ? '#e85020' : 'transparent';
   }
   window.toggleLock = function() {
-    if (sessionStorage.getItem(KEY) === '1') { sessionStorage.removeItem(KEY); applyState(); }
+    if (sessionStorage.getItem(KEY) === '1') { sessionStorage.removeItem(KEY); _stToggle(false); applyState(); }
     else {
       const p = prompt('PIN de edición:');
-      if (p === PIN) { sessionStorage.setItem(KEY, '1'); applyState(); }
+      if (p === PIN) { sessionStorage.setItem(KEY, '1'); applyState(); _stToggle(true); }
       else if (p !== null) alert('PIN incorrecto.');
     }
   };
   applyState();
+  if (sessionStorage.getItem(KEY) === '1') _stToggle(true);
 })();
 </script>
 </body>

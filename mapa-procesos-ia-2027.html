@@ -361,6 +361,17 @@ main { max-width: 1440px; margin: 0 auto; padding: 36px 56px 80px; }
 
 /* ── LOCK ── */
 body:not(.edit-unlocked) .edit-only { display: none !important; }
+
+/* ── EDIT HINTS ── */
+body.edit-unlocked [contenteditable="true"] {
+  outline: 1.5px dashed rgba(232,80,32,.4);
+  border-radius: 2px;
+  cursor: text;
+}
+body.edit-unlocked [contenteditable="true"]:focus {
+  outline: 2px solid #e85020;
+  background: rgba(232,80,32,.04);
+}
 </style>
 </head>
 <body>
@@ -396,7 +407,7 @@ body:not(.edit-unlocked) .edit-only { display: none !important; }
     <rect width="100%" height="100%" fill="url(#tri)" mask="url(#tri-mask)"/>
   </svg>
 
-  <div class="hero-content">
+  <div class="hero-content" id="content-mapa-hero">
     <div class="hero-label">Programa de Innovación Digital · Grupo Corven · Plan de Adopción IA</div>
     <h1 class="hero-title">Mapa de Procesos<br><span>de IA · 2027</span></h1>
     <p class="hero-sub">Procesos de eficientización y automatización por área, encuadrados en los<br>niveles del Plan de Adopción IA. Documento de trabajo colaborativo · Comité IA.</p>
@@ -436,7 +447,7 @@ body:not(.edit-unlocked) .edit-only { display: none !important; }
 </div>
 
 <!-- ===== PAI FRAMEWORK BANNER ===== -->
-<div class="fw-banner">
+<div class="fw-banner" id="content-mapa-fw">
   <div class="fw-title">Marco de referencia — Niveles del Plan de Adopción IA</div>
   <div class="fw-levels">
     <div class="fw-level">
@@ -506,23 +517,27 @@ body:not(.edit-unlocked) .edit-only { display: none !important; }
 
 <!-- TAB: POR ÁREA -->
 <div class="tab-panel active" id="panel-area">
-  <div class="callout">
-    Este mapa se actualiza a medida que se relevan procesos con cada área. Los procesos <strong style="color:var(--ink)">"A relevar"</strong> son áreas donde se identificó potencial pero falta la entrevista de detalle. Usarlo en la sesión de trabajo con Fabiana y Sebastián para completar y alinear.
-  </div>
-  <div class="legend-row">
-    <span class="legend-item"><span class="status-badge s-a-relevar">A relevar</span> Potencial identificado — falta mapear</span>
-    <span class="legend-item"><span class="status-badge s-en-mapeo">En mapeo</span> Relevamiento en curso</span>
-    <span class="legend-item"><span class="status-badge s-en-diseno">En diseño</span> Proceso mapeado — diseñando solución</span>
-    <span class="legend-item"><span class="status-badge s-en-presupuesto">En presupuesto</span> Solución definida — armando BC</span>
-    <span class="legend-item"><span class="status-badge s-ejecutando">Ejecutando</span> En ejecución</span>
+  <div id="content-mapa-area-static">
+    <div class="callout">
+      Este mapa se actualiza a medida que se relevan procesos con cada área. Los procesos <strong style="color:var(--ink)">"A relevar"</strong> son áreas donde se identificó potencial pero falta la entrevista de detalle. Usarlo en la sesión de trabajo con Fabiana y Sebastián para completar y alinear.
+    </div>
+    <div class="legend-row">
+      <span class="legend-item"><span class="status-badge s-a-relevar">A relevar</span> Potencial identificado — falta mapear</span>
+      <span class="legend-item"><span class="status-badge s-en-mapeo">En mapeo</span> Relevamiento en curso</span>
+      <span class="legend-item"><span class="status-badge s-en-diseno">En diseño</span> Proceso mapeado — diseñando solución</span>
+      <span class="legend-item"><span class="status-badge s-en-presupuesto">En presupuesto</span> Solución definida — armando BC</span>
+      <span class="legend-item"><span class="status-badge s-ejecutando">Ejecutando</span> En ejecución</span>
+    </div>
   </div>
   <div id="areaView"></div>
 </div>
 
 <!-- TAB: POR CAPA PAI -->
 <div class="tab-panel" id="panel-capa">
-  <div class="callout warn">
-    Vista estratégica: procesos agrupados por nivel PAI requerido. Un proceso puede aparecer en múltiples niveles. Útil para planificar el roll-out capa por capa.
+  <div id="content-mapa-capa-static">
+    <div class="callout warn">
+      Vista estratégica: procesos agrupados por nivel PAI requerido. Un proceso puede aparecer en múltiples niveles. Útil para planificar el roll-out capa por capa.
+    </div>
   </div>
   <div id="capaView"></div>
 </div>
@@ -1142,9 +1157,37 @@ function exportData() {
   });
 }
 
+/* ══════════ STATIC TEXT EDIT ══════════ */
+const _SECTIONS = [
+  { id: 'mapa-hero',        sel: '.hero-label, .hero-title, .hero-sub, .hero-stat-lbl' },
+  { id: 'mapa-fw',          sel: '.fw-title, .fw-level-name, .fw-level-desc' },
+  { id: 'mapa-area-static', sel: '.callout, .legend-item' },
+  { id: 'mapa-capa-static', sel: '.callout' }
+];
+let _stT = null, _stP = {};
+async function _stLoad() {
+  try {
+    const { data } = await sbClient.from('sections').select('id, content').in('id', _SECTIONS.map(s => s.id));
+    if (data) data.forEach(r => { const e = document.getElementById('content-' + r.id); if (e && r.content) e.innerHTML = r.content; });
+  } catch(e) {}
+}
+async function _stSave(id) {
+  const e = document.getElementById('content-' + id); if (!e) return;
+  await sbClient.from('sections').upsert({ id, content: e.innerHTML, updated_at: new Date().toISOString() }, { onConflict: 'id' });
+}
+function _stSched(id) { _stP[id] = true; clearTimeout(_stT); _stT = setTimeout(() => { Object.keys(_stP).forEach(_stSave); _stP = {}; }, 1500); }
+function _stToggle(on) {
+  _SECTIONS.forEach(({ id, sel }) => {
+    const c = document.getElementById('content-' + id); if (!c) return;
+    const els = sel ? [...c.querySelectorAll(sel)] : [c];
+    els.forEach(el => { el.contentEditable = on ? 'true' : 'false'; if (on) el.addEventListener('input', () => _stSched(id)); });
+  });
+}
+
 /* ══════════ INIT ══════════ */
 (async () => {
   await loadFromSupabase();
+  await _stLoad();
   renderAll();
 })();
 
@@ -1164,15 +1207,15 @@ function exportData() {
   }
   window.toggleLock = function() {
     if (isUnlocked()) {
-      sessionStorage.removeItem(KEY);
-      applyState();
+      sessionStorage.removeItem(KEY); _stToggle(false); applyState();
     } else {
       const p = prompt('PIN de edición:');
-      if (p === PIN) { sessionStorage.setItem(KEY, '1'); applyState(); }
+      if (p === PIN) { sessionStorage.setItem(KEY, '1'); applyState(); _stToggle(true); }
       else if (p !== null) alert('PIN incorrecto.');
     }
   };
   applyState();
+  if (isUnlocked()) _stToggle(true);
 })();
 </script>
 </body>
