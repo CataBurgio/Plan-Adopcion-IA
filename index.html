@@ -70,6 +70,15 @@ body.edit-mode [contenteditable]:hover {
   background: #fff8f6;
 }
 
+/* En modo edición: desactivar clicks en elementos interactivos para poder editar su texto */
+body.edit-mode .ws-card {
+  pointer-events: none;
+  cursor: default;
+}
+body.edit-mode [contenteditable="true"] {
+  pointer-events: all;
+}
+
 /* ── HEADER ── */
 .site-header {
   background: #fff; border-bottom: 1px solid var(--line);
@@ -331,7 +340,7 @@ td.opp      { font-size: 11px; color: var(--dim); }
 <!-- ── HEADER ── -->
 <header class="site-header">
   <div class="header-top">
-    <div class="header-brand">
+    <div id="content-header" class="header-brand">
       <div class="logo-block">
         <div class="logo-tri"></div>
         <div class="logo-name">GRUPO <em>CORVEN</em></div>
@@ -700,7 +709,7 @@ td.opp      { font-size: 11px; color: var(--dim); }
 const SUPABASE_URL  = 'https://wpmxxoojxtilgqbhymji.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndwbXh4b29qeHRpbGdxYmh5bWppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MzAzOTUsImV4cCI6MjEwNTUwNjM5NX0.TurznBdylkCfb3JMHbMeg_phfdaiwjJVE44x3dPsvNg';
 
-const SECTION_IDS = ['estructura','ws-a','ws-b','ws-c','presupuesto','gaps'];
+const SECTION_IDS = ['header','estructura','ws-a','ws-b','ws-c','presupuesto','gaps'];
 
 // ── Init Supabase ──
 const { createClient } = supabase;
@@ -827,7 +836,8 @@ function toggleEditMode() {
       'td.project, td.team, td.provider, td.budget, td.opp, ' +
       '.card-title, .card-body, ' +
       '.budget-note, ' +
-      '.block-label, .subsec-label'
+      '.block-label, .subsec-label, ' +
+      '.header-label, .header-title, .header-meta'
     );
     editables.forEach(el => {
       el.contentEditable = editMode ? 'true' : 'false';

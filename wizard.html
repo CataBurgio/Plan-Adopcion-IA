@@ -326,7 +326,8 @@ textarea{resize:vertical;min-height:80px;line-height:1.55}
   <a href="/mapa-procesos-ia-2027" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Mapa de Procesos</a>
   <a href="/wizard" style="color:#ffffff;text-decoration:none;padding:11px 13px;border-bottom:2px solid #e85020;display:inline-block">Wizard</a>
   <a href="/consolidado" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Consolidado</a>
-  <button id="lockBtn" onclick="toggleLock()" style="margin-left:auto;background:none;border:1.5px solid #333333;border-radius:4px;cursor:pointer;color:#6b7280;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap"><span id="lockLabel">Solo lectura</span></button>
+  <span id="lockBtn" style="margin-left:auto;border:1.5px solid #333333;border-radius:4px;color:#6b7280;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap"><span id="lockLabel">Solo lectura</span></span>
+  <button id="editBtn" onclick="toggleLock()" style="margin-left:8px;background:transparent;border:1.5px solid #e85020;border-radius:4px;cursor:pointer;color:#e85020;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap">✏️ Editar</button>
 </div>
 
 <!-- TOP BAR -->
@@ -1534,11 +1535,11 @@ document.addEventListener('keydown',e=>{
   function isUnlocked() { return sessionStorage.getItem(KEY) === '1'; }
   function applyState() {
     const ok = isUnlocked();
-    const btn = document.getElementById('lockBtn');
-    if (!btn) return;
-    document.getElementById('lockLabel').textContent = ok ? 'Editando' : 'Solo lectura';
-    btn.style.color = ok ? '#e85020' : '#6b7280';
-    btn.style.borderColor = ok ? '#e85020' : '#333333';
+    const editBtn = document.getElementById('editBtn');
+    if (!editBtn) return;
+    editBtn.textContent = ok ? '× Salir de edición' : '✏️ Editar';
+    editBtn.style.color = ok ? '#fff' : '#e85020';
+    editBtn.style.background = ok ? '#e85020' : 'transparent';
   }
   window.toggleLock = function() {
     if (isUnlocked()) {
