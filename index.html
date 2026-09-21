@@ -274,6 +274,16 @@ td.opp      { font-size: 11px; color: var(--dim); }
 body.edit-mode .badge { cursor: pointer; }
 body.edit-mode .badge::after { content: ' ▾'; font-size: 8px; opacity: .45; }
 
+/* Add row button */
+.add-row-foot td { padding: 5px 13px !important; border-top: 1px dashed var(--card-bd) !important; }
+.add-row-btn {
+  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600;
+  color: var(--dim); background: transparent;
+  border: 1.5px dashed var(--card-bd); border-radius: 3px;
+  padding: 3px 12px; cursor: pointer; transition: all .15s;
+}
+.add-row-btn:hover { color: var(--accent); border-color: var(--accent); }
+
 /* Status picker dropdown */
 .status-picker {
   position: fixed; z-index: 9999; background: #fff;
@@ -643,7 +653,7 @@ body.edit-mode .badge::after { content: ' ▾'; font-size: 8px; opacity: .45; }
         </div>
       </div>
       <div class="tbl-wrap">
-        <table class="budget-tbl">
+        <table class="budget-tbl budget-autosum">
           <thead class="thead-acc"><tr><th>Categoría</th><th>Concepto</th><th style="text-align:right;">Monto est.</th></tr></thead>
           <tbody>
             <tr><td><span class="badge badge-info">Licencias</span></td><td class="project">Copilot M365 · 75 personas × 4 meses (sept–dic 2026)</td><td class="budget filled" style="text-align:right;">USD 8.400</td></tr>
@@ -668,6 +678,17 @@ body.edit-mode .badge::after { content: ' ▾'; font-size: 8px; opacity: .45; }
           <div class="card-title">Proyectos C-06 a C-09</div>
           <div class="card-body">Finanzas, eCommerce, Family Office, agente B2C cross-marcas. A dimensionar según business case aprobado.<br><strong style="color:var(--ink2);margin-top:6px;display:block;">A definir — condicionado al modelo técnico</strong></div>
         </div>
+      </div>
+      <div class="tbl-wrap mt-md">
+        <table class="budget-tbl budget-autosum">
+          <thead class="thead-acc"><tr><th>Categoría</th><th>Concepto</th><th style="text-align:right;">Monto est.</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge" style="background:#e0e7ff;color:#3730a3;">WS-B</span></td><td class="project">Licencias Copilot 2027 · 75 full year + 75 adicionales ~9 meses</td><td class="budget filled" style="text-align:right;">USD 50.400–75.600</td></tr>
+            <tr><td><span class="badge" style="background:#e0e7ff;color:#3730a3;">WS-B</span></td><td class="project">Ola 4+ — capacitación escala al resto de la organización</td><td class="budget filled" style="text-align:right;">USD 50.000–80.000</td></tr>
+            <tr><td><span class="badge" style="background:#fde8e0;color:var(--accent);">WS-C</span></td><td class="project">Proyectos C-06 a C-09 (Finanzas, eCommerce, Family Office, agente B2C)</td><td class="budget" style="text-align:right;">A definir</td></tr>
+            <tr class="total-row"><td colspan="2"><strong>TOTAL FASE 1</strong></td><td style="text-align:right;"><strong>USD 100.400 – 155.600</strong></td></tr>
+          </tbody>
+        </table>
       </div>
       <div class="corven-logo"><div class="logo-tri"></div><div class="logo-name">GRUPO <em>CORVEN</em></div></div>
     </div>
@@ -780,6 +801,7 @@ async function loadContent() {
     console.warn('Supabase no disponible, mostrando contenido estático.', err);
   } finally {
     document.getElementById('loading').classList.add('hidden');
+    recalcBudgetTables();
   }
 }
 
@@ -841,6 +863,8 @@ function toggleEditMode() {
   document.getElementById('edit-bar').classList.toggle('visible', editMode);
   document.getElementById('btn-edit').textContent = editMode ? '✕ Salir de edición' : '✏️ Editar';
   document.getElementById('btn-edit').className = editMode ? 'btn btn-solid' : 'btn btn-gray';
+
+  injectAddRowBtns(editMode);
 
   SECTION_IDS.forEach(id => {
     const el = document.getElementById('content-' + id);
@@ -926,6 +950,81 @@ function showStatusPicker(badge, sectionId) {
   _picker.style.top = top + 'px';
   _picker.style.left = left + 'px';
 }
+
+// ── Budget auto-sum ──
+function parseBudgetRange(text) {
+  const t = text.replace(/~/g, '').replace(/USD/gi, '').trim();
+  if (!t || /a\s*(confirmar|definir|dimensionar)/i.test(t)) return { low: 0, high: 0 };
+  const clean = t.replace(/\./g, '');                      // remove thousands dots
+  const m = clean.match(/^(-?\d+(?:\.\d+)?)[–\-](\d+(?:\.\d+)?)$/);
+  if (m) return { low: parseFloat(m[1]) || 0, high: parseFloat(m[2]) || 0 };
+  return { low: parseFloat(clean) || 0, high: parseFloat(clean) || 0 };
+}
+
+function recalcBudgetTables() {
+  document.querySelectorAll('table.budget-autosum').forEach(tbl => {
+    let low = 0, high = 0, hasApprox = false;
+    tbl.querySelectorAll('tbody tr:not(.total-row) td.budget.filled').forEach(cell => {
+      const txt = cell.textContent.trim();
+      if (txt.includes('~')) hasApprox = true;
+      const r = parseBudgetRange(txt);
+      low += r.low; high += r.high;
+    });
+    const totalStrong = tbl.querySelector('.total-row td:last-child strong');
+    if (!totalStrong) return;
+    const fmt = n => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const pre = hasApprox ? '~' : '';
+    totalStrong.textContent = (low === high)
+      ? `USD ${pre}${fmt(low)}`
+      : `USD ${pre}${fmt(low)} – ${fmt(high)}`;
+  });
+}
+
+// ── Add table row ──
+function injectAddRowBtns(on) {
+  if (on) {
+    document.querySelectorAll('.tbl-wrap table').forEach(tbl => {
+      if (tbl.querySelector('.add-row-foot')) return;
+      const cols = tbl.querySelector('thead tr')?.children.length || tbl.querySelector('tr')?.children.length || 5;
+      const tfoot = document.createElement('tfoot');
+      tfoot.className = 'add-row-foot';
+      tfoot.innerHTML = `<tr><td colspan="${cols}"><button class="add-row-btn" onclick="addTableRow(this)">+ Agregar fila</button></td></tr>`;
+      tbl.appendChild(tfoot);
+    });
+  } else {
+    document.querySelectorAll('.add-row-foot').forEach(f => f.remove());
+  }
+}
+
+function addTableRow(btn) {
+  const tbl  = btn.closest('table');
+  const tbody = tbl.querySelector('tbody');
+  const rows  = [...tbody.querySelectorAll('tr:not(.total-row)')];
+  const last  = rows[rows.length - 1];
+  const cols  = last?.children.length || tbl.querySelector('thead tr')?.children.length || 5;
+  const newRow = document.createElement('tr');
+  for (let i = 0; i < cols; i++) {
+    const td = document.createElement('td');
+    if (last?.children[i]) {
+      td.className = last.children[i].className;
+      td.style.cssText = last.children[i].style.cssText;
+    }
+    td.contentEditable = 'true';
+    newRow.appendChild(td);
+  }
+  const totalRow = tbody.querySelector('.total-row');
+  if (totalRow) tbody.insertBefore(newRow, totalRow);
+  else tbody.appendChild(newRow);
+  newRow.children[0]?.focus();
+  recalcBudgetTables();
+  const sec = btn.closest('[id^="content-"]');
+  if (sec) scheduleSave(sec.id.replace('content-', ''));
+}
+
+// Recalc live while editing budget cells
+document.addEventListener('input', e => {
+  if (editMode && e.target.closest('table.budget-autosum')) recalcBudgetTables();
+});
 
 // ── Arranque ──
 loadContent();
