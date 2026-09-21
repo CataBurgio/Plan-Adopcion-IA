@@ -372,6 +372,96 @@ body.edit-unlocked [contenteditable="true"]:focus {
   outline: 2px solid #e85020;
   background: rgba(232,80,32,.04);
 }
+
+/* ── PENDING QUEUE ── */
+#pendingBtn {
+  position: relative; background: transparent;
+  border: 1.5px solid #444; border-radius: 4px; cursor: pointer;
+  color: #9ca3af; font-size: 11px; font-weight: 600;
+  font-family: 'Montserrat', -apple-system, sans-serif;
+  padding: 5px 11px; flex-shrink: 0; white-space: nowrap;
+  margin-left: 8px; transition: all .15s;
+}
+#pendingBtn:hover { border-color: #e85020; color: #e85020; }
+#pendingBtn.has-items { border-color: #f59e0b; color: #f59e0b; }
+#pendingCount {
+  position: absolute; top: -7px; right: -7px;
+  background: #e85020; color: #fff; border-radius: 50%;
+  width: 17px; height: 17px; font-size: 10px; font-weight: 800;
+  display: none; align-items: center; justify-content: center;
+  line-height: 1;
+}
+#pendingCount.show { display: flex; }
+
+/* ── PENDING PANEL ── */
+#pendingBackdrop {
+  display: none; position: fixed; inset: 0; z-index: 250;
+  background: rgba(0,0,0,.35);
+}
+#pendingBackdrop.show { display: block; }
+#pendingPanel {
+  position: fixed; top: 0; right: -440px; bottom: 0; width: 420px; z-index: 260;
+  background: var(--white); box-shadow: -4px 0 30px rgba(0,0,0,.18);
+  display: flex; flex-direction: column; transition: right .25s ease;
+  overflow: hidden;
+}
+#pendingPanel.show { right: 0; }
+.pq-header {
+  padding: 20px 24px 16px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0;
+}
+.pq-title { font-size: 16px; font-weight: 800; color: var(--black); }
+.pq-title span { color: var(--brand); }
+.pq-subtitle { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.pq-close {
+  background: none; border: none; cursor: pointer; color: var(--muted);
+  font-size: 18px; line-height: 1; padding: 0; flex-shrink: 0; margin-top: 2px;
+}
+.pq-close:hover { color: var(--ink); }
+.pq-body {
+  flex: 1; overflow-y: auto; padding: 16px 24px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.pq-empty {
+  text-align: center; padding: 48px 24px;
+  font-size: 13px; color: var(--muted); line-height: 1.8;
+}
+.pq-empty strong { display: block; font-size: 26px; margin-bottom: 10px; }
+.pq-item {
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 8px;
+  animation: pq-fade-in .2s ease;
+}
+@keyframes pq-fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.pq-item.discarding { opacity: .4; pointer-events: none; transition: opacity .2s; }
+.pq-source {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--muted); display: flex; align-items: center; gap: 6px;
+}
+.pq-source::before {
+  content: ''; display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; background: #f59e0b; flex-shrink: 0;
+}
+.pq-proceso { font-size: 14px; font-weight: 800; color: var(--black); line-height: 1.3; }
+.pq-meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.pq-area-tag {
+  font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 3px;
+  background: #f3f4f6; color: var(--ink);
+}
+.pq-capa-tag {
+  font-size: 10.5px; font-weight: 600; padding: 2px 7px; border-radius: 3px; color: #fff;
+}
+.pq-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+.pq-footer-meta { font-size: 11px; color: #9ca3af; }
+.pq-actions { display: flex; gap: 8px; margin-top: 2px; border-top: 1px solid var(--line); padding-top: 10px; }
+.pq-btn {
+  flex: 1; padding: 7px 0; border-radius: 5px; font-family: inherit;
+  font-size: 12px; font-weight: 700; cursor: pointer; border: 1.5px solid var(--line);
+  background: var(--white); color: var(--muted); transition: all .12s;
+}
+.pq-btn-approve { border-color: #059669; color: #059669; }
+.pq-btn-approve:hover { background: #059669; color: #fff; }
+.pq-btn-discard:hover { border-color: #ef4444; color: #ef4444; }
 </style>
 </head>
 <body>
@@ -385,6 +475,7 @@ body.edit-unlocked [contenteditable="true"]:focus {
   <a href="/consolidado" style="color:#9ca3af;text-decoration:none;padding:11px 13px;border-bottom:2px solid transparent;display:inline-block">Consolidado</a>
   <span id="lockBtn" style="margin-left:auto;border:1.5px solid #333333;border-radius:4px;color:#6b7280;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap"><span id="lockLabel">Solo lectura</span></span>
   <button id="editBtn" onclick="toggleLock()" style="margin-left:8px;background:transparent;border:1.5px solid #e85020;border-radius:4px;cursor:pointer;color:#e85020;font-size:11px;font-weight:600;font-family:'Montserrat',-apple-system,sans-serif;padding:5px 11px;flex-shrink:0;white-space:nowrap">✏️ Editar</button>
+  <button id="pendingBtn" onclick="openPendingPanel()">🔔 Pendientes<span id="pendingCount"></span></button>
 </div>
 
 <!-- ===== HERO ===== -->
@@ -543,6 +634,21 @@ body.edit-unlocked [contenteditable="true"]:focus {
 </div>
 
 </main>
+
+<!-- ===== PENDING QUEUE PANEL ===== -->
+<div id="pendingBackdrop" onclick="closePendingPanel()"></div>
+<div id="pendingPanel">
+  <div class="pq-header">
+    <div>
+      <div class="pq-title">Cola de <span>aprobación</span></div>
+      <div class="pq-subtitle" id="pqSubtitle">Procesos detectados automáticamente por IA</div>
+    </div>
+    <button class="pq-close" onclick="closePendingPanel()">✕</button>
+  </div>
+  <div class="pq-body" id="pqBody">
+    <div class="pq-empty"><strong>🔍</strong>Cargando…</div>
+  </div>
+</div>
 
 <!-- ===== MODAL ===== -->
 <div id="addModal">
@@ -1157,6 +1263,155 @@ function exportData() {
   });
 }
 
+/* ══════════ PENDING QUEUE ══════════ */
+let _pendingItems = [];
+let _pendingPollTimer = null;
+
+const CAPA_COLORS = {
+  'Capa 1': '#059669', 'Capa 2a': '#7c3aed', 'Capa 2b': '#9333ea',
+  'Capa 3': '#0070c0', 'Capa 4': '#e85020'
+};
+
+async function loadPendingItems() {
+  try {
+    const { data } = await sbClient
+      .from('pending_items')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+    _pendingItems = data || [];
+  } catch(e) {
+    _pendingItems = [];
+  }
+  updatePendingBadge();
+}
+
+function updatePendingBadge() {
+  const n = _pendingItems.length;
+  const btn = document.getElementById('pendingBtn');
+  const cnt = document.getElementById('pendingCount');
+  if (n > 0) {
+    cnt.textContent = n;
+    cnt.classList.add('show');
+    btn.classList.add('has-items');
+  } else {
+    cnt.classList.remove('show');
+    btn.classList.remove('has-items');
+  }
+  const sub = document.getElementById('pqSubtitle');
+  if (sub) sub.textContent = n === 0
+    ? 'Sin procesos pendientes de revisión'
+    : `${n} proceso${n > 1 ? 's' : ''} pendiente${n > 1 ? 's' : ''} de revisión`;
+}
+
+function openPendingPanel() {
+  document.getElementById('pendingBackdrop').classList.add('show');
+  document.getElementById('pendingPanel').classList.add('show');
+  renderPendingItems();
+}
+
+function closePendingPanel() {
+  document.getElementById('pendingBackdrop').classList.remove('show');
+  document.getElementById('pendingPanel').classList.remove('show');
+}
+
+function renderPendingItems() {
+  const body = document.getElementById('pqBody');
+  updatePendingBadge();
+  if (_pendingItems.length === 0) {
+    body.innerHTML = '<div class="pq-empty"><strong>✓</strong>Todo al día — sin procesos pendientes de aprobación.</div>';
+    return;
+  }
+
+  body.innerHTML = _pendingItems.map(item => {
+    const capas = (item.capas || []);
+    const capaHtml = capas.map(c => {
+      const col = CAPA_COLORS[c] || '#9ca3af';
+      return `<span class="pq-capa-tag" style="background:${col}">${c}</span>`;
+    }).join('');
+
+    const fuente = item.fuente || item.source_file?.split('/').pop()?.replace('.md','') || '—';
+    const fecha = item.created_at ? new Date(item.created_at).toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'numeric' }) : '';
+    const refLine = [item.referente, item.sponsor].filter(Boolean).join(' · ');
+
+    return `
+    <div class="pq-item" id="pqi-${item.id}">
+      <div class="pq-source">${fuente}</div>
+      <div class="pq-proceso">${escHtml(item.proceso)}</div>
+      <div class="pq-meta">
+        ${item.area ? `<span class="pq-area-tag">${escHtml(item.area)}</span>` : ''}
+        ${capaHtml}
+      </div>
+      ${item.descripcion ? `<div class="pq-desc">${escHtml(item.descripcion)}</div>` : ''}
+      ${item.nota ? `<div class="pq-desc" style="font-style:italic;color:#6b7280">"${escHtml(item.nota)}"</div>` : ''}
+      <div class="pq-footer-meta">${refLine ? refLine + ' · ' : ''}${fecha}</div>
+      <div class="pq-actions">
+        <button class="pq-btn pq-btn-approve" onclick="approveItem('${item.id}')">✓ Aprobar</button>
+        <button class="pq-btn pq-btn-discard" onclick="discardItem('${item.id}')">✗ Descartar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function approveItem(id) {
+  const item = _pendingItems.find(x => x.id === id);
+  if (!item) return;
+  const el = document.getElementById('pqi-' + id);
+  if (el) el.classList.add('discarding');
+
+  const capas = (item.capas || []).map(c => {
+    const map = { 'Capa 1': '1', 'Capa 2a': '2.1', 'Capa 2b': '2.2', 'Capa 3': '3', 'Capa 4': '4' };
+    return map[c] || c;
+  });
+
+  const newProc = {
+    id: getNextId(),
+    prioridad: 99,
+    area: item.area || '',
+    proceso: item.proceso || '',
+    descripcion: item.descripcion || '',
+    opp: '',
+    referente: item.referente || '',
+    sponsor: item.sponsor || '',
+    capas,
+    fase: 'Fase 1 — 2027',
+    status: 'a-relevar',
+    fuente: item.fuente || '',
+    nota: item.nota || ''
+  };
+
+  PROCESOS.push(newProc);
+  renderAll();
+  scheduleSave();
+
+  await sbClient.from('pending_items').update({ status: 'approved' }).eq('id', id);
+  _pendingItems = _pendingItems.filter(x => x.id !== id);
+  renderPendingItems();
+  showSaveIndicator('Proceso aprobado ✓');
+  hideSaveIndicator();
+}
+
+async function discardItem(id) {
+  const el = document.getElementById('pqi-' + id);
+  if (el) el.classList.add('discarding');
+  await sbClient.from('pending_items').update({ status: 'discarded' }).eq('id', id);
+  _pendingItems = _pendingItems.filter(x => x.id !== id);
+  renderPendingItems();
+}
+
+function startPendingPoll() {
+  clearInterval(_pendingPollTimer);
+  _pendingPollTimer = setInterval(async () => {
+    await loadPendingItems();
+    const panel = document.getElementById('pendingPanel');
+    if (panel.classList.contains('show')) renderPendingItems();
+  }, 60000);
+}
+
 /* ══════════ STATIC TEXT EDIT ══════════ */
 const _SECTIONS = [
   { id: 'mapa-hero',        sel: '.hero-label, .hero-title, .hero-sub, .hero-stat-lbl' },
@@ -1188,7 +1443,9 @@ function _stToggle(on) {
 (async () => {
   await loadFromSupabase();
   await _stLoad();
+  await loadPendingItems();
   renderAll();
+  startPendingPoll();
 })();
 
 /* ══════════ LOCK ══════════ */
