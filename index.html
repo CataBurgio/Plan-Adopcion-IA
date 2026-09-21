@@ -267,6 +267,24 @@ td.opp      { font-size: 11px; color: var(--dim); }
 .badge-info   { background: var(--info-bg);   color: var(--info);   }
 .badge-gray   { background: var(--gray-bg);   color: var(--muted);  }
 .badge-danger { background: var(--danger-bg); color: var(--danger); }
+.badge-dark   { background: #d1d5db;          color: #374151;       }
+.badge-purple { background: #ede9fe;          color: #6d28d9;       }
+
+/* Edit mode: badges are clickable status pickers */
+body.edit-mode .badge { cursor: pointer; }
+body.edit-mode .badge::after { content: ' ▾'; font-size: 8px; opacity: .45; }
+
+/* Status picker dropdown */
+.status-picker {
+  position: fixed; z-index: 9999; background: #fff;
+  border: 1px solid var(--card-bd); border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.13); min-width: 210px;
+  padding: 4px 0; display: none;
+}
+.status-picker-opt {
+  padding: 7px 12px; cursor: pointer; display: flex; align-items: center;
+}
+.status-picker-opt:hover { background: var(--card-bg); }
 
 /* ── CARDS ── */
 .card-grid { display: grid; gap: 14px; }
@@ -858,8 +876,70 @@ function scheduleSave(sectionId) {
   }, 1500); // autosave 1.5s después del último cambio
 }
 
+// ── Status picker ──
+const STATUS_OPTIONS = [
+  { key: 'propuesta',    label: '⬜ Propuesta',              cls: 'badge-gray'   },
+  { key: 'pre-proyecto', label: '◼ Pre-proyecto',            cls: 'badge-dark'   },
+  { key: 'aprobado',     label: '🔵 Aprobado · por iniciar', cls: 'badge-info'   },
+  { key: 'en-curso',     label: '🟡 En curso',               cls: 'badge-warn'   },
+  { key: 'completado',   label: '✅ Completado y en uso',    cls: 'badge-ok'     },
+  { key: 'backlog',      label: '🟣 Backlog/Pendiente',      cls: 'badge-purple' },
+];
+
+let _pickerBadge = null, _pickerSecId = null;
+const _picker = document.createElement('div');
+_picker.className = 'status-picker';
+_picker.innerHTML = STATUS_OPTIONS.map(o =>
+  `<div class="status-picker-opt" data-key="${o.key}"><span class="badge ${o.cls}">${o.label}</span></div>`
+).join('');
+document.body.appendChild(_picker);
+
+_picker.addEventListener('click', e => {
+  const opt = e.target.closest('[data-key]');
+  if (!opt || !_pickerBadge) return;
+  const chosen = STATUS_OPTIONS.find(o => o.key === opt.dataset.key);
+  if (chosen) {
+    _pickerBadge.className = 'badge ' + chosen.cls;
+    _pickerBadge.textContent = chosen.label;
+    scheduleSave(_pickerSecId);
+  }
+  _picker.style.display = 'none';
+  _pickerBadge = null;
+});
+
+document.addEventListener('click', e => {
+  if (_picker.style.display === 'none') return;
+  if (!e.target.closest('.status-picker') && !e.target.closest('.badge')) {
+    _picker.style.display = 'none';
+  }
+});
+
+function showStatusPicker(badge, sectionId) {
+  _pickerBadge = badge;
+  _pickerSecId = sectionId;
+  _picker.style.display = 'block';
+  const r = badge.getBoundingClientRect();
+  const pw = _picker.offsetWidth, ph = _picker.offsetHeight;
+  let top = r.bottom + 4, left = r.left;
+  if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+  if (top + ph > window.innerHeight - 8) top = r.top - ph - 4;
+  _picker.style.top = top + 'px';
+  _picker.style.left = left + 'px';
+}
+
 // ── Arranque ──
 loadContent();
+
+// Delegated badge click (works even after Supabase innerHTML replace)
+SECTION_IDS.forEach(id => {
+  const el = document.getElementById('content-' + id);
+  if (!el) return;
+  el.addEventListener('click', e => {
+    if (!editMode) return;
+    const badge = e.target.closest('.badge');
+    if (badge) { e.stopPropagation(); showStatusPicker(badge, id); }
+  });
+});
 
 /* ══ LOCK ══ */
 function updateLockBtn(ok) {
