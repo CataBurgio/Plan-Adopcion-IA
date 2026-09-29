@@ -1368,6 +1368,8 @@ document.addEventListener('input', e => {
 let candidatesData   = [];
 let candFilter       = 'all';
 
+let candTableExists = false;
+
 async function loadCandidates() {
   try {
     const { data, error } = await db.from('candidates')
@@ -1375,9 +1377,11 @@ async function loadCandidates() {
       .order('numero', { ascending: true });
     if (error) throw error;
     candidatesData = data || [];
+    candTableExists = true;
   } catch (err) {
     console.warn('No se pudieron cargar candidatos:', err);
     candidatesData = [];
+    candTableExists = false;
   }
   renderCandidates();
   updateCandStats();
@@ -1423,7 +1427,13 @@ function renderCandidates() {
     </tr>`;
   });
 
-  tbody.innerHTML = html || '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--dim)">Sin candidatos.</td></tr>';
+  if (!html) {
+    const msg = candTableExists
+      ? 'Sin candidatos. Usá los botones "+ Corporativo" o "+ Movilidad" para agregar.'
+      : '⚠️ Tabla de candidatos no encontrada en Supabase. Ejecutá <strong>supabase-candidates.sql</strong> en el SQL Editor para crearla.';
+    html = `<tr><td colspan="8" style="text-align:center;padding:24px 10px;color:var(--muted);font-size:12.5px">${msg}</td></tr>`;
+  }
+  tbody.innerHTML = html;
 
   // Conectar edición de texto
   tbody.querySelectorAll('.cand-editable').forEach(td => {
@@ -1499,35 +1509,44 @@ function setCandFilter(f) {
 }
 
 async function addCandidate(vertical) {
-  if (!editMode) return;
+  if (!candTableExists) {
+    alert('La tabla de candidatos no existe en Supabase todavía.\n\nEjecutá el archivo supabase-candidates.sql en el SQL Editor de Supabase y recargá la página.');
+    return;
+  }
   const nextNum = candidatesData.length > 0
-    ? Math.max(...candidatesData.map(c => c.numero)) + 1
+    ? Math.max(...candidatesData.map(c => Number(c.numero) || 0)) + 1
     : 1;
-  const newCand = { numero: nextNum, participante: '', area: '', vertical,
-                    tiene_copilot: false, nativo_digital: false, ola_asignada: null };
+  const newCand = {
+    numero: nextNum, participante: '', area: '', vertical,
+    tiene_copilot: false, nativo_digital: false, ola_asignada: null
+  };
   const { data, error } = await db.from('candidates').insert(newCand).select().single();
-  if (error) { console.error('Error agregando candidato:', error); return; }
+  if (error) {
+    console.error('Error agregando candidato:', error);
+    alert('Error al agregar candidato: ' + (error.message || JSON.stringify(error)));
+    return;
+  }
   candidatesData.push(data);
-  // Si el filtro activo no coincide con la vertical nueva, cambiar a "all"
   if (candFilter !== 'all' && candFilter !== vertical) setCandFilter('all');
   else renderCandidates();
   updateCandStats();
-  // Hacer scroll al final de la tabla y foco en el nombre
   setTimeout(() => {
     const newRow = document.querySelector(`#cand-tbody tr[data-cid="${data.id}"]`);
     if (newRow) {
       newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const nameCell = newRow.querySelector('.cand-editable[data-field="participante"]');
-      if (nameCell) nameCell.focus();
+      newRow.querySelector('.cand-editable[data-field="participante"]')?.focus();
     }
   }, 80);
 }
 
 async function deleteCandidate(cid, num) {
-  if (!editMode) return;
   if (!confirm(`¿Eliminar candidato #${num}?`)) return;
   const { error } = await db.from('candidates').delete().eq('id', cid);
-  if (error) { console.error('Error eliminando candidato:', error); return; }
+  if (error) {
+    console.error('Error eliminando candidato:', error);
+    alert('Error al eliminar: ' + (error.message || JSON.stringify(error)));
+    return;
+  }
   candidatesData = candidatesData.filter(c => c.id !== cid);
   renderCandidates();
   updateCandStats();
