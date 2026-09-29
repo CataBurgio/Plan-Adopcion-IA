@@ -345,6 +345,79 @@ body.edit-mode .badge::after { content: ' ▾'; font-size: 8px; opacity: .45; }
   .phase-block:last-child  { border-radius: 0 0 4px 4px; margin-left: 0; margin-top: -1px; }
   .header-meta .sep, .header-meta span:not(.hl) + .sep { display: none; }
 }
+
+/* ═══════════════════════════════════════════
+   OLAS DE CAPACITACIÓN — sección 07
+════════════════════════════════════════════ */
+
+/* Stats rápidas */
+.ola-stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
+.ola-stat { background:var(--card-bg); border:1px solid var(--card-bd); border-radius:6px; padding:14px 16px; }
+.ola-stat-val { font-size:26px; font-weight:800; color:var(--ink2); line-height:1; margin-bottom:4px; }
+.ola-stat-val.teal-v { color:var(--teal); }
+.ola-stat-val.acc-v  { color:var(--accent); }
+.ola-stat-label { font-size:10px; font-weight:700; color:var(--dim); letter-spacing:1.5px; text-transform:uppercase; }
+
+/* Ciclo visual de una ola */
+.ola-cycle { display:flex; border-radius:6px; overflow:hidden; border:1px solid var(--line); margin:14px 0 28px; }
+.ola-phase { padding:12px 11px; border-right:1px solid var(--line); background:var(--card-bg); flex:1; min-width:0; }
+.ola-phase:last-child { border-right:none; flex:2.4; background:#f0f9ff; border-top:3px solid var(--teal); }
+.ola-phase.prep-ph { border-top:3px solid var(--purple); background:#faf5ff; flex:1.3; }
+.ola-phase.cap-ph  { border-top:3px solid var(--accent); background:#fff7f5; }
+.ola-phase-tag  { font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); margin-bottom:5px; }
+.ola-phase-name { font-size:12px; font-weight:700; color:var(--ink2); margin-bottom:3px; }
+.ola-phase-dtl  { font-size:10.5px; color:var(--muted); line-height:1.4; }
+
+/* Cronograma de olas */
+.olas-sched th { background:var(--ink2)!important; color:#fff!important; }
+.ola-id    { font-weight:800; color:var(--ink2); white-space:nowrap; }
+.ola-mes   { color:var(--muted); font-size:12px; }
+
+/* RACI */
+.raci-tbl { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:8px; }
+.raci-tbl thead th { padding:8px 12px; text-align:left; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.raci-tbl thead th:first-child { background:var(--card-bg); color:var(--dim); width:100px; }
+.raci-tbl thead th:nth-child(2){ background:#f0f4f8; color:#374151; }
+.raci-tbl thead th.col-marvik  { background:#1e3a5f; color:#fff; }
+.raci-tbl thead th.col-corven  { background:#7c1f0a; color:#fff; }
+.raci-tbl tbody td { padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.5; }
+.raci-tbl td.raci-fase   { font-size:9.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--dim); white-space:nowrap; background:var(--card-bg); border-right:2px solid var(--line); }
+.raci-tbl td.raci-act    { font-weight:500; color:var(--ink2); }
+.raci-tbl td.raci-marvik { color:#1a3356; }
+.raci-tbl td.raci-corven { color:#6b1a07; }
+.raci-tbl tr:hover td { background:#fafafa; }
+.raci-tbl tr.ph-start td { border-top:2px solid var(--line); }
+.raci-tbl tr.ph-start td.raci-fase { border-top:2px solid var(--accent); }
+
+/* Candidatos */
+.cand-controls { display:flex; gap:10px; align-items:center; margin-bottom:14px; flex-wrap:wrap; }
+.cand-stat-pill { font-size:11px; color:var(--muted); font-weight:600; padding:5px 12px; background:var(--card-bg); border-radius:20px; border:1px solid var(--card-bd); }
+.cand-stat-pill strong { color:var(--ink); }
+.cand-filter-btn { font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; border:1.5px solid var(--card-bd); background:#fff; color:var(--muted); cursor:pointer; transition:all .15s; font-family:inherit; }
+.cand-filter-btn.active { border-color:var(--accent); color:var(--accent); background:#fff7f5; }
+.cand-tbl { width:100%; border-collapse:collapse; font-size:12.5px; }
+.cand-tbl thead th { background:var(--ink2); color:#fff; padding:8px 10px; text-align:left; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; white-space:nowrap; }
+.cand-tbl tbody td { padding:7px 10px; border-bottom:1px solid var(--line); vertical-align:middle; }
+.cand-tbl tbody tr:hover td { background:#fff8f6; }
+.cand-tbl .cn { font-size:10px; font-weight:700; color:var(--dim); text-align:center; width:34px; }
+.cand-tbl .cp { font-weight:500; min-width:160px; }
+.cand-tbl .ca { color:var(--muted); min-width:110px; }
+.cv-badge { display:inline-block; padding:2px 7px; border-radius:2px; font-size:9px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; }
+.cv-corp { background:#dbeafe; color:#1e40af; }
+.cv-mov  { background:#fef3c7; color:#92400e; }
+.cand-toggle { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:4px; font-size:13px; user-select:none; border:1.5px solid var(--line); background:#f8f9fa; transition:all .15s; }
+.cand-toggle.on  { background:#dcfce7; border-color:#16a34a; }
+.cand-toggle.off { background:#f1f5f9; border-color:#cbd5e1; }
+body.edit-mode .cand-toggle { cursor:pointer; }
+body:not(.edit-mode) .cand-toggle { pointer-events:none; }
+.cand-ola-badge { display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:20px; padding:0 6px; border-radius:3px; font-size:10px; font-weight:700; background:#f3f4f6; color:var(--muted); border:1px solid var(--card-bd); }
+.cand-section-hdr td { font-size:10px!important; font-weight:800!important; letter-spacing:2px!important; text-transform:uppercase!important; padding:5px 10px!important; }
+.cand-section-hdr.corp td { background:#1e3a5f!important; color:#fff!important; }
+.cand-section-hdr.mov  td { background:#92400e!important; color:#fff!important; }
+.cand-tbl .cand-editable { outline:none; }
+body.edit-mode .cand-tbl .cand-editable { outline:1px dashed rgba(232,80,32,.35); border-radius:2px; cursor:text; }
+body.edit-mode .cand-tbl .cand-editable:focus { outline:2px solid var(--accent); background:#fffdf9; }
+tr.cand-saving td { opacity:.55; }
 </style>
 </head>
 <body>
@@ -399,6 +472,7 @@ body.edit-mode .badge::after { content: ' ▾'; font-size: 8px; opacity: .45; }
     <div class="nav-tab" data-sec="ws-c">04. WS-C · Desarrollo</div>
     <div class="nav-tab" data-sec="presupuesto">05. Presupuesto</div>
     <div class="nav-tab" data-sec="gaps">06. Gaps críticos</div>
+    <div class="nav-tab" data-sec="olas-capacitacion">07. Olas · Marvik</div>
   </nav>
 </header>
 
@@ -731,6 +805,220 @@ body.edit-mode .badge::after { content: ' ▾'; font-size: 8px; opacity: .45; }
     </div>
   </section>
 
+  <!-- ══ 07. OLAS DE CAPACITACIÓN ══ -->
+  <section class="section" id="sec-olas-capacitacion">
+
+    <!-- Contenido estático: se guarda en Supabase tabla 'sections' -->
+    <div class="section-inner" id="content-olas-capacitacion">
+
+      <div class="sec-header">
+        <div class="sec-num" style="background:var(--teal);color:#fff">07</div>
+        <div class="sec-meta">
+          <div class="sec-title">Olas de capacitación · Marvik</div>
+          <div class="sec-sub">6 instancias · 150 personas · Microsoft Copilot 365 · Oct – Dic 2026 · Proveedor: Marvik (Guillermo Varela · guillermo@marvik.ai)</div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="ola-stat-grid">
+        <div class="ola-stat"><div class="ola-stat-val teal-v">6</div><div class="ola-stat-label">Instancias de dictado</div></div>
+        <div class="ola-stat"><div class="ola-stat-val">150</div><div class="ola-stat-label">Personas a capacitar</div></div>
+        <div class="ola-stat"><div class="ola-stat-val acc-v">4 meses</div><div class="ola-stat-label">Por ola (cap. + acompañamiento)</div></div>
+        <div class="ola-stat"><div class="ola-stat-val">USD 52K</div><div class="ola-stat-label">Inversión total del programa</div></div>
+      </div>
+
+      <!-- Cronograma -->
+      <div class="block-label">Cronograma de olas</div>
+      <div class="tbl-wrap" style="margin-bottom:28px">
+        <table>
+          <thead class="olas-sched"><tr><th>Instancia</th><th>Mes cap.</th><th>Pers.</th><th>Área / Vertical</th><th>Estado</th><th>Acompañamiento hasta</th></tr></thead>
+          <tbody>
+            <tr><td class="ola-id">Ola 1</td><td class="ola-mes">Oct 2026</td><td>25</td><td class="project">Por definir en kick-off</td><td><span class="badge badge-gray">⬜ Por planificar</span></td><td class="budget">Feb 2027</td></tr>
+            <tr><td class="ola-id">Ola 2</td><td class="ola-mes">Nov 2026</td><td>25</td><td class="project">Por definir en kick-off</td><td><span class="badge badge-gray">⬜ Por planificar</span></td><td class="budget">Mar 2027</td></tr>
+            <tr><td class="ola-id">Ola 3.1</td><td class="ola-mes">Nov 2026</td><td>25</td><td class="project">Por definir en kick-off</td><td><span class="badge badge-gray">⬜ Por planificar</span></td><td class="budget">Mar 2027</td></tr>
+            <tr><td class="ola-id">Ola 3.2</td><td class="ola-mes">Nov 2026</td><td>25</td><td class="project">Por definir en kick-off</td><td><span class="badge badge-gray">⬜ Por planificar</span></td><td class="budget">Mar 2027</td></tr>
+            <tr><td class="ola-id">Ola 4.1</td><td class="ola-mes">Dic 2026</td><td>25</td><td class="project">Por definir en kick-off</td><td><span class="badge badge-gray">⬜ Por planificar</span></td><td class="budget">Abr 2027</td></tr>
+            <tr><td class="ola-id">Ola 4.2</td><td class="ola-mes">Dic 2026</td><td>25</td><td class="project">Por definir en kick-off</td><td><span class="badge badge-gray">⬜ Por planificar</span></td><td class="budget">Abr 2027</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Ciclo -->
+      <div class="block-label">Ciclo de una ola · 4 meses</div>
+      <div class="ola-cycle">
+        <div class="ola-phase prep-ph">
+          <div class="ola-phase-tag">Semana 0</div>
+          <div class="ola-phase-name">Preparación</div>
+          <div class="ola-phase-dtl">Kick-off con dirección · Entrevistas con líderes de área · Encuesta diagnóstico (línea base) · Composición de grupos y contenidos</div>
+        </div>
+        <div class="ola-phase cap-ph">
+          <div class="ola-phase-tag">Semana 1</div>
+          <div class="ola-phase-name">Sesión 1 · 2 hs</div>
+          <div class="ola-phase-dtl">Nivelar y arrancar · Primer trabajo sobre tareas propias</div>
+        </div>
+        <div class="ola-phase cap-ph">
+          <div class="ola-phase-tag">Semana 2</div>
+          <div class="ola-phase-name">Sesión 2 · 2 hs</div>
+          <div class="ola-phase-dtl">Profundizar · Usos más complejos a partir de lo que probaron</div>
+        </div>
+        <div class="ola-phase cap-ph">
+          <div class="ola-phase-tag">Semana 3</div>
+          <div class="ola-phase-name">Sesión 3 · 2 hs</div>
+          <div class="ola-phase-dtl">Aplicar y sostener · Flujo completo de trabajo · Referentes identificados</div>
+        </div>
+        <div class="ola-phase cap-ph">
+          <div class="ola-phase-tag">Semana 4</div>
+          <div class="ola-phase-name">Taller práctico · 4 hs</div>
+          <div class="ola-phase-dtl">Proceso real del equipo · Trabajo guiado + puesta en común · Referentes designados formalmente</div>
+        </div>
+        <div class="ola-phase">
+          <div class="ola-phase-tag">Meses 2 · 3 · 4</div>
+          <div class="ola-phase-name">Acompañamiento</div>
+          <div class="ola-phase-dtl">Canal diario Teams · Office hours (sem./quinc.) · Seguimiento referentes · Reporte mensual al Comité IA · Medición de impacto al cierre</div>
+        </div>
+      </div>
+
+      <!-- RACI -->
+      <div class="block-label">Responsables por etapa</div>
+      <div class="tbl-wrap" style="margin-bottom:28px">
+        <table class="raci-tbl">
+          <thead>
+            <tr>
+              <th>Fase</th>
+              <th>Actividad</th>
+              <th class="col-marvik">Marvik</th>
+              <th class="col-corven">Grupo Corven</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Discovery -->
+            <tr class="ph-start">
+              <td class="raci-fase" rowspan="4">Discovery<br>Semana 0</td>
+              <td class="raci-act">Kick-off con dirección</td>
+              <td class="raci-marvik">Facilita la sesión · Define estructura, prioridades y objetivos por vertical</td>
+              <td class="raci-corven">Nicolás + CEOs de vertical asisten · Cata coordina agenda y participantes</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Entrevistas con líderes de área (5–6 × 1 h)</td>
+              <td class="raci-marvik">Conduce las entrevistas · Releva procesos diarios, fricciones y disponibilidad</td>
+              <td class="raci-corven">Cata/Fabi identifican los líderes a entrevistar y confirman agenda</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Encuesta diagnóstico — línea base</td>
+              <td class="raci-marvik">Diseña y aplica la encuesta · Fija el punto de partida para medir impacto</td>
+              <td class="raci-corven">Comunica a los participantes y asegura respuesta completa antes de la Sesión 1</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Composición de olas y armado de contenidos</td>
+              <td class="raci-marvik">Propone agrupamiento por afinidad de procesos y roles · Customiza el contenido por área</td>
+              <td class="raci-corven">Aprueba la composición definitiva · Confirma disponibilidad de los participantes de cada ola</td>
+            </tr>
+            <!-- Mes 1 -->
+            <tr class="ph-start">
+              <td class="raci-fase" rowspan="5">Mes 1<br>Capacitación</td>
+              <td class="raci-act">Sesión 1 — Nivelar y arrancar (2 hs)</td>
+              <td class="raci-marvik">Facilita · Pone a todos en el mismo punto de partida</td>
+              <td class="raci-corven">IT verifica acceso Copilot activo antes de la sesión · Participantes conectados a tiempo</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Sesión 2 — Profundizar (2 hs)</td>
+              <td class="raci-marvik">Facilita · Ajusta contenido con el feedback de la Sesión 1</td>
+              <td class="raci-corven">Participantes practican lo aprendido en su trabajo real entre sesiones</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Sesión 3 — Aplicar y sostener (2 hs)</td>
+              <td class="raci-marvik">Facilita · Cierra el loop de aprendizaje · Trabaja uso en equipo y buenas prácticas</td>
+              <td class="raci-corven">Participantes + referentes de cambio (ya pre-identificados) asisten</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Selección del proceso para el taller práctico</td>
+              <td class="raci-marvik">Comparte material y criterios para identificar el proceso a trabajar</td>
+              <td class="raci-corven">Directores y referentes eligen el proceso real del área (con carga de trabajo conocida)</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Taller práctico — La jornada (4 hs)</td>
+              <td class="raci-marvik">Facilita · Destrabando caso a caso en tiempo real · Facilita puesta en común y feedback</td>
+              <td class="raci-corven">Cata/Fabi coordinan logística y presencialidad · Participantes traen datos reales · Referentes quedan designados formalmente al cierre</td>
+            </tr>
+            <!-- Acompañamiento -->
+            <tr class="ph-start">
+              <td class="raci-fase" rowspan="4">Meses 2–4<br>Acompañamiento</td>
+              <td class="raci-act">Canal diario de consultas (Teams)</td>
+              <td class="raci-marvik">Responde en el día · Orienta sobre herramienta, prompts y qué tarea conviene a cada herramienta</td>
+              <td class="raci-corven">Fabi/Cata crean el canal antes de la Sesión 1 · Participantes lo usan activamente</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Office hours (semanales mes 2 · quincenales meses 3–4, 2 hs c/u)</td>
+              <td class="raci-marvik">Organiza y facilita · Integra olas activas en una misma instancia desde el mes 2</td>
+              <td class="raci-corven">Participantes + referentes asisten · Cata monitorea concurrencia y escalona si hace falta</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Seguimiento referentes de cambio (1 h · semanal mes 2 · quincenal meses 3–4)</td>
+              <td class="raci-marvik">Facilita reunión · Recoge casos de uso que emergen del área · Da feedback a los referentes</td>
+              <td class="raci-corven">Referentes (2–3 por ola) reportan adopción y fricciones del equipo · Yanina coordina seguimiento de change</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Reporte mensual al Comité IA</td>
+              <td class="raci-marvik">Elabora informe (indicadores Microsoft + canal diario + encuesta) · Lo presenta al Comité</td>
+              <td class="raci-corven">Comité IA (Cata + Fabi + Sebas) recibe, revisa y toma decisiones de ajuste al programa</td>
+            </tr>
+            <!-- Cierre -->
+            <tr class="ph-start">
+              <td class="raci-fase" rowspan="3">Cierre<br>de ola</td>
+              <td class="raci-act">Encuesta horas ahorradas (post-capacitación)</td>
+              <td class="raci-marvik">Diseña y aplica (mismo instrumento que línea base) · Análisis por tipo de tarea y por área</td>
+              <td class="raci-corven">Participantes completan · Yanina asegura tasa de respuesta alta</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Medición de impacto vs. línea base</td>
+              <td class="raci-marvik">Interpreta indicadores Microsoft + encuesta · Entrega reporte de cierre del ciclo</td>
+              <td class="raci-corven">Comité IA valida los resultados · Cata decide qué se comunica al negocio y en qué formato</td>
+            </tr>
+            <tr>
+              <td class="raci-act">Documentación de casos de uso del área</td>
+              <td class="raci-marvik">Consolida los mejores casos surgidos del taller y del acompañamiento</td>
+              <td class="raci-corven">Referentes validan el contenido · Cata decide qué se publica en el canal Nexo</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="corven-logo"><div class="logo-tri"></div><div class="logo-name">GRUPO <em>CORVEN</em></div></div>
+    </div><!-- /content-olas-capacitacion -->
+
+    <!-- Candidatos: siempre dinámico desde Supabase tabla 'candidates' — NO se guarda como HTML -->
+    <div class="section-inner" style="border-top:none;padding-top:4px">
+      <div class="block-label">Lista de candidatos</div>
+      <div class="cand-controls">
+        <div id="cand-stats" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <button class="cand-filter-btn active" data-filter="all"         onclick="setCandFilter('all')">Todos (100)</button>
+          <button class="cand-filter-btn"         data-filter="Corporativo" onclick="setCandFilter('Corporativo')">Corporativo (25)</button>
+          <button class="cand-filter-btn"         data-filter="Movilidad"   onclick="setCandFilter('Movilidad')">Movilidad (75)</button>
+        </div>
+      </div>
+      <div class="tbl-wrap" data-no-addrow>
+        <table class="cand-tbl">
+          <thead>
+            <tr>
+              <th style="width:36px">#</th>
+              <th>Participante</th>
+              <th>Área</th>
+              <th>Vertical</th>
+              <th style="text-align:center;width:80px">Licencia<br>Copilot</th>
+              <th style="text-align:center;width:80px">Nativo<br>Digital</th>
+              <th style="width:70px">Ola</th>
+            </tr>
+          </thead>
+          <tbody id="cand-tbody">
+            <tr><td colspan="7" style="text-align:center;color:var(--dim);padding:28px 10px;font-size:13px">Cargando candidatos…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section><!-- /sec-olas-capacitacion -->
+
 </main>
 
 <!-- Edit mode bar -->
@@ -748,7 +1036,7 @@ body.edit-mode .badge::after { content: ' ▾'; font-size: 8px; opacity: .45; }
 const SUPABASE_URL  = 'https://wpmxxoojxtilgqbhymji.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndwbXh4b29qeHRpbGdxYmh5bWppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MzAzOTUsImV4cCI6MjEwNTUwNjM5NX0.TurznBdylkCfb3JMHbMeg_phfdaiwjJVE44x3dPsvNg';
 
-const SECTION_IDS = ['header','estructura','ws-a','ws-b','ws-c','presupuesto','gaps'];
+const SECTION_IDS = ['header','estructura','ws-a','ws-b','ws-c','presupuesto','gaps','olas-capacitacion'];
 
 // ── Init Supabase ──
 const { createClient } = supabase;
@@ -879,7 +1167,10 @@ function toggleEditMode() {
       '.card-title, .card-body, ' +
       '.budget-note, ' +
       '.block-label, .subsec-label, ' +
-      '.header-label, .header-title, .header-meta'
+      '.header-label, .header-title, .header-meta, ' +
+      'td.raci-act, td.raci-marvik, td.raci-corven, ' +
+      '.ola-stat-val, .ola-stat-label, .ola-phase-name, .ola-phase-dtl, ' +
+      '.ola-id, .ola-mes'
     );
     editables.forEach(el => {
       el.contentEditable = editMode ? 'true' : 'false';
@@ -887,6 +1178,11 @@ function toggleEditMode() {
         el.addEventListener('input', () => scheduleSave(id), { once: false });
       }
     });
+  });
+
+  // Sync editabilidad de la tabla de candidatos
+  document.querySelectorAll('#cand-tbody .cand-editable').forEach(td => {
+    td.contentEditable = editMode ? 'true' : 'false';
   });
 }
 
@@ -984,6 +1280,7 @@ function recalcBudgetTables() {
 function injectAddRowBtns(on) {
   if (on) {
     document.querySelectorAll('.tbl-wrap table').forEach(tbl => {
+      if (tbl.closest('[data-no-addrow]')) return; // candidates table: no auto "+" row
       if (tbl.querySelector('.add-row-foot')) return;
       const cols = tbl.querySelector('thead tr')?.children.length || tbl.querySelector('tr')?.children.length || 5;
       const tfoot = document.createElement('tfoot');
@@ -1034,8 +1331,145 @@ document.addEventListener('input', e => {
   if (editMode && e.target.closest('table.budget-autosum')) recalcBudgetTables();
 });
 
+// ═══════════════════════════════════════════
+// CANDIDATOS — Supabase tabla 'candidates'
+// ═══════════════════════════════════════════
+
+let candidatesData   = [];
+let candFilter       = 'all';
+
+async function loadCandidates() {
+  try {
+    const { data, error } = await db.from('candidates')
+      .select('*')
+      .order('numero', { ascending: true });
+    if (error) throw error;
+    candidatesData = data || [];
+  } catch (err) {
+    console.warn('No se pudieron cargar candidatos:', err);
+    candidatesData = [];
+  }
+  renderCandidates();
+  updateCandStats();
+}
+
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderCandidates() {
+  const tbody = document.getElementById('cand-tbody');
+  if (!tbody) return;
+
+  const list = candFilter === 'all'
+    ? candidatesData
+    : candidatesData.filter(c => c.vertical === candFilter);
+
+  let html = '';
+  let lastVert = '';
+
+  list.forEach(c => {
+    if (c.vertical !== lastVert) {
+      const isCorpSection = c.vertical === 'Corporativo';
+      const count = candidatesData.filter(x => x.vertical === c.vertical).length;
+      html += `<tr class="cand-section-hdr ${isCorpSection ? 'corp' : 'mov'}">
+        <td colspan="7">${escHtml(c.vertical)} &nbsp;·&nbsp; ${count} participantes</td>
+      </tr>`;
+      lastVert = c.vertical;
+    }
+    const vc  = c.vertical === 'Corporativo' ? 'cv-corp' : 'cv-mov';
+    const cpC = c.tiene_copilot  ? 'on' : 'off';
+    const ndC = c.nativo_digital ? 'on' : 'off';
+    const olaLbl = c.ola_asignada ? `Ola ${c.ola_asignada}` : '—';
+    html += `<tr data-cid="${c.id}" data-num="${c.numero}">
+      <td class="cn">${c.numero}</td>
+      <td class="cp cand-editable" data-field="participante">${escHtml(c.participante)}</td>
+      <td class="ca cand-editable" data-field="area">${escHtml(c.area)}</td>
+      <td><span class="cv-badge ${vc}">${escHtml(c.vertical)}</span></td>
+      <td style="text-align:center"><span class="cand-toggle ${cpC}" data-field="tiene_copilot">${c.tiene_copilot ? '✅' : '—'}</span></td>
+      <td style="text-align:center"><span class="cand-toggle ${ndC}" data-field="nativo_digital">${c.nativo_digital ? '✅' : '—'}</span></td>
+      <td><span class="cand-ola-badge">${olaLbl}</span></td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--dim)">Sin candidatos.</td></tr>';
+
+  // Conectar edición de texto
+  tbody.querySelectorAll('.cand-editable').forEach(td => {
+    td.contentEditable = editMode ? 'true' : 'false';
+    td.addEventListener('blur', onCandBlur);
+  });
+
+  // Conectar toggles booleanos
+  tbody.querySelectorAll('.cand-toggle').forEach(span => {
+    span.addEventListener('click', () => toggleCandBool(span));
+  });
+}
+
+async function onCandBlur(e) {
+  if (!editMode) return;
+  const td  = e.target;
+  const tr  = td.closest('tr[data-cid]');
+  if (!tr) return;
+  const cid   = parseInt(tr.dataset.cid);
+  const field = td.dataset.field;
+  const value = td.textContent.trim();
+
+  const cand = candidatesData.find(c => c.id === cid);
+  if (cand) cand[field] = value;
+
+  tr.classList.add('cand-saving');
+  const { error } = await db.from('candidates').update({ [field]: value }).eq('id', cid);
+  tr.classList.remove('cand-saving');
+  if (error) console.error('Error guardando candidato:', error);
+  updateCandStats();
+}
+
+async function toggleCandBool(span) {
+  if (!editMode) return;
+  const tr    = span.closest('tr[data-cid]');
+  if (!tr) return;
+  const cid   = parseInt(tr.dataset.cid);
+  const field = span.dataset.field;
+
+  const cand = candidatesData.find(c => c.id === cid);
+  if (!cand) return;
+  const newVal = !cand[field];
+  cand[field] = newVal;
+
+  span.classList.toggle('on', newVal);
+  span.classList.toggle('off', !newVal);
+  span.textContent = newVal ? '✅' : '—';
+
+  await db.from('candidates').update({ [field]: newVal }).eq('id', cid);
+  updateCandStats();
+}
+
+function updateCandStats() {
+  const el = document.getElementById('cand-stats');
+  if (!el) return;
+  const total   = candidatesData.length;
+  const named   = candidatesData.filter(c => c.participante?.trim()).length;
+  const copilot = candidatesData.filter(c => c.tiene_copilot).length;
+  const nativo  = candidatesData.filter(c => c.nativo_digital).length;
+  el.innerHTML = `
+    <span class="cand-stat-pill"><strong>${named}</strong> / ${total} identificados</span>
+    <span class="cand-stat-pill"><strong>${copilot}</strong> con licencia Copilot</span>
+    <span class="cand-stat-pill"><strong>${nativo}</strong> nativos digitales</span>
+  `;
+}
+
+function setCandFilter(f) {
+  candFilter = f;
+  document.querySelectorAll('.cand-filter-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.filter === f)
+  );
+  renderCandidates();
+}
+
 // ── Arranque ──
 loadContent();
+loadCandidates();
 
 // Delegated badge click (works even after Supabase innerHTML replace)
 SECTION_IDS.forEach(id => {
