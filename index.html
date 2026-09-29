@@ -418,6 +418,30 @@ body:not(.edit-mode) .cand-toggle { pointer-events:none; }
 body.edit-mode .cand-tbl .cand-editable { outline:1px dashed rgba(232,80,32,.35); border-radius:2px; cursor:text; }
 body.edit-mode .cand-tbl .cand-editable:focus { outline:2px solid var(--accent); background:#fffdf9; }
 tr.cand-saving td { opacity:.55; }
+
+/* Agregar / eliminar candidatos (solo en edit-mode) */
+.cand-add-area { display:none; gap:6px; }
+body.edit-mode .cand-add-area { display:flex; }
+.cand-add-btn {
+  font-size:11px; font-weight:700; padding:5px 12px; border-radius:20px;
+  border:1.5px solid; cursor:pointer; font-family:inherit; transition:all .15s;
+}
+.cand-add-btn.corp { background:#dbeafe; border-color:#93c5fd; color:#1e40af; }
+.cand-add-btn.corp:hover { background:#bfdbfe; }
+.cand-add-btn.mov  { background:#fef3c7; border-color:#fcd34d; color:#92400e; }
+.cand-add-btn.mov:hover  { background:#fde68a; }
+
+/* Columna de eliminar: oculta en lectura, visible en edición */
+.cand-del-th, .cand-del-td { display:none; width:36px; text-align:center; }
+body.edit-mode .cand-del-th,
+body.edit-mode .cand-del-td { display:table-cell; }
+.cand-del-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:22px; height:22px; border-radius:3px; cursor:pointer;
+  background:#fee2e2; border:1px solid #fca5a5; color:#dc2626;
+  font-size:13px; line-height:1; transition:background .15s;
+}
+.cand-del-btn:hover { background:#fecaca; }
 </style>
 </head>
 <body>
@@ -991,8 +1015,13 @@ tr.cand-saving td { opacity:.55; }
       <div class="block-label">Lista de candidatos</div>
       <div class="cand-controls">
         <div id="cand-stats" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-        <div style="margin-left:auto;display:flex;gap:6px">
-          <button class="cand-filter-btn active" data-filter="all"         onclick="setCandFilter('all')">Todos (100)</button>
+        <div style="margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <!-- Botones de agregar: solo visibles en edit-mode -->
+          <div class="cand-add-area">
+            <button class="cand-add-btn corp" onclick="addCandidate('Corporativo')">+ Corporativo</button>
+            <button class="cand-add-btn mov"  onclick="addCandidate('Movilidad')">+ Movilidad</button>
+          </div>
+          <button class="cand-filter-btn active" data-filter="all"         onclick="setCandFilter('all')">Todos</button>
           <button class="cand-filter-btn"         data-filter="Corporativo" onclick="setCandFilter('Corporativo')">Corporativo (25)</button>
           <button class="cand-filter-btn"         data-filter="Movilidad"   onclick="setCandFilter('Movilidad')">Movilidad (75)</button>
         </div>
@@ -1008,10 +1037,11 @@ tr.cand-saving td { opacity:.55; }
               <th style="text-align:center;width:80px">Licencia<br>Copilot</th>
               <th style="text-align:center;width:80px">Nativo<br>Digital</th>
               <th style="width:70px">Ola</th>
+              <th class="cand-del-th"></th>
             </tr>
           </thead>
           <tbody id="cand-tbody">
-            <tr><td colspan="7" style="text-align:center;color:var(--dim);padding:28px 10px;font-size:13px">Cargando candidatos…</td></tr>
+            <tr><td colspan="8" style="text-align:center;color:var(--dim);padding:28px 10px;font-size:13px">Cargando candidatos…</td></tr>
           </tbody>
         </table>
       </div>
@@ -1373,7 +1403,7 @@ function renderCandidates() {
       const isCorpSection = c.vertical === 'Corporativo';
       const count = candidatesData.filter(x => x.vertical === c.vertical).length;
       html += `<tr class="cand-section-hdr ${isCorpSection ? 'corp' : 'mov'}">
-        <td colspan="7">${escHtml(c.vertical)} &nbsp;·&nbsp; ${count} participantes</td>
+        <td colspan="8">${escHtml(c.vertical)} &nbsp;·&nbsp; ${count} participantes</td>
       </tr>`;
       lastVert = c.vertical;
     }
@@ -1389,10 +1419,11 @@ function renderCandidates() {
       <td style="text-align:center"><span class="cand-toggle ${cpC}" data-field="tiene_copilot">${c.tiene_copilot ? '✅' : '—'}</span></td>
       <td style="text-align:center"><span class="cand-toggle ${ndC}" data-field="nativo_digital">${c.nativo_digital ? '✅' : '—'}</span></td>
       <td><span class="cand-ola-badge">${olaLbl}</span></td>
+      <td class="cand-del-td"><span class="cand-del-btn" title="Eliminar" onclick="deleteCandidate(${c.id}, ${c.numero})">×</span></td>
     </tr>`;
   });
 
-  tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--dim)">Sin candidatos.</td></tr>';
+  tbody.innerHTML = html || '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--dim)">Sin candidatos.</td></tr>';
 
   // Conectar edición de texto
   tbody.querySelectorAll('.cand-editable').forEach(td => {
@@ -1465,6 +1496,41 @@ function setCandFilter(f) {
     b.classList.toggle('active', b.dataset.filter === f)
   );
   renderCandidates();
+}
+
+async function addCandidate(vertical) {
+  if (!editMode) return;
+  const nextNum = candidatesData.length > 0
+    ? Math.max(...candidatesData.map(c => c.numero)) + 1
+    : 1;
+  const newCand = { numero: nextNum, participante: '', area: '', vertical,
+                    tiene_copilot: false, nativo_digital: false, ola_asignada: null };
+  const { data, error } = await db.from('candidates').insert(newCand).select().single();
+  if (error) { console.error('Error agregando candidato:', error); return; }
+  candidatesData.push(data);
+  // Si el filtro activo no coincide con la vertical nueva, cambiar a "all"
+  if (candFilter !== 'all' && candFilter !== vertical) setCandFilter('all');
+  else renderCandidates();
+  updateCandStats();
+  // Hacer scroll al final de la tabla y foco en el nombre
+  setTimeout(() => {
+    const newRow = document.querySelector(`#cand-tbody tr[data-cid="${data.id}"]`);
+    if (newRow) {
+      newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const nameCell = newRow.querySelector('.cand-editable[data-field="participante"]');
+      if (nameCell) nameCell.focus();
+    }
+  }, 80);
+}
+
+async function deleteCandidate(cid, num) {
+  if (!editMode) return;
+  if (!confirm(`¿Eliminar candidato #${num}?`)) return;
+  const { error } = await db.from('candidates').delete().eq('id', cid);
+  if (error) { console.error('Error eliminando candidato:', error); return; }
+  candidatesData = candidatesData.filter(c => c.id !== cid);
+  renderCandidates();
+  updateCandStats();
 }
 
 // ── Arranque ──
